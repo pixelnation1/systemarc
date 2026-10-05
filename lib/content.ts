@@ -1,5 +1,6 @@
 import { getProject } from "@/lib/projects";
 import { services } from "@/lib/services";
+import { solutions } from "@/lib/solutions";
 import { siteUrl } from "@/lib/site";
 
 export type ContentFamily =
@@ -60,14 +61,6 @@ const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
  * only after the page has its own useful content.
  */
 export const reservedTopics: readonly ReservedTopic[] = [
-  { family: "solutions", slug: "customer-portals", label: "Customer portals" },
-  { family: "solutions", slug: "workflow-automation", label: "Workflow automation" },
-  { family: "solutions", slug: "inventory-systems", label: "Inventory systems" },
-  { family: "solutions", slug: "scheduling-systems", label: "Scheduling systems" },
-  { family: "solutions", slug: "reputation-management", label: "Reputation management" },
-  { family: "solutions", slug: "repair-management", label: "Repair management" },
-  { family: "solutions", slug: "community-platforms", label: "Community platforms" },
-  { family: "solutions", slug: "business-dashboards", label: "Business dashboards" },
   { family: "industries", slug: "repair-shops", label: "Repair shops" },
   { family: "industries", slug: "retail", label: "Retail" },
   { family: "industries", slug: "game-stores", label: "Game stores" },
@@ -133,8 +126,40 @@ function publishedServices(): ProgrammaticPage[] {
   }));
 }
 
+function publishedSolutions(): ProgrammaticPage[] {
+  return solutions.map((solution) => ({
+    family: "solutions" as const,
+    slug: solution.slug,
+    title: solution.name,
+    metaTitle: solution.metaTitle,
+    metaDescription: solution.metaDescription,
+    headline: solution.headline,
+    intro: solution.intro
+      .map((paragraph) =>
+        paragraph
+          .map((part) => (typeof part === "string" ? part : part.text))
+          .join(""),
+      )
+      .join(" "),
+    problem: solution.signs.map((item) => item.body).join(" "),
+    solution: solution.definition.answer
+      .map((paragraph) =>
+        paragraph
+          .map((part) => (typeof part === "string" ? part : part.text))
+          .join(""),
+      )
+      .join(" "),
+    capabilities: solution.includes.map((item) => item.title),
+    relatedServices: solution.services,
+    relatedWork: solution.relatedWork.map((item) => item.slug),
+    faq: solution.faq,
+    schema: "Service" as const,
+    index: true,
+  }));
+}
+
 export function getPublished(family?: ContentFamily) {
-  return [...publishedServices(), ...draftPages].filter(
+  return [...publishedServices(), ...publishedSolutions(), ...draftPages].filter(
     (page) => isPublishable(page) && (family === undefined || page.family === family),
   );
 }

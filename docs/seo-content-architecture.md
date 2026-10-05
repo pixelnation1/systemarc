@@ -10,7 +10,7 @@ Do not put `localhost` or `vercel.app` URLs in production metadata, canonicals, 
 
 SystemArc is a custom software and business systems company. The positioning is: software built around your business.
 
-Search pages should explain a real problem, the way SystemArc approaches it, and what the company actually builds. The homepage, the About page, the Work index, the Services index, and the seven published service pages are indexable because they contain that substance.
+Search pages should explain a real problem, the way SystemArc approaches it, and what the company actually builds. The homepage, the About page, the Work index, the Services index, the seven published service pages, the Solutions index, and the eight published solution pages are indexable because they contain that substance.
 
 Metadata is generated with `createMetadata` in `lib/site.ts`. `metadataBase` is the production origin, so a path such as `/about` becomes `https://www.systemarchq.com/about`.
 
@@ -31,11 +31,13 @@ Unknown paths are not indexable unless the caller explicitly opts in. Paths list
 Future families may live at:
 
 - `/services/[slug]` for a service with its own content in `lib/services.ts`
-- `/solutions/[slug]`
+- `/solutions/[slug]` for a solution with its own content in `lib/solutions.ts`
 - `/industries/[slug]`
 - `/locations/[slug]`
 
-The seven service pages are published from `lib/services.ts`. They are not thin drafts. Solutions, industries, and locations still publish nothing until a page is added to `draftPages` in `lib/content.ts` and passes `isPublishable`.
+The seven service pages are published from `lib/services.ts`. The eight solution pages are published from `lib/solutions.ts`. They are not thin drafts, and they are not the same pages with the nouns swapped. Industries and locations still publish nothing until a page is added to `draftPages` in `lib/content.ts` and passes `isPublishable`.
+
+Do not publish a solution for every combination of service, industry, and city. A combination page exists only when it has substantial content of its own.
 
 `/services/custom-software-development` and the other six service URLs are live. Do not create a second URL for the same service.
 
@@ -105,7 +107,7 @@ Do not create a second URL for the same page with a query string, trailing varia
 
 ## 6. Content model
 
-`ProgrammaticPage` in `lib/content.ts` is the shape for a future landing page. Published services in `lib/services.ts` are mapped into that shape so the sitemap and related links stay in one place. The service pages themselves render from the richer service record, not from the generic landing-page view.
+`ProgrammaticPage` in `lib/content.ts` is the shape for a future landing page. Published services in `lib/services.ts` and published solutions in `lib/solutions.ts` are mapped into that shape so the sitemap and related links stay in one place. Those pages render from their own records, not from the generic landing-page view.
 
 Fields:
 
@@ -197,6 +199,6 @@ Do not publish the same explanation under several URLs.
 
 Do not create doorway pages, city pages for places SystemArc does not serve, or pages aimed at a keyword SystemArc does not actually discuss.
 
-If a route is only a placeholder or "coming soon", set it `noindex, follow` and leave it out of the sitemap. The homepage, the completed About page, the Work index, `/services`, and the seven completed service pages stay indexable. Individual case studies stay `noindex` until they are written.
+If a route is only a placeholder or "coming soon", set it `noindex, follow` and leave it out of the sitemap. The homepage, the completed About page, the Work index, `/services`, the seven completed service pages, `/solutions`, and the eight completed solution pages stay indexable. Individual case studies stay `noindex` until they are written.
 
 When a placeholder gains a full page, change its entry in `lib/indexing.ts` to `true`. The metadata helper and the sitemap both follow that flag.
