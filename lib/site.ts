@@ -21,6 +21,7 @@ export const navItems = [
 export const footerItems = [
   { href: "/services", label: "Services" },
   { href: "/solutions", label: "Solutions" },
+  { href: "/industries", label: "Industries" },
   { href: "/work", label: "Work" },
   { href: "/process", label: "Process" },
   { href: "/about", label: "About" },

@@ -1,3 +1,4 @@
+import { industries } from "@/lib/industries";
 import { getProject } from "@/lib/projects";
 import { services } from "@/lib/services";
 import { solutions } from "@/lib/solutions";
@@ -60,13 +61,7 @@ const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
  * Reserved topics are not routes. Add a matching entry to `draftPages`
  * only after the page has its own useful content.
  */
-export const reservedTopics: readonly ReservedTopic[] = [
-  { family: "industries", slug: "repair-shops", label: "Repair shops" },
-  { family: "industries", slug: "retail", label: "Retail" },
-  { family: "industries", slug: "game-stores", label: "Game stores" },
-  { family: "industries", slug: "professional-services", label: "Professional services" },
-  { family: "industries", slug: "local-service-businesses", label: "Local service businesses" },
-];
+export const reservedTopics: readonly ReservedTopic[] = [];
 
 /**
  * Pages ready for review. They stay unpublished until `isPublishable`
@@ -158,10 +153,46 @@ function publishedSolutions(): ProgrammaticPage[] {
   }));
 }
 
+function publishedIndustries(): ProgrammaticPage[] {
+  return industries.map((industry) => ({
+    family: "industries" as const,
+    slug: industry.slug,
+    title: industry.name,
+    metaTitle: industry.metaTitle,
+    metaDescription: industry.metaDescription,
+    headline: industry.headline,
+    intro: industry.intro
+      .map((paragraph) =>
+        paragraph
+          .map((part) => (typeof part === "string" ? part : part.text))
+          .join(""),
+      )
+      .join(" "),
+    problem: industry.problems.map((item) => item.body).join(" "),
+    solution: industry.relevance.answer
+      .map((paragraph) =>
+        paragraph
+          .map((part) => (typeof part === "string" ? part : part.text))
+          .join(""),
+      )
+      .join(" "),
+    capabilities: industry.systems.map((item) => item.title),
+    relatedServices: industry.services.map((item) => item.slug),
+    relatedIndustries: industry.relatedIndustries.map((item) => item.slug),
+    relatedWork: industry.relatedWork.map((item) => item.slug),
+    faq: industry.faq,
+    schema: "WebPage" as const,
+    index: true,
+  }));
+}
+
 export function getPublished(family?: ContentFamily) {
-  return [...publishedServices(), ...publishedSolutions(), ...draftPages].filter(
-    (page) => isPublishable(page) && (family === undefined || page.family === family),
-  );
+  return [
+    ...publishedServices(),
+    ...publishedSolutions(),
+    ...publishedIndustries(),
+    ...draftPages,
+  ].filter((page) => isPublishable(page) && (family === undefined || page.family === family));
 }
 
 export function getPublishedPage(family: ContentFamily, slug: string) {
@@ -178,6 +209,7 @@ const familyLabels: Record<ContentFamily, string> = {
 const familyParents: Partial<Record<ContentFamily, string>> = {
   services: "/services",
   solutions: "/solutions",
+  industries: "/industries",
 };
 
 export function familyLabel(family: ContentFamily) {

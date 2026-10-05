@@ -9,6 +9,7 @@ export const routeIndex = {
   "/work": true,
   "/services": true,
   "/solutions": true,
+  "/industries": true,
   "/process": false,
   "/start-a-project": false,
   "/privacy": false,
