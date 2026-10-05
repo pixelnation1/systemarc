@@ -1,18 +1,31 @@
 import { ProjectShowcase } from "@/components/project-showcase";
 import { Container } from "@/components/container";
-import { createMetadata } from "@/lib/site";
+import { PageSchema } from "@/components/json-ld";
 import { projects } from "@/lib/projects";
+import { createMetadata } from "@/lib/site";
+
+const workDescription =
+  "Selected SystemArc projects, including ReviewForge, RepairForge, and PixelNation Systems.";
 
 export const metadata = createMetadata({
   title: "Work",
-  description:
-    "Selected SystemArc projects, including ReviewForge, RepairForge, and PixelNation Systems.",
+  description: workDescription,
   path: "/work",
+  index: true,
 });
 
 export default function WorkPage() {
   return (
     <Container className="py-20 sm:py-28">
+      <PageSchema
+        path="/work"
+        name="Work | SystemArc"
+        description={workDescription}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Work", path: "/work" },
+        ]}
+      />
       <p className="font-mono text-xs tracking-[0.18em] text-electric-cobalt uppercase">
         Selected work
       </p>

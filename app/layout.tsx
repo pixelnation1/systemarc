@@ -1,14 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
+import { JsonLd } from "@/components/json-ld";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import {
-  organizationJsonLd,
-  siteDescription,
-  siteName,
-  siteTitle,
-  siteUrl,
-} from "@/lib/site";
+import { siteGraph } from "@/lib/schema";
+import { siteDescription, siteName, siteTitle, siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -43,9 +39,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName,
+    title: siteTitle,
+    description: siteDescription,
+    url: "/",
   },
   twitter: {
     card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
   },
   robots: {
     index: true,
@@ -60,12 +61,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background font-sans text-foreground">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationJsonLd).replace(/</g, "\\u003c"),
-          }}
-        />
+        <JsonLd data={siteGraph()} />
         <a className="skip-link" href="#main">
           Skip to content
         </a>

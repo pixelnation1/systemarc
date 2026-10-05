@@ -1,22 +1,19 @@
 import type { MetadataRoute } from "next";
-import { projects } from "@/lib/projects";
+import { getPublished, pageCanonicalPath } from "@/lib/content";
+import { indexableStaticPaths } from "@/lib/indexing";
 import { siteUrl } from "@/lib/site";
+
+function absoluteUrl(path: string) {
+  return path === "/" ? siteUrl : `${siteUrl}${path}`;
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const paths = [
-    "",
-    "/services",
-    "/solutions",
-    "/work",
-    "/process",
-    "/about",
-    "/start-a-project",
-    "/privacy",
-    "/terms",
-    ...projects.map((project) => `/work/${project.slug}`),
+    ...indexableStaticPaths(),
+    ...getPublished().map((page) => pageCanonicalPath(page)),
   ];
 
-  return paths.map((path) => ({
-    url: `${siteUrl}${path}`,
+  return [...new Set(paths)].map((path) => ({
+    url: absoluteUrl(path),
   }));
 }

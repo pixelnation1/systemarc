@@ -6,6 +6,7 @@ export const metadata = createMetadata({
   description:
     "Custom software, business automation, web applications, and AI and integrations from SystemArc.",
   path: "/services",
+  index: false,
 });
 
 export default function ServicesPage() {

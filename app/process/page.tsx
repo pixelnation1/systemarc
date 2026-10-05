@@ -6,6 +6,7 @@ export const metadata = createMetadata({
   description:
     "How SystemArc moves from understanding a business to launching and supporting custom software.",
   path: "/process",
+  index: false,
 });
 
 export default function ProcessPage() {

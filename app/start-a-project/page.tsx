@@ -6,6 +6,7 @@ export const metadata = createMetadata({
   description:
     "Start a conversation with SystemArc about a workflow, a disconnected system, or software that does not exist yet.",
   path: "/start-a-project",
+  index: false,
 });
 
 export default function StartProjectPage() {

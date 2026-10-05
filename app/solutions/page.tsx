@@ -6,6 +6,7 @@ export const metadata = createMetadata({
   description:
     "Business systems SystemArc designs around real operations, including portals, workflows, dashboards, and integrations.",
   path: "/solutions",
+  index: false,
 });
 
 export default function SolutionsPage() {

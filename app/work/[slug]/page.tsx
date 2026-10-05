@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/container";
 import { getProject, projects } from "@/lib/projects";
+import { createMetadata } from "@/lib/site";
 
 type ProjectPageProps = {
   params: Promise<{ slug: string }>;
@@ -14,22 +14,20 @@ export function generateStaticParams() {
 
 export const dynamicParams = false;
 
-export async function generateMetadata({
-  params,
-}: ProjectPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: ProjectPageProps) {
   const { slug } = await params;
   const project = getProject(slug);
 
   if (!project) {
-    return { title: "Work" };
+    return { title: "Work", robots: { index: false, follow: true } };
   }
 
-  return {
+  return createMetadata({
     title: project.name,
     description: project.description,
-    alternates: { canonical: project.href },
-    openGraph: { url: project.href },
-  };
+    path: project.href,
+    index: false,
+  });
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {

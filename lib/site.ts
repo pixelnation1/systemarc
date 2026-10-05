@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { routeIndex } from "@/lib/indexing";
 
 export const siteUrl = "https://www.systemarchq.com";
 
@@ -33,33 +34,51 @@ export const legalItems = [
 
 export const startProjectHref = "/start-a-project";
 
-export const organizationJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: siteName,
-  url: siteUrl,
-  logo: `${siteUrl}/images/logo.png`,
-  description: siteDescription,
-};
+function resolveIndex(path: string, requested: boolean | undefined) {
+  if (Object.prototype.hasOwnProperty.call(routeIndex, path)) {
+    return routeIndex[path as keyof typeof routeIndex];
+  }
+
+  return requested ?? false;
+}
 
 export function createMetadata({
   title,
   description,
   path,
-  index = true,
+  index,
+  absoluteTitle = false,
 }: {
   title: string;
   description: string;
   path: string;
+  /** Used only when the path is not listed in the indexing registry. */
   index?: boolean;
+  /** Use the title as written, without the site title template. */
+  absoluteTitle?: boolean;
 }): Metadata {
+  const indexed = resolveIndex(path, index);
+  const documentTitle = absoluteTitle ? title : `${title} | ${siteName}`;
+
   return {
-    title,
+    title: absoluteTitle ? { absolute: title } : title,
     description,
     alternates: { canonical: path },
-    openGraph: { url: path },
-    robots: index
-      ? { index: true, follow: true }
-      : { index: false, follow: true },
+    openGraph: {
+      title: documentTitle,
+      description,
+      url: path,
+      siteName,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: documentTitle,
+      description,
+    },
+    robots: {
+      index: indexed,
+      follow: true,
+    },
   };
 }

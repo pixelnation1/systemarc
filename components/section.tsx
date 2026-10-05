@@ -30,7 +30,7 @@ export function SectionHeading({
   children,
 }: {
   eyebrow: string;
-  title: string;
+  title: ReactNode;
   id?: string;
   children?: ReactNode;
 }) {
