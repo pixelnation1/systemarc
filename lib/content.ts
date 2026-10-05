@@ -1,4 +1,5 @@
 import { getProject } from "@/lib/projects";
+import { services } from "@/lib/services";
 import { siteUrl } from "@/lib/site";
 
 export type ContentFamily =
@@ -59,13 +60,6 @@ const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
  * only after the page has its own useful content.
  */
 export const reservedTopics: readonly ReservedTopic[] = [
-  { family: "services", slug: "custom-software-development", label: "Custom software development" },
-  { family: "services", slug: "business-process-automation", label: "Business process automation" },
-  { family: "services", slug: "web-application-development", label: "Web application development" },
-  { family: "services", slug: "software-integrations", label: "Software integrations" },
-  { family: "services", slug: "ai-automation", label: "AI automation" },
-  { family: "services", slug: "customer-portal-development", label: "Customer portal development" },
-  { family: "services", slug: "internal-tools-development", label: "Internal tools development" },
   { family: "solutions", slug: "customer-portals", label: "Customer portals" },
   { family: "solutions", slug: "workflow-automation", label: "Workflow automation" },
   { family: "solutions", slug: "inventory-systems", label: "Inventory systems" },
@@ -114,8 +108,33 @@ export function isPublishable(page: ProgrammaticPage) {
   );
 }
 
+function publishedServices(): ProgrammaticPage[] {
+  return services.map((service) => ({
+    family: "services" as const,
+    slug: service.slug,
+    title: service.name,
+    metaTitle: service.metaTitle,
+    metaDescription: service.metaDescription,
+    headline: service.headline,
+    intro: service.intro
+      .map((paragraph) =>
+        paragraph
+          .map((part) => (typeof part === "string" ? part : part.text))
+          .join(""),
+      )
+      .join(" "),
+    problem: service.problems.map((item) => item.body).join(" "),
+    capabilities: service.builds.map((item) => item.title),
+    relatedServices: service.relatedServices,
+    relatedWork: service.relatedWork.map((item) => item.slug),
+    faq: service.faq,
+    schema: "Service" as const,
+    index: true,
+  }));
+}
+
 export function getPublished(family?: ContentFamily) {
-  return draftPages.filter(
+  return [...publishedServices(), ...draftPages].filter(
     (page) => isPublishable(page) && (family === undefined || page.family === family),
   );
 }

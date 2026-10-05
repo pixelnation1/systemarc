@@ -10,7 +10,7 @@ Do not put `localhost` or `vercel.app` URLs in production metadata, canonicals, 
 
 SystemArc is a custom software and business systems company. The positioning is: software built around your business.
 
-Search pages should explain a real problem, the way SystemArc approaches it, and what the company actually builds. The homepage, the About page, and the Work index are the current indexable pages because they contain that substance.
+Search pages should explain a real problem, the way SystemArc approaches it, and what the company actually builds. The homepage, the About page, the Work index, the Services index, and the seven published service pages are indexable because they contain that substance.
 
 Metadata is generated with `createMetadata` in `lib/site.ts`. `metadataBase` is the production origin, so a path such as `/about` becomes `https://www.systemarchq.com/about`.
 
@@ -30,12 +30,14 @@ Unknown paths are not indexable unless the caller explicitly opts in. Paths list
 
 Future families may live at:
 
-- `/services/[slug]`
+- `/services/[slug]` for a service with its own content in `lib/services.ts`
 - `/solutions/[slug]`
 - `/industries/[slug]`
 - `/locations/[slug]`
 
-Those route handlers already exist. They publish nothing until a page is added to `draftPages` in `lib/content.ts` and passes `isPublishable`.
+The seven service pages are published from `lib/services.ts`. They are not thin drafts. Solutions, industries, and locations still publish nothing until a page is added to `draftPages` in `lib/content.ts` and passes `isPublishable`.
+
+`/services/custom-software-development` and the other six service URLs are live. Do not create a second URL for the same service.
 
 A publishable page needs:
 
@@ -95,7 +97,7 @@ Examples:
 - `/about`
 - `/work`
 - `/work/reviewforge`
-- `/services/custom-software-development` only after that page is actually written
+- `/services/custom-software-development`
 
 Do not create a second URL for the same page with a query string, trailing variant, or synonym slug. Set one canonical path.
 
@@ -103,7 +105,9 @@ Do not create a second URL for the same page with a query string, trailing varia
 
 ## 6. Content model
 
-`ProgrammaticPage` in `lib/content.ts` is the shape for a future landing page:
+`ProgrammaticPage` in `lib/content.ts` is the shape for a future landing page. Published services in `lib/services.ts` are mapped into that shape so the sitemap and related links stay in one place. The service pages themselves render from the richer service record, not from the generic landing-page view.
+
+Fields:
 
 - `slug`
 - `title`
@@ -157,7 +161,7 @@ Builders exist, and must stay unused until the matching content is real and visi
 - `Service`
 - `SoftwareApplication` for a finished case study
 - `Article`
-- `FAQPage` only for questions visible on that page
+- `FAQPage` only for questions visible on that page, and only when current search guidelines make a FAQ rich result appropriate. The service pages show their questions in HTML and do not emit `FAQPage`, because that rich result is limited to government and health sites.
 - `Person` only with a confirmed name, role, and biography
 
 Do not add address, phone, employee count, founding date, awards, social profiles, ratings, or reviews. Those facts are not established.
@@ -193,6 +197,6 @@ Do not publish the same explanation under several URLs.
 
 Do not create doorway pages, city pages for places SystemArc does not serve, or pages aimed at a keyword SystemArc does not actually discuss.
 
-If a route is only a placeholder or "coming soon", set it `noindex, follow` and leave it out of the sitemap. The homepage and the completed About page stay indexable. The Work index stays indexable because it describes real systems. Individual case studies stay `noindex` until they are written.
+If a route is only a placeholder or "coming soon", set it `noindex, follow` and leave it out of the sitemap. The homepage, the completed About page, the Work index, `/services`, and the seven completed service pages stay indexable. Individual case studies stay `noindex` until they are written.
 
 When a placeholder gains a full page, change its entry in `lib/indexing.ts` to `true`. The metadata helper and the sitemap both follow that flag.

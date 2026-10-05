@@ -60,12 +60,14 @@ export function pageGraph({
   description,
   breadcrumbs,
   extra = [],
+  mainEntityId,
 }: {
   path: string;
   name: string;
   description: string;
   breadcrumbs: readonly Breadcrumb[];
   extra?: readonly SchemaNode[];
+  mainEntityId?: string;
 }) {
   const url = absoluteUrl(path);
   const pageId = `${url}#webpage`;
@@ -84,6 +86,7 @@ export function pageGraph({
         about: { "@id": organizationId },
         breadcrumb: { "@id": breadcrumbId },
         inLanguage: "en",
+        ...(mainEntityId ? { mainEntity: { "@id": mainEntityId } } : {}),
       },
       {
         "@type": "BreadcrumbList",

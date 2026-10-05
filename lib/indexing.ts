@@ -7,7 +7,7 @@ export const routeIndex = {
   "/": true,
   "/about": true,
   "/work": true,
-  "/services": false,
+  "/services": true,
   "/solutions": false,
   "/process": false,
   "/start-a-project": false,
