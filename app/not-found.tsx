@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ButtonLink } from "@/components/button-link";
 import { Container } from "@/components/container";
 
@@ -15,22 +14,17 @@ export default function NotFound() {
         404
       </p>
       <h1 className="mt-4 max-w-[12em] font-serif text-4xl leading-[1.1] tracking-[-0.02em] text-foreground sm:text-5xl">
-        This page is not available.
+        This route doesn&apos;t exist.
       </h1>
       <p className="mt-6 max-w-xl text-base leading-7 text-secondary sm:text-lg">
-        The address may be incorrect, or the page may have been moved.
+        The system is working. This page isn&apos;t part of it.
       </p>
-      <div className="mt-10">
-        <ButtonLink href="/">Back to home</ButtonLink>
+      <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+        <ButtonLink href="/">Return Home</ButtonLink>
+        <ButtonLink href="/services" variant="secondary">
+          Explore Services
+        </ButtonLink>
       </div>
-      <p className="mt-6">
-        <Link
-          href="/start-a-project"
-          className="inline-flex min-h-11 items-center text-sm text-silver underline decoration-steel underline-offset-4 transition-colors duration-150 hover:text-electric-cobalt hover:decoration-cobalt"
-        >
-          Start a Project
-        </Link>
-      </p>
     </Container>
   );
 }

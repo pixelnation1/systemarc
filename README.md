@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SystemArc
 
-## Getting Started
+The public website for SystemArc, a custom software and business systems company. The production host is [https://www.systemarchq.com](https://www.systemarchq.com).
 
-First, run the development server:
+## Stack
+
+- Next.js 16 App Router
+- React 19
+- TypeScript
+- Tailwind CSS v4
+
+There is no analytics SDK, CRM SDK, or form vendor in the project.
+
+## Local development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Copy `.env.example` to `.env.local` when you need form delivery or search-engine verification tags. Leave the values empty until they are real. The site runs without them. In development, a project inquiry is written to the server log and is not stored for follow-up.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Production build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+npm run build
+npm start
+```
 
-## Learn More
+Canonical URLs, the sitemap, and JSON-LD always use `https://www.systemarchq.com`. They are not taken from the local host.
 
-To learn more about Next.js, take a look at the following resources:
+## Environment variables
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Name | Purpose |
+| --- | --- |
+| `INQUIRY_WEBHOOK_URL` | `https` endpoint that receives a project inquiry. Required before production leads can be relied upon. |
+| `INQUIRY_WEBHOOK_SECRET` | Optional bearer token sent only from the server. |
+| `INQUIRY_LOG_SINK` | Set to `true` to force the non-durable server log. Leave unset in production. |
+| `GOOGLE_SITE_VERIFICATION` | Google Search Console token. Omitted from the HTML until set. Must be present at build time. |
+| `BING_SITE_VERIFICATION` | Bing Webmaster Tools token (`msvalidate.01`). Omitted until set. Must be present at build time. |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Do not commit `.env.local` or real secrets. `.env.example` lists names only.
 
-## Deploy on Vercel
+## Project structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `app/` — routes, metadata, sitemap, robots, error pages
+- `components/` — page sections and the project inquiry form
+- `lib/` — content, schema, indexing, and the inquiry service
+- `public/images/` — brand mark, lockup, and generated icon sizes
+- `docs/` — architecture and production notes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment
+
+The site is a static Next.js app plus one server action for `/start-a-project`. Deploy it behind HTTPS on `www.systemarchq.com`. Point the apex host at that same HTTPS host. Details are in [docs/production-readiness.md](docs/production-readiness.md).
+
+## Documentation
+
+- [docs/README.md](docs/README.md) — index
+- [docs/seo-content-architecture.md](docs/seo-content-architecture.md) — SEO, AEO, and GEO
+- [docs/project-inquiry-system.md](docs/project-inquiry-system.md) — discovery form
+- [docs/production-readiness.md](docs/production-readiness.md) — release audit

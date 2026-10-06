@@ -39,11 +39,11 @@ export function ProductShot({
   sizes?: string;
 }) {
   const shell = frame
-    ? "relative w-full overflow-hidden border border-steel bg-graphite"
-    : "relative w-full overflow-hidden bg-graphite";
+    ? "relative w-full min-w-0 max-w-full overflow-hidden border border-steel bg-graphite"
+    : "relative w-full min-w-0 max-w-full overflow-hidden bg-graphite";
 
   return (
-    <figure>
+    <figure className="min-w-0 max-w-full">
       {src ? (
         <div className={shell} style={{ aspectRatio: ratio }}>
           <Image
@@ -58,7 +58,7 @@ export function ProductShot({
         </div>
       ) : (
         <div
-          className={`${shell} flex min-h-64 flex-col justify-between p-6 sm:min-h-72 sm:p-8`}
+          className={`${shell} flex flex-col justify-between p-6 sm:p-8`}
           style={{ aspectRatio: ratio }}
           role="img"
           aria-label={alt}
@@ -127,7 +127,7 @@ export function ShotGallery({
   name: string;
 }) {
   return (
-    <div className="mt-12 grid gap-10">
+    <div className="mt-12 grid min-w-0 gap-10">
       {galleryRoles.map((slot) => {
         const matches = shotsByRole(shots, slot.role);
         const figures =
@@ -154,11 +154,16 @@ export function ShotGallery({
           <div
             key={slot.role}
             className={
-              slot.role === "desktop" ? "grid gap-8" : "grid gap-8 sm:grid-cols-2"
+              slot.role === "desktop"
+                ? "grid min-w-0 gap-8"
+                : "grid min-w-0 gap-8 sm:grid-cols-2"
             }
           >
             {figures.map((figure) => (
-              <div key={figure.key} className={slot.role === "desktop" ? "min-w-0" : slot.layout}>
+              <div
+                key={figure.key}
+                className={slot.role === "desktop" ? "min-w-0" : `min-w-0 ${slot.layout}`}
+              >
                 <ProductShot
                   src={figure.src}
                   alt={figure.alt}

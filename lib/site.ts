@@ -35,6 +35,33 @@ export const legalItems = [
 
 export const startProjectHref = "/start-a-project";
 
+export const defaultSocialImage = {
+  url: "/images/og.jpg",
+  width: 1200,
+  height: 630,
+  alt: "SystemArc. Software built around your business.",
+} as const;
+
+export type SocialImage = {
+  url: string;
+  width: number;
+  height: number;
+  alt: string;
+};
+
+/** Present only when a real verification value is set at build time. */
+export function siteVerification() {
+  const google = process.env.GOOGLE_SITE_VERIFICATION?.trim();
+  const bing = process.env.BING_SITE_VERIFICATION?.trim();
+
+  if (!google && !bing) return undefined;
+
+  return {
+    ...(google ? { google } : {}),
+    ...(bing ? { other: { "msvalidate.01": bing } } : {}),
+  };
+}
+
 function resolveIndex(path: string, requested: boolean | undefined) {
   if (Object.prototype.hasOwnProperty.call(routeIndex, path)) {
     return routeIndex[path as keyof typeof routeIndex];
@@ -49,6 +76,7 @@ export function createMetadata({
   path,
   index,
   absoluteTitle = false,
+  image = defaultSocialImage,
 }: {
   title: string;
   description: string;
@@ -57,6 +85,8 @@ export function createMetadata({
   index?: boolean;
   /** Use the title as written, without the site title template. */
   absoluteTitle?: boolean;
+  /** Replaces the default social image for this page. */
+  image?: SocialImage;
 }): Metadata {
   const indexed = resolveIndex(path, index);
   const documentTitle = absoluteTitle ? title : `${title} | ${siteName}`;
@@ -71,11 +101,13 @@ export function createMetadata({
       url: path,
       siteName,
       type: "website",
+      images: [image],
     },
     twitter: {
       card: "summary_large_image",
       title: documentTitle,
       description,
+      images: [image.url],
     },
     robots: {
       index: indexed,

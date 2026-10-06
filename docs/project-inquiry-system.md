@@ -119,13 +119,13 @@ Use the same destination interface. Send mail from the server with a provider al
 
 ## Analytics
 
-`lib/inquiry/analytics.ts` emits:
+Inquiry events go through `lib/analytics.ts`, the shared site bus. `lib/inquiry/analytics.ts` still emits:
 
 - `project_form_started` on the first edit or continue
 - `project_form_step_completed` with a step number when a step is accepted
 - `project_form_submitted` after the server accepts the inquiry
 
-Subscribe with `subscribeToInquiryEvents`. Events do not include names, email addresses, or answers. No analytics product is installed.
+Subscribe with `subscribeToAnalytics` (or `subscribeToInquiryEvents` for the form events only). Events do not include names, email addresses, or answers. No analytics product is installed. See `docs/production-readiness.md` for the other prepared events.
 
 ## Privacy
 

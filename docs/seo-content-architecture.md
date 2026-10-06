@@ -19,8 +19,10 @@ Every indexable page sets:
 - a unique title
 - a unique meta description
 - a canonical URL
-- Open Graph title, description, URL, and site name
-- Twitter card title and description
+- Open Graph title, description, URL, site name, and image
+- Twitter card title, description, and image
+
+The default social image is the official SystemArc lockup at `/images/og.jpg`. Pass `image` to `createMetadata` when a Services, Solutions, Industries, or case-study page later needs its own image. Do not generate a unique image for every page until that artwork exists.
 
 The title template is `%s | SystemArc`. Pass `absoluteTitle: true` when the title must be used exactly, as on the homepage and About page.
 

@@ -16,10 +16,10 @@ export function Logo({
       className="inline-flex shrink-0 items-center gap-2.5"
     >
       <Image
-        src="/images/favicon.png"
+        src="/images/icon-512.png"
         alt=""
-        width={1254}
-        height={1254}
+        width={512}
+        height={512}
         sizes="96px"
         priority={priority}
         className="logo-mark size-9 mix-blend-lighten"

@@ -29,7 +29,7 @@ export function organizationNode(): SchemaNode {
     "@id": organizationId,
     name: siteName,
     url: siteUrl,
-    logo: `${siteUrl}/images/logo.png`,
+    logo: `${siteUrl}/images/icon-512.png`,
     description: siteDescription,
     slogan: "Software built around your business.",
   };

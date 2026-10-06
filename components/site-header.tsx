@@ -72,6 +72,7 @@ export function SiteHeader() {
           <ButtonLink
             href={startProjectHref}
             current={isCurrent(pathname, startProjectHref)}
+            analyticsLocation="header"
             className="ml-4"
           >
             Start a Project
@@ -138,6 +139,7 @@ export function SiteHeader() {
             href={startProjectHref}
             onClick={closeMenu}
             current={isCurrent(pathname, startProjectHref)}
+            analyticsLocation="header"
             className="mt-3 w-full"
           >
             Start a Project

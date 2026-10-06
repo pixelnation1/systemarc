@@ -1,27 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import { JsonLd } from "@/components/json-ld";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { fontVariables } from "@/lib/fonts";
 import { siteGraph } from "@/lib/schema";
-import { siteDescription, siteName, siteTitle, siteUrl } from "@/lib/site";
+import {
+  defaultSocialImage,
+  siteDescription,
+  siteName,
+  siteTitle,
+  siteUrl,
+  siteVerification,
+} from "@/lib/site";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const newsreader = Newsreader({
-  variable: "--font-newsreader",
-  subsets: ["latin"],
-  weight: ["400", "500"],
-});
+const verification = siteVerification();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -32,8 +25,11 @@ export const metadata: Metadata = {
   description: siteDescription,
   applicationName: siteName,
   icons: {
-    icon: [{ url: "/images/favicon.png", type: "image/png" }],
-    apple: [{ url: "/images/favicon.png", type: "image/png" }],
+    icon: [
+      { url: "/images/icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/images/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: "/images/icon-180.png", sizes: "180x180", type: "image/png" }],
   },
   openGraph: {
     type: "website",
@@ -42,23 +38,26 @@ export const metadata: Metadata = {
     title: siteTitle,
     description: siteDescription,
     url: "/",
+    images: [defaultSocialImage],
   },
   twitter: {
     card: "summary_large_image",
     title: siteTitle,
     description: siteDescription,
+    images: [defaultSocialImage.url],
   },
   robots: {
     index: true,
     follow: true,
   },
+  ...(verification ? { verification } : {}),
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} h-full antialiased`}
+      className={`${fontVariables} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background font-sans text-foreground">
         <JsonLd data={siteGraph()} />

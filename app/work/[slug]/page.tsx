@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { TrackCaseStudyView } from "@/components/analytics/track-case-study";
 import { CaseStudyView } from "@/components/work/case-study-view";
 import { JsonLd } from "@/components/json-ld";
 import { caseStudies, getCaseStudy } from "@/lib/case-studies";
@@ -67,6 +68,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           mainEntityId: software ? `${url}#software` : undefined,
         })}
       />
+      <TrackCaseStudyView slug={study.slug} />
       <CaseStudyView study={study} shots={listProjectShots(study.imageDir)} />
     </>
   );
