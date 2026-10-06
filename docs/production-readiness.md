@@ -6,9 +6,9 @@ The marketing site can be deployed. It is not ready to accept production leads, 
 
 ## READY
 
-- Homepage, About, Services and seven service pages, Solutions and eight solution pages, Industries and four industry pages, Work and three case studies, and `/start-a-project` are substantive and indexable.
+- Homepage, About, Services and seven service pages, Solutions and eight solution pages, Industries and four industry pages, Work and three case studies, Process, and `/start-a-project` are substantive and indexable.
 - Each of those pages has a unique title, description, canonical path, Open Graph title, description, URL, site name, and image, plus a large Twitter card. `metadataBase` is `https://www.systemarchq.com`.
-- `/sitemap.xml` lists those indexable URLs only, on the www host. It does not list `/privacy`, `/terms`, `/process`, locations, or API routes.
+- `/sitemap.xml` lists those indexable URLs only, on the www host. It does not list `/privacy`, `/terms`, locations, or API routes.
 - `/robots.txt` allows all user agents to crawl `/` and points at `https://www.systemarchq.com/sitemap.xml`.
 - JSON-LD is Organization, WebSite, WebPage, BreadcrumbList, ItemList, Service, and SoftwareApplication. SoftwareApplication is used only for ReviewForge and RepairForge. There are no ratings, prices, addresses, phones, founding dates, awards, or social profiles.
 - FAQ content stays in the HTML. `FAQPage` schema is not emitted, because that rich result is limited and the visible questions already answer the page.
@@ -89,14 +89,6 @@ What it is: `/privacy` and `/terms` say the policy and terms are not published y
 Why it matters: the site collects a name, email, optional phone, and business details once delivery is turned on. The public pages do not yet say how that information is kept.
 
 What must happen next: write the policy and terms from the actual practices, publish them, remove the “not published yet” sentences, then set `/privacy` and `/terms` to indexable in `lib/indexing.ts` only after that text is real.
-
-### Process page
-
-What it is: Process is in the primary navigation and is still a preparation page. It is `noindex` and is not in the sitemap.
-
-Why it matters: a main navigation item currently opens a page that says the process will be expanded later.
-
-What must happen next: either publish the process page, or accept the preparation page until that copy exists. The navigation was not changed in this audit.
 
 ### Company facts that are intentionally absent
 

@@ -13,7 +13,7 @@ export const routeIndex = {
   "/services": true,
   "/solutions": true,
   "/industries": true,
-  "/process": false,
+  "/process": true,
   "/start-a-project": true,
   "/privacy": false,
   "/terms": false,

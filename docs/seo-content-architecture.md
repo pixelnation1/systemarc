@@ -207,6 +207,6 @@ Do not publish the same explanation under several URLs.
 
 Do not create doorway pages, city pages for places SystemArc does not serve, or pages aimed at a keyword SystemArc does not actually discuss.
 
-If a route is only a placeholder or "coming soon", set it `noindex, follow` and leave it out of the sitemap. The homepage, the completed About page, the Work index, the ReviewForge, RepairForge, and PixelNation Systems case studies, `/services`, the seven completed service pages, `/solutions`, the eight completed solution pages, `/industries`, the four completed industry pages, and `/start-a-project` stay indexable. `/privacy` and `/terms` stay `noindex` until a real policy is published.
+If a route is only a placeholder or "coming soon", set it `noindex, follow` and leave it out of the sitemap. The homepage, the completed About page, the Work index, the ReviewForge, RepairForge, and PixelNation Systems case studies, `/services`, the seven completed service pages, `/solutions`, the eight completed solution pages, `/industries`, the four completed industry pages, `/process`, and `/start-a-project` stay indexable. `/privacy` and `/terms` stay `noindex` until a real policy is published.
 
 When a placeholder gains a full page, change its entry in `lib/indexing.ts` to `true`. The metadata helper and the sitemap both follow that flag.
