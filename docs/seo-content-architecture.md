@@ -10,7 +10,7 @@ Do not put `localhost` or `vercel.app` URLs in production metadata, canonicals, 
 
 SystemArc is a custom software and business systems company. The positioning is: software built around your business.
 
-Search pages should explain a real problem, the way SystemArc approaches it, and what the company actually builds. The homepage, the About page, the Work index, the Services index, the seven published service pages, the Solutions index, the eight published solution pages, the Industries index, and the four published industry pages are indexable because they contain that substance.
+Search pages should explain a real problem, the way SystemArc approaches it, and what the company actually builds. The homepage, the About page, the Work index, the three case studies (ReviewForge, RepairForge, and PixelNation Systems), the Services index, the seven published service pages, the Solutions index, the eight published solution pages, the Industries index, the four published industry pages, and the project inquiry page are indexable because they contain that substance.
 
 Metadata is generated with `createMetadata` in `lib/site.ts`. `metadataBase` is the production origin, so a path such as `/about` becomes `https://www.systemarchq.com/about`.
 
@@ -40,6 +40,10 @@ The seven service pages are published from `lib/services.ts`. The eight solution
 Do not publish a page for every combination of service, solution, industry, and city. A combination page exists only when it has substantial content of its own. Do not create `/industries/[industry]/[service]`, `/industries/[industry]/[solution]`, or `/industries/[industry]/[city]`. An industry page exists only where SystemArc has operational context. The current set is repair and service businesses, gaming and hobby retail, retail businesses, and local service businesses.
 
 `/services/custom-software-development` and the other six service URLs are live. Do not create a second URL for the same service.
+
+Case studies live at `/work/reviewforge`, `/work/repairforge`, and `/work/pixelnation-systems`. Their content is in `lib/case-studies.ts`. They are static routes in `lib/indexing.ts`, not programmatic drafts. `tags` on each study are reserved for a future hub filter. The hub does not filter at three projects.
+
+Product screenshots are read from `public/images/work/reviewforge/`, `public/images/work/repairforge/`, and `public/images/work/pixelnation/`. A file is used when its name starts with `hero`, `desktop`, `mobile`, or `detail`. An empty slot stays an architectural placeholder. The site does not generate interface images.
 
 A publishable page needs:
 
@@ -158,12 +162,14 @@ Indexable pages emit:
 - `WebPage`
 - `BreadcrumbList`
 
-Builders exist, and must stay unused until the matching content is real and visible:
+Service and solution pages emit `Service`, with the name, description, URL, and SystemArc as provider. The Work index emits an `ItemList` of the three case studies.
 
-- `Service`
-- `SoftwareApplication` for a finished case study
+ReviewForge and RepairForge also emit `SoftwareApplication` with the name, description, URL, visible application category, and SystemArc as provider. They do not include price, ratings, review counts, operating system, or offers. PixelNation Systems stays a `WebPage` because that page describes several systems, not one application.
+
+Builders that stay unused until the matching content is real and visible:
+
 - `Article`
-- `FAQPage` only for questions visible on that page, and only when current search guidelines make a FAQ rich result appropriate. The service pages show their questions in HTML and do not emit `FAQPage`, because that rich result is limited to government and health sites.
+- `FAQPage` only for questions visible on that page, and only when current search guidelines make a FAQ rich result appropriate. Published pages show their questions in HTML and do not emit `FAQPage`, because that rich result is limited to government and health sites.
 - `Person` only with a confirmed name, role, and biography
 
 Do not add address, phone, employee count, founding date, awards, social profiles, ratings, or reviews. Those facts are not established.
@@ -181,7 +187,7 @@ It includes:
 - static paths marked indexable in `lib/indexing.ts`
 - programmatic pages that pass `isPublishable`
 
-It excludes placeholder routes, legal placeholders, unfinished case studies, and reserved topics. A future page appears automatically when it becomes publishable. No manual sitemap edit is required for that.
+It excludes placeholder routes, legal placeholders, and reserved topics. A future page appears automatically when it becomes publishable. No manual sitemap edit is required for that.
 
 `lastmod` is omitted. A generated timestamp would claim the page changed when it did not.
 
@@ -199,6 +205,6 @@ Do not publish the same explanation under several URLs.
 
 Do not create doorway pages, city pages for places SystemArc does not serve, or pages aimed at a keyword SystemArc does not actually discuss.
 
-If a route is only a placeholder or "coming soon", set it `noindex, follow` and leave it out of the sitemap. The homepage, the completed About page, the Work index, `/services`, the seven completed service pages, `/solutions`, the eight completed solution pages, `/industries`, and the four completed industry pages stay indexable. Individual case studies stay `noindex` until they are written.
+If a route is only a placeholder or "coming soon", set it `noindex, follow` and leave it out of the sitemap. The homepage, the completed About page, the Work index, the ReviewForge, RepairForge, and PixelNation Systems case studies, `/services`, the seven completed service pages, `/solutions`, the eight completed solution pages, `/industries`, the four completed industry pages, and `/start-a-project` stay indexable. `/privacy` and `/terms` stay `noindex` until a real policy is published.
 
 When a placeholder gains a full page, change its entry in `lib/indexing.ts` to `true`. The metadata helper and the sitemap both follow that flag.

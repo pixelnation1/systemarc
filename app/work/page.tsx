@@ -1,57 +1,71 @@
-import { ProjectShowcase } from "@/components/project-showcase";
 import { Container } from "@/components/container";
-import { PageSchema } from "@/components/json-ld";
-import { projects } from "@/lib/projects";
-import { createMetadata } from "@/lib/site";
+import { JsonLd } from "@/components/json-ld";
+import { WorkConversion } from "@/components/work/work-conversion";
+import { WorkHub } from "@/components/work/work-hub";
+import { caseStudies } from "@/lib/case-studies";
+import { pageGraph } from "@/lib/schema";
+import { createMetadata, siteUrl } from "@/lib/site";
 
-const workDescription =
-  "Selected SystemArc projects, including ReviewForge, RepairForge, and PixelNation Systems.";
+const title = "Software Projects & Systems | SystemArc Work";
+const description =
+  "Explore software platforms and operational systems built by SystemArc, including ReviewForge, RepairForge, and PixelNation Systems.";
 
 export const metadata = createMetadata({
-  title: "Work",
-  description: workDescription,
+  title,
+  description,
   path: "/work",
   index: true,
+  absoluteTitle: true,
 });
 
 export default function WorkPage() {
   return (
-    <Container className="py-20 sm:py-28">
-      <PageSchema
-        path="/work"
-        name="Work | SystemArc"
-        description={workDescription}
-        breadcrumbs={[
-          { name: "Home", path: "/" },
-          { name: "Work", path: "/work" },
-        ]}
+    <>
+      <JsonLd
+        data={pageGraph({
+          path: "/work",
+          name: title,
+          description,
+          breadcrumbs: [
+            { name: "Home", path: "/" },
+            { name: "Work", path: "/work" },
+          ],
+          mainEntityId: `${siteUrl}/work#projects`,
+          extra: [
+            {
+              "@type": "ItemList",
+              "@id": `${siteUrl}/work#projects`,
+              name: "Selected work",
+              itemListElement: caseStudies.map((study, index) => ({
+                "@type": "ListItem",
+                position: index + 1,
+                name: study.name,
+                url: `${siteUrl}${study.href}`,
+              })),
+            },
+          ],
+        })}
       />
-      <p className="font-mono text-xs tracking-[0.18em] text-electric-cobalt uppercase">
-        Selected work
-      </p>
-      <h1 className="mt-4 max-w-[14em] font-serif text-4xl leading-[1.1] tracking-[-0.02em] text-balance text-foreground sm:text-5xl">
-        Systems built to solve real problems.
-      </h1>
-      <p className="mt-6 max-w-2xl text-base leading-7 text-secondary sm:text-lg sm:leading-8">
-        SystemArc&apos;s approach comes from identifying real operational
-        problems and building software around them. These systems show that
-        approach in practice.
-      </p>
-      <ol className="mt-16">
-        {projects.map((project, index) => (
-          <li
-            key={project.slug}
-            className="border-t border-steel py-14 first:border-t-0 first:pt-0 last:pb-0 lg:py-20"
-          >
-            <ProjectShowcase
-              project={project}
-              number={String(index + 1).padStart(2, "0")}
-              visualFirst={index % 2 === 0}
-              headingLevel="h2"
-            />
-          </li>
-        ))}
-      </ol>
-    </Container>
+      <Container className="pt-20 sm:pt-28">
+        <p className="font-mono text-xs tracking-[0.18em] text-electric-cobalt uppercase">
+          Selected work
+        </p>
+        <h1 className="mt-4 max-w-[12em] font-serif text-4xl leading-[1.08] tracking-[-0.03em] text-balance text-foreground sm:text-6xl">
+          Systems built around real problems.
+        </h1>
+        <div className="mt-6 max-w-2xl space-y-5 text-base leading-7 text-secondary sm:text-lg sm:leading-8">
+          <p>Good software starts with understanding the operation.</p>
+          <p>
+            These projects show how SystemArc turns operational problems,
+            disconnected workflows, customer friction, and missing capabilities
+            into working systems.
+          </p>
+        </div>
+      </Container>
+      <Container className="border-t border-steel py-16 sm:py-24">
+        <WorkHub />
+      </Container>
+      <WorkConversion />
+    </>
   );
 }

@@ -205,7 +205,20 @@ export const solutions: readonly SolutionPage[] = [
       "custom-software-development",
     ],
     relatedSolutions: ["business-dashboards", "reputation-customer-feedback"],
-    relatedWork: [],
+    relatedWork: [
+      {
+        slug: "reviewforge",
+        note: "turns customer feedback and review follow-up into a repeatable workflow, with a business view of that process.",
+      },
+      {
+        slug: "repairforge",
+        note: "is built around one repair workflow. Customers and the shop look at different views of the same job, from intake through completion.",
+      },
+      {
+        slug: "pixelnation-systems",
+        note: "include a check-in workflow that records a visit against a community, participation, and Support Points.",
+      },
+    ],
     faq: [
       {
         question: "What is the difference between workflow automation and new software?",
@@ -513,7 +526,20 @@ export const solutions: readonly SolutionPage[] = [
     },
     services: ["internal-tools-development", "custom-software-development"],
     relatedSolutions: ["workflow-automation", "inventory-systems"],
-    relatedWork: [],
+    relatedWork: [
+      {
+        slug: "reviewforge",
+        note: "includes a business dashboard so the feedback process is visible to the people running it.",
+      },
+      {
+        slug: "repairforge",
+        note: "gives the shop and the customer different views of one repair. The shop view is operational: status, communication, and what is still open.",
+      },
+      {
+        slug: "pixelnation-systems",
+        note: "record community participation, check-ins, and Support Points as operational information beside the retail transaction.",
+      },
+    ],
     faq: [
       {
         question: "What is the difference between a dashboard and a report?",

@@ -29,7 +29,7 @@ export const projects: readonly Project[] = [
   {
     slug: "repairforge",
     name: "RepairForge",
-    category: "Repair Business Workflow & Customer Communication Platform",
+    category: "Repair Workflow & Customer Communication Platform",
     description:
       "A system designed around repair businesses, giving customers clearer service visibility while helping shops organize communication and workflow around active repairs.",
     capabilities: [

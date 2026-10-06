@@ -1,64 +1,73 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Container } from "@/components/container";
-import { getProject, projects } from "@/lib/projects";
-import { createMetadata } from "@/lib/site";
+import { CaseStudyView } from "@/components/work/case-study-view";
+import { JsonLd } from "@/components/json-ld";
+import { caseStudies, getCaseStudy } from "@/lib/case-studies";
+import { listProjectShots } from "@/lib/project-shots";
+import { pageGraph, softwareApplicationNode } from "@/lib/schema";
+import { createMetadata, siteUrl } from "@/lib/site";
 
 type ProjectPageProps = {
   params: Promise<{ slug: string }>;
 };
 
 export function generateStaticParams() {
-  return projects.map((project) => ({ slug: project.slug }));
+  return caseStudies.map((study) => ({ slug: study.slug }));
 }
 
 export const dynamicParams = false;
 
 export async function generateMetadata({ params }: ProjectPageProps) {
   const { slug } = await params;
-  const project = getProject(slug);
+  const study = getCaseStudy(slug);
 
-  if (!project) {
+  if (!study) {
     return { title: "Work", robots: { index: false, follow: true } };
   }
 
   return createMetadata({
-    title: project.name,
-    description: project.description,
-    path: project.href,
-    index: false,
+    title: study.seoTitle,
+    description: study.description,
+    path: study.href,
+    index: true,
+    absoluteTitle: true,
   });
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
-  const project = getProject(slug);
+  const study = getCaseStudy(slug);
 
-  if (!project) {
+  if (!study) {
     notFound();
   }
 
+  const url = `${siteUrl}${study.href}`;
+  const software = study.softwareApplication
+    ? softwareApplicationNode({
+        name: study.name,
+        description: study.answer,
+        url,
+        applicationCategory: study.category,
+      })
+    : null;
+
   return (
-    <Container className="py-20 sm:py-28">
-      <article>
-        <h1 className="max-w-[14em] font-serif text-4xl leading-[1.1] tracking-[-0.02em] text-balance text-warm-white sm:text-5xl">
-          {project.name}
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-8 text-silver">
-          {project.category}
-        </p>
-        <p className="mt-8 max-w-2xl text-base leading-7 text-silver">
-          Case study coming soon.
-        </p>
-        <p className="mt-10">
-          <Link
-            href="/work"
-            className="inline-flex min-h-11 items-center text-sm text-warm-white underline decoration-steel underline-offset-4 transition-colors duration-150 hover:text-electric-cobalt hover:decoration-cobalt"
-          >
-            Back to Work
-          </Link>
-        </p>
-      </article>
-    </Container>
+    <>
+      <JsonLd
+        data={pageGraph({
+          path: study.href,
+          name: study.seoTitle,
+          description: study.description,
+          breadcrumbs: [
+            { name: "Home", path: "/" },
+            { name: "Work", path: "/work" },
+            { name: study.name, path: study.href },
+          ],
+          extra: software ? [software] : [],
+          mainEntityId: software ? `${url}#software` : undefined,
+        })}
+      />
+      <CaseStudyView study={study} shots={listProjectShots(study.imageDir)} />
+    </>
   );
 }

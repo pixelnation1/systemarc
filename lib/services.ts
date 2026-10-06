@@ -224,6 +224,14 @@ export const services: readonly ServicePage[] = [
         slug: "reviewforge",
         note: "is a SystemArc platform for structured customer feedback and reputation workflows. It was built because follow-up depended on disconnected manual work, not because a generic review tool matched the operation.",
       },
+      {
+        slug: "repairforge",
+        note: "is a SystemArc platform for repair workflow and customer communication. The repair is the record. Customers and the shop see different views of that same job.",
+      },
+      {
+        slug: "pixelnation-systems",
+        note: "are custom operational systems built around a gaming and technology retail business: communities, check-in, support points, events, and the work those activities require. They sit alongside transaction software.",
+      },
     ],
     faq: [
       {
@@ -389,6 +397,14 @@ export const services: readonly ServicePage[] = [
         slug: "reviewforge",
         note: "includes review workflows that structure customer follow-up instead of leaving it as a manual, disconnected task. The platform is the system. The workflow is the automation.",
       },
+      {
+        slug: "repairforge",
+        note: "keeps repair status, communication, and the next step on one workflow, so the shop is working from the job instead of reconciling disconnected notes.",
+      },
+      {
+        slug: "pixelnation-systems",
+        note: "include a check-in path that connects a visit to a community, participation, and Support Points.",
+      },
     ],
     faq: [
       {
@@ -541,7 +557,16 @@ export const services: readonly ServicePage[] = [
       "customer-portal-development",
       "internal-tools-development",
     ],
-    relatedWork: [],
+    relatedWork: [
+      {
+        slug: "reviewforge",
+        note: "is a SystemArc web application for structured customer feedback, review workflows, reputation management, and customer engagement.",
+      },
+      {
+        slug: "pixelnation-systems",
+        note: "include community, check-in, and operational software used around a gaming and technology retail business.",
+      },
+    ],
     faq: [
       {
         question: "What is the difference between a website and a web application?",
@@ -678,7 +703,16 @@ export const services: readonly ServicePage[] = [
       ],
     },
     relatedServices: ["business-process-automation", "custom-software-development"],
-    relatedWork: [],
+    relatedWork: [
+      {
+        slug: "repairforge",
+        note: "is a SystemArc repair workflow platform. Where a shop already has software that should remain, connecting it is separate work from the workflow itself.",
+      },
+      {
+        slug: "pixelnation-systems",
+        note: "cover community, check-in, event, and support-point workflows for a gaming and technology retailer, while established transaction platforms can remain in place.",
+      },
+    ],
     faq: [
       {
         question: "What is an API?",
@@ -1096,6 +1130,10 @@ export const services: readonly ServicePage[] = [
       {
         slug: "pixelnation-systems",
         note: "is a set of SystemArc systems around a gaming and technology business, including community engagement, customer check-in, support points, events, and internal operational tools. The internal tools are the relevant part here: software for the people running the operation.",
+      },
+      {
+        slug: "repairforge",
+        note: "gives the shop an operational view of an active repair: workflow, communication, and the work still open. The customer sees a different view of that same job.",
       },
     ],
     faq: [
