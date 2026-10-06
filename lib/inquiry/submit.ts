@@ -2,6 +2,11 @@ import { randomUUID } from "node:crypto";
 import { headers } from "next/headers";
 import { consumeRateLimit } from "@/lib/inquiry/rate-limit";
 import type { ProjectInquiry } from "@/lib/inquiry/model";
+import {
+  deliverInquiryWebhook,
+  selectInquiryDelivery,
+  type InquiryDeliverySelection,
+} from "@/lib/inquiry/webhook";
 
 export type InquiryDelivery = "webhook" | "log";
 
@@ -24,38 +29,18 @@ export function allowInquiryAttempt(key: string) {
   return consumeRateLimit(key, attemptLimit, windowMs).ok;
 }
 
-function webhookDestination(): InquiryDestination | null {
-  const raw = process.env.INQUIRY_WEBHOOK_URL?.trim();
-  if (!raw) return null;
+function currentDeliverySelection(): InquiryDeliverySelection {
+  return selectInquiryDelivery({
+    nodeEnv: process.env.NODE_ENV,
+    webhookUrl: process.env.INQUIRY_WEBHOOK_URL,
+    logSink: process.env.INQUIRY_LOG_SINK,
+  });
+}
 
-  let url: URL;
-  try {
-    url = new URL(raw);
-  } catch {
-    return null;
-  }
-
-  if (url.protocol !== "https:") return null;
-
-  return {
-    name: "webhook",
-    async deliver(inquiry) {
-      const secret = process.env.INQUIRY_WEBHOOK_SECRET?.trim();
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          ...(secret ? { authorization: `Bearer ${secret}` } : {}),
-        },
-        body: JSON.stringify(inquiry),
-        signal: AbortSignal.timeout(8000),
-      });
-
-      if (!response.ok) {
-        throw new Error("Inquiry destination rejected the request.");
-      }
-    },
-  };
+export function explainUnavailableDestination(): "missing" | "invalid" {
+  const selection = currentDeliverySelection();
+  if (selection.kind === "unavailable") return selection.reason;
+  return "missing";
 }
 
 function logDestination(): InquiryDestination {
@@ -76,11 +61,18 @@ function logDestination(): InquiryDestination {
 }
 
 export function resolveInquiryDestination(): InquiryDestination | null {
-  const webhook = webhookDestination();
-  if (webhook) return webhook;
-  if (process.env.NODE_ENV === "development" || process.env.INQUIRY_LOG_SINK === "true") {
-    return logDestination();
+  const selection = currentDeliverySelection();
+  if (selection.kind === "webhook") {
+    const url = selection.url;
+    const secret = process.env.INQUIRY_WEBHOOK_SECRET;
+    return {
+      name: "webhook",
+      deliver(inquiry) {
+        return deliverInquiryWebhook(url, inquiry, { secret });
+      },
+    };
   }
+  if (selection.kind === "log") return logDestination();
   return null;
 }
 

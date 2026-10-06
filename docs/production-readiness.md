@@ -23,11 +23,13 @@ The marketing site can be deployed. It is not ready to accept production leads, 
 
 ### Project inquiry delivery
 
-What it is: `/start-a-project` has no production destination. Without `INQUIRY_WEBHOOK_URL`, a production submission is rejected and the success screen is not shown. The visitor is told the inquiry was not sent. Development, or `INQUIRY_LOG_SINK=true`, writes an id, source page, company type, and area count to the server log. That log is not a mailbox and does not store the inquiry.
+Status: CODE READY — EXTERNAL DESTINATION REQUIRED
 
-Why it matters: a lead can be lost, or a local test can be mistaken for a delivered lead.
+What it is: the server can POST a version `1.0` inquiry to `INQUIRY_WEBHOOK_URL` and show success only after a 2xx response. No production webhook is configured in this repo. Without a valid `https` URL, production submissions fail closed and the success screen is not shown. `INQUIRY_LOG_SINK` is ignored in production. Development without a webhook URL can log an id, source page, company type, and area count. That log is not a mailbox.
 
-What must happen next: set `INQUIRY_WEBHOOK_URL` to an `https` endpoint that stores the JSON and notifies a person, or add another `InquiryDestination` in `lib/inquiry/submit.ts` for email, a database, or a CRM. Leave `INQUIRY_LOG_SINK` unset in production. Confirm one real submission arrives before launch. Options are documented in `docs/project-inquiry-system.md`. No vendor is selected.
+Why it matters: a lead is not delivered until an endpoint you control accepts the payload.
+
+What must happen next: set `INQUIRY_WEBHOOK_URL` to an `https` endpoint that stores the JSON and notifies a person. Set `INQUIRY_WEBHOOK_SECRET` if that endpoint checks a bearer token. Treat `inquiryId` as an idempotency key. Confirm one real submission arrives before launch. Leave `INQUIRY_LOG_SINK` unset. The contract is in `docs/project-inquiry-system.md`. No vendor is selected.
 
 ### Shared rate limit
 
@@ -66,7 +68,7 @@ What must happen next:
 
 ### Analytics provider
 
-What it is: `lib/analytics.ts` can emit `project_form_started`, `project_form_step_completed`, `project_form_submitted`, `start_project_clicked`, `case_study_viewed`, and `service_cta_clicked`. Nothing is listening, and no SDK is installed.
+What it is: `lib/analytics.ts` can emit `project_form_started`, `project_form_step_completed`, `project_form_submitted`, `start_project_clicked`, `case_study_viewed`, and `service_cta_clicked`. `project_form_submitted` fires only after the inquiry webhook returns 2xx. Nothing is listening, and no SDK is installed.
 
 Why it matters: those events are not recorded anywhere.
 

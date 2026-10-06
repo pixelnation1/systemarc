@@ -34,9 +34,9 @@ Canonical URLs, the sitemap, and JSON-LD always use `https://www.systemarchq.com
 
 | Name | Purpose |
 | --- | --- |
-| `INQUIRY_WEBHOOK_URL` | `https` endpoint that receives a project inquiry. Required before production leads can be relied upon. |
+| `INQUIRY_WEBHOOK_URL` | Production `https` endpoint that receives a project inquiry. Required before leads can be relied upon. |
 | `INQUIRY_WEBHOOK_SECRET` | Optional bearer token sent only from the server. |
-| `INQUIRY_LOG_SINK` | Set to `true` to force the non-durable server log. Leave unset in production. |
+| `INQUIRY_LOG_SINK` | Development-only diagnostic log. Ignored in production. Leave unset there. |
 | `GOOGLE_SITE_VERIFICATION` | Google Search Console token. Omitted from the HTML until set. Must be present at build time. |
 | `BING_SITE_VERIFICATION` | Bing Webmaster Tools token (`msvalidate.01`). Omitted until set. Must be present at build time. |
 

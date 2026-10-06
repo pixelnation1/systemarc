@@ -4,10 +4,12 @@ import type { FieldErrors } from "@/lib/inquiry/model";
 import {
   allowInquiryAttempt,
   createInquiryId,
+  explainUnavailableDestination,
   inquiryClientKey,
   resolveInquiryDestination,
   type InquiryDelivery,
 } from "@/lib/inquiry/submit";
+import { logInquiryDeliveryFailure, InquiryDeliveryError } from "@/lib/inquiry/webhook";
 import {
   draftFromUnknown,
   firstErrorField,
@@ -31,7 +33,7 @@ const notConfiguredMessage =
   "This inquiry was not sent. A delivery destination is not configured yet, so nothing was stored.";
 
 const deliveryFailedMessage =
-  "We couldn't deliver this inquiry. Please try again in a moment.";
+  "We couldn't send your project inquiry right now. Your information has not been confirmed as received. Please try again shortly.";
 
 const rateLimitMessage =
   "We couldn't accept another inquiry from this network just yet. Please try again later.";
@@ -94,12 +96,18 @@ export async function submitProjectInquiry(input: {
 
     const destination = resolveInquiryDestination();
     if (!destination) {
+      if (explainUnavailableDestination() === "invalid") {
+        logInquiryDeliveryFailure(createInquiryId(), new InquiryDeliveryError("invalid_webhook_url"));
+        return { ok: false, code: "unavailable", message: deliveryFailedMessage };
+      }
       return { ok: false, code: "unavailable", message: notConfiguredMessage };
     }
 
+    const inquiryId = createInquiryId();
     try {
-      await destination.deliver({ ...inquiry, id: createInquiryId() });
-    } catch {
+      await destination.deliver({ ...inquiry, id: inquiryId });
+    } catch (error) {
+      logInquiryDeliveryFailure(inquiryId, error);
       return { ok: false, code: "unavailable", message: deliveryFailedMessage };
     }
 

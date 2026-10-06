@@ -69,16 +69,118 @@ Internal exceptions are not returned to the visitor.
 1. Rate-limit the attempt.
 2. If the honeypot has a value, return success and store nothing.
 3. Normalize and validate.
-4. Resolve a destination.
-5. Deliver the inquiry, or return an error that says it was not stored.
+4. Create an inquiry id with `crypto.randomUUID()` on the server. The browser does not supply this id.
+5. Set `submittedAt` on the server.
+6. Resolve a destination.
+7. Deliver the inquiry, or return an error that says it was not confirmed as received.
 
 Destinations:
 
-- `webhook`: used when `INQUIRY_WEBHOOK_URL` is an `https` URL. The server POSTs the inquiry JSON. This is the production path.
-- `log`: used in development, or when `INQUIRY_LOG_SINK=true`. It writes an id, source page, business type, and area count to the server log. It does not write the visitor's answers, and it is not durable.
-- none: production without a valid webhook URL. The form tells the visitor the inquiry was not sent.
+- `webhook`: used when `INQUIRY_WEBHOOK_URL` is an `https` URL. The server POSTs one JSON request. This is the production path.
+- `log`: used in development when no webhook URL is set, or outside production when `INQUIRY_LOG_SINK=true`. It writes an id, source page, business type, and area count. It does not write the visitor's answers, and it is not durable. Production ignores this sink.
+- none: production without a webhook URL. The form says the inquiry was not sent and nothing was stored.
+- invalid: a webhook URL is set but is not `https`. Every environment fails closed. The visitor sees the delivery failure message. The log records `invalid_webhook_url` and does not record the URL.
 
-The success screen is shown only after a destination accepts the inquiry, or after a honeypot discard. The log destination adds a visible note that the inquiry is not stored for follow-up.
+The success screen is shown only after the webhook returns a 2xx status, after the development log sink accepts the record, or after a honeypot discard. A completed `fetch` with a 4xx, 5xx, redirect, timeout, or network error is a failure. The log sink adds a visible note that the inquiry is not stored for follow-up.
+
+There is no automatic retry. A second attempt would risk a duplicate inquiry. The receiver should treat `inquiryId` as an idempotency key and store or notify once per id.
+
+## Webhook payload
+
+Version `1.0`. Event name `systemarc.project_inquiry.created`. Built in `lib/inquiry/webhook.ts`.
+
+Field names follow the inquiry model. `systems` keeps `keepExisting` and `systemsToKeep`. `submittedAt` is lifted to the top of the payload. `metadata` on the wire is `sourcePage` and `referrer` only.
+
+```json
+{
+  "event": "systemarc.project_inquiry.created",
+  "version": "1.0",
+  "inquiryId": "server-generated-uuid",
+  "submittedAt": "2026-10-06T15:00:00.000Z",
+  "contact": {
+    "name": "",
+    "email": "",
+    "phone": "",
+    "preferredContact": "Email"
+  },
+  "company": {
+    "name": "",
+    "description": "",
+    "type": "Other",
+    "size": ""
+  },
+  "problem": {
+    "description": "",
+    "currentProcess": "",
+    "affectedUsers": [],
+    "frequency": ""
+  },
+  "systems": {
+    "currentTools": "",
+    "manualDataMovement": "",
+    "keepExisting": "",
+    "systemsToKeep": ""
+  },
+  "project": {
+    "desiredOutcome": "",
+    "solutionAwareness": "Somewhat",
+    "areas": [],
+    "timeline": "",
+    "budget": ""
+  },
+  "metadata": {
+    "sourcePage": "/start-a-project",
+    "referrer": ""
+  }
+}
+```
+
+The request is server-side only.
+
+- `Content-Type: application/json`
+- `User-Agent: SystemArc-Inquiry/1.0`
+- `Authorization: Bearer <INQUIRY_WEBHOOK_SECRET>` when that variable is non-empty after trimming
+- Redirects are not followed
+- Timeout is 10 seconds (`inquiryWebhookTimeoutMs`), using `AbortSignal.timeout`
+- Success is an HTTP status from 200 through 299
+
+`INQUIRY_WEBHOOK_URL` and `INQUIRY_WEBHOOK_SECRET` are read on the server. They are not sent to client JavaScript.
+
+## Failure behavior
+
+The visitor sees:
+
+> We couldn't send your project inquiry right now. Your information has not been confirmed as received. Please try again shortly.
+
+That message is used when delivery was attempted and not confirmed, and when the webhook URL is set but invalid. A missing production URL uses a separate message: the inquiry was not sent because a destination is not configured, and nothing was stored.
+
+The page does not show an HTTP status, stack trace, webhook host, or environment variable.
+
+The server log for a failure is one JSON line:
+
+```json
+{
+  "event": "project_inquiry_delivery_failed",
+  "inquiryId": "...",
+  "submittedAt": "...",
+  "category": "rejected",
+  "status": 500
+}
+```
+
+`category` is `timeout`, `network`, `rejected`, `invalid_webhook_url`, or `unexpected`. `status` is included for an HTTP response that was not a success. The secret, the webhook URL, and the form contents are not logged.
+
+## Testing the webhook locally
+
+`lib/inquiry/webhook.test.ts` posts to a local HTTP receiver. It does not use a public URL. Run:
+
+```txt
+node --experimental-strip-types --import ./lib/inquiry/webhook-test-hooks.mjs --test lib/inquiry/webhook.test.ts
+```
+
+Covered cases: 2xx success, 400, 500, timeout, redirect, missing URL, invalid URL, bearer token present, bearer token absent, and a failure log that omits the secret and the inquiry body.
+
+To try a real endpoint from a development server, set `INQUIRY_WEBHOOK_URL` to an `https` URL you control. Leave `INQUIRY_LOG_SINK` unset. Submit one inquiry and confirm that URL stored the `inquiryId`. Do not point the variable at a production inbox until that check is intentional.
 
 ## Anti-spam
 
@@ -96,9 +198,9 @@ See `.env.example`.
 
 | Variable | Purpose |
 | --- | --- |
-| `INQUIRY_WEBHOOK_URL` | `https` URL that receives the inquiry JSON. Required before production leads can be relied upon. |
-| `INQUIRY_WEBHOOK_SECRET` | Optional bearer token. Sent only from the server as `Authorization`. Never put this in client code. |
-| `INQUIRY_LOG_SINK` | Set to `true` to force the non-durable server log. Development uses that log automatically. |
+| `INQUIRY_WEBHOOK_URL` | Production `https` endpoint that receives the inquiry JSON. Required before production leads can be relied upon. `http` and malformed values fail closed. |
+| `INQUIRY_WEBHOOK_SECRET` | Optional bearer token shared with that endpoint. Sent only from the server as `Authorization`. Never put this in client code. |
+| `INQUIRY_LOG_SINK` | Development-only diagnostic sink. Set to `true` outside production to log an id when no webhook URL is set. Ignored in production. |
 
 No API credentials are included in the repo.
 
@@ -111,7 +213,7 @@ Add a destination beside the webhook in `resolveInquiryDestination`. It should:
 - throw if the provider does not accept the inquiry
 - read secrets from environment variables
 
-Keep the form and the wizard unaware of the provider. A webhook in front of the CRM is enough if the CRM can receive JSON.
+Keep the form and the wizard unaware of the provider. A webhook in front of the CRM is enough if the CRM can receive the version `1.0` payload and dedupe on `inquiryId`.
 
 ## Connecting email later
 
@@ -123,7 +225,9 @@ Inquiry events go through `lib/analytics.ts`, the shared site bus. `lib/inquiry/
 
 - `project_form_started` on the first edit or continue
 - `project_form_step_completed` with a step number when a step is accepted
-- `project_form_submitted` after the server accepts the inquiry
+- `project_form_submitted` only after the webhook returns 2xx
+
+A development log, a honeypot discard, and a failed delivery do not emit `project_form_submitted`. There is no separate submission-attempt event.
 
 Subscribe with `subscribeToAnalytics` (or `subscribeToInquiryEvents` for the form events only). Events do not include names, email addresses, or answers. No analytics product is installed. See `docs/production-readiness.md` for the other prepared events.
 
@@ -135,8 +239,10 @@ The referrer stored with an inquiry has no query string.
 
 ## Before production leads can be relied upon
 
-- Set `INQUIRY_WEBHOOK_URL` to a real `https` endpoint, or add a server destination that stores the inquiry.
-- Confirm the endpoint persists the payload and notifies a person.
+- Set `INQUIRY_WEBHOOK_URL` to a real `https` endpoint that stores the version `1.0` payload and notifies a person.
+- If the endpoint requires a shared token, set `INQUIRY_WEBHOOK_SECRET` to the same value on both sides.
+- Make the receiver idempotent on `inquiryId`. The site sends each attempt once.
+- Confirm one real submission returns 2xx and arrives where a person can read it.
+- Leave `INQUIRY_LOG_SINK` unset. Production will not treat that log as delivery.
 - Replace the in-memory rate limit if more than one server handles the form.
 - Publish the privacy policy, then remove the "not published yet" sentence on the review step.
-- Leave `INQUIRY_LOG_SINK` unset in production. The log is not a mailbox.

@@ -190,7 +190,9 @@ export function ProjectInquiryForm() {
       });
 
       if (result.ok) {
-        trackInquiryEvent({ name: "project_form_submitted" });
+        if (result.delivery === "webhook") {
+          trackInquiryEvent({ name: "project_form_submitted" });
+        }
         setDelivery(result.delivery);
         return;
       }
