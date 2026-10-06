@@ -2,7 +2,7 @@
 
 Audit date: 2026-10-06. Canonical host: `https://www.systemarchq.com`.
 
-The marketing site can be deployed. It is not ready to accept production leads, and the legal pages are not final. Do not treat a successful form submission in development as proof that a lead was delivered.
+The marketing site can be deployed. Lead delivery is application-ready and still needs a Supabase project, the migration, and production environment variables before a visitor success screen means a stored inquiry. The legal pages are not final. Do not treat a successful form submission in development as proof that a lead was stored.
 
 ## READY
 
@@ -23,13 +23,22 @@ The marketing site can be deployed. It is not ready to accept production leads, 
 
 ### Project inquiry delivery
 
-Status: CODE READY — EXTERNAL DESTINATION REQUIRED
+Status: APPLICATION READY — DATABASE CONFIGURATION REQUIRED
 
-What it is: the server can POST a version `1.0` inquiry to `INQUIRY_WEBHOOK_URL` and show success only after a 2xx response. No production webhook is configured in this repo. Without a valid `https` URL, production submissions fail closed and the success screen is not shown. `INQUIRY_LOG_SINK` is ignored in production. Development without a webhook URL can log an id, source page, company type, and area count. That log is not a mailbox.
+What it is: the existing form validates an inquiry and POSTs version `1.0` to `INQUIRY_WEBHOOK_URL`. `POST /api/inquiries/webhook` checks a bearer secret, validates the payload again, and inserts it into Supabase `project_inquiries`. The success screen appears only after that insert is confirmed with HTTP 2xx. A missing URL, a rejected webhook, or a database error keeps the failure screen. `INQUIRY_LOG_SINK` is ignored in production. No Supabase project or production secret is configured in this repo.
 
-Why it matters: a lead is not delivered until an endpoint you control accepts the payload.
+Why it matters: a lead is stored only after the migration is applied and the production environment can reach that database.
 
-What must happen next: set `INQUIRY_WEBHOOK_URL` to an `https` endpoint that stores the JSON and notifies a person. Set `INQUIRY_WEBHOOK_SECRET` if that endpoint checks a bearer token. Treat `inquiryId` as an idempotency key. Confirm one real submission arrives before launch. Leave `INQUIRY_LOG_SINK` unset. The contract is in `docs/project-inquiry-system.md`. No vendor is selected.
+What must happen next:
+
+1. Create the Supabase project.
+2. Apply `supabase/migrations/20261006180000_create_project_inquiries.sql`.
+3. Set the production environment variables in `docs/lead-storage.md`.
+4. Submit one real inquiry from `/start-a-project`.
+5. Confirm the row in `project_inquiries`.
+6. Confirm the visitor sees the success screen.
+
+Leave `INQUIRY_LOG_SINK` unset. Publish the privacy policy, including inquiry collection, before promoting the form as a production lead channel. The contract is in `docs/lead-storage.md` and `docs/project-inquiry-system.md`.
 
 ### Shared rate limit
 

@@ -83,7 +83,9 @@ Destinations:
 
 The success screen is shown only after the webhook returns a 2xx status, after the development log sink accepts the record, or after a honeypot discard. A completed `fetch` with a 4xx, 5xx, redirect, timeout, or network error is a failure. The log sink adds a visible note that the inquiry is not stored for follow-up.
 
-There is no automatic retry. A second attempt would risk a duplicate inquiry. The receiver should treat `inquiryId` as an idempotency key and store or notify once per id.
+There is no automatic retry. A second attempt would risk a duplicate inquiry. The receiver treats `inquiryId` as an idempotency key and stores once per id.
+
+The production receiver is `POST /api/inquiries/webhook`, documented in `docs/lead-storage.md`. Point `INQUIRY_WEBHOOK_URL` at it from the environment. The form does not contain that URL.
 
 ## Webhook payload
 
@@ -175,10 +177,12 @@ The server log for a failure is one JSON line:
 `lib/inquiry/webhook.test.ts` posts to a local HTTP receiver. It does not use a public URL. Run:
 
 ```txt
-node --experimental-strip-types --import ./lib/inquiry/webhook-test-hooks.mjs --test lib/inquiry/webhook.test.ts
+node --experimental-strip-types --import ./lib/inquiry/webhook-test-hooks.mjs --test lib/inquiry/webhook.test.ts lib/inquiry/receiver/receiver.test.ts
 ```
 
-Covered cases: 2xx success, 400, 500, timeout, redirect, missing URL, invalid URL, bearer token present, bearer token absent, and a failure log that omits the secret and the inquiry body.
+Webhook cases: 2xx success, 400, 500, timeout, redirect, missing URL, invalid URL, bearer token present, bearer token absent, and a failure log that omits the secret and the inquiry body.
+
+Receiver cases in `lib/inquiry/receiver/receiver.test.ts` check authentication, payload validation, a duplicate id, and a failed store. They use an in-memory store. They do not connect to Supabase and they do not count as proof that a row was saved.
 
 To try a real endpoint from a development server, set `INQUIRY_WEBHOOK_URL` to an `https` URL you control. Leave `INQUIRY_LOG_SINK` unset. Submit one inquiry and confirm that URL stored the `inquiryId`. Do not point the variable at a production inbox until that check is intentional.
 
@@ -198,9 +202,12 @@ See `.env.example`.
 
 | Variable | Purpose |
 | --- | --- |
-| `INQUIRY_WEBHOOK_URL` | Production `https` endpoint that receives the inquiry JSON. Required before production leads can be relied upon. `http` and malformed values fail closed. |
-| `INQUIRY_WEBHOOK_SECRET` | Optional bearer token shared with that endpoint. Sent only from the server as `Authorization`. Never put this in client code. |
+| `INQUIRY_WEBHOOK_URL` | Sending side. Production `https` endpoint that receives the inquiry JSON. For this site, that is `https://www.systemarchq.com/api/inquiries/webhook`. `http` and malformed values fail closed. |
+| `INQUIRY_WEBHOOK_SECRET` | Sending side. Bearer token sent only from the server as `Authorization`. Use the same value as `INQUIRY_RECEIVER_SECRET`. |
 | `INQUIRY_LOG_SINK` | Development-only diagnostic sink. Set to `true` outside production to log an id when no webhook URL is set. Ignored in production. |
+| `INQUIRY_RECEIVER_SECRET` | Receiving side. Required bearer token for `POST /api/inquiries/webhook`. |
+| `SUPABASE_URL` | Server-only project URL. Not a `NEXT_PUBLIC_` variable. |
+| `SUPABASE_SECRET_KEY` | Privileged server-only Supabase secret key. Bypasses row level security. Never send it to the browser. |
 
 No API credentials are included in the repo.
 
@@ -239,10 +246,13 @@ The referrer stored with an inquiry has no query string.
 
 ## Before production leads can be relied upon
 
-- Set `INQUIRY_WEBHOOK_URL` to a real `https` endpoint that stores the version `1.0` payload and notifies a person.
-- If the endpoint requires a shared token, set `INQUIRY_WEBHOOK_SECRET` to the same value on both sides.
-- Make the receiver idempotent on `inquiryId`. The site sends each attempt once.
-- Confirm one real submission returns 2xx and arrives where a person can read it.
+- Apply `supabase/migrations/20261006180000_create_project_inquiries.sql`.
+- Set `SUPABASE_URL` and `SUPABASE_SECRET_KEY` on the server.
+- Set `INQUIRY_WEBHOOK_URL` to `https://www.systemarchq.com/api/inquiries/webhook`.
+- Set `INQUIRY_WEBHOOK_SECRET` and `INQUIRY_RECEIVER_SECRET` to the same shared secret.
 - Leave `INQUIRY_LOG_SINK` unset. Production will not treat that log as delivery.
+- Submit one real inquiry and confirm the row in `project_inquiries` and the success screen.
+- Publish the privacy policy, including inquiry collection, before promoting the form as a production lead channel. Then remove the "not published yet" sentence on the review step.
 - Replace the in-memory rate limit if more than one server handles the form.
-- Publish the privacy policy, then remove the "not published yet" sentence on the review step.
+
+Storage, authentication, and idempotency are specified in `docs/lead-storage.md`.

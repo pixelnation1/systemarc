@@ -9,7 +9,7 @@ The public website for SystemArc, a custom software and business systems company
 - TypeScript
 - Tailwind CSS v4
 
-There is no analytics SDK, CRM SDK, or form vendor in the project.
+There is no analytics SDK, CRM SDK, or form vendor in the project. Project inquiries can be stored in Supabase from the server. The browser does not receive a Supabase key.
 
 ## Local development
 
@@ -34,9 +34,12 @@ Canonical URLs, the sitemap, and JSON-LD always use `https://www.systemarchq.com
 
 | Name | Purpose |
 | --- | --- |
-| `INQUIRY_WEBHOOK_URL` | Production `https` endpoint that receives a project inquiry. Required before leads can be relied upon. |
-| `INQUIRY_WEBHOOK_SECRET` | Optional bearer token sent only from the server. |
+| `INQUIRY_WEBHOOK_URL` | Sending side. Production `https` endpoint. Use `https://www.systemarchq.com/api/inquiries/webhook`. |
+| `INQUIRY_WEBHOOK_SECRET` | Sending side. Bearer token sent only from the server. Same value as the receiver secret. |
 | `INQUIRY_LOG_SINK` | Development-only diagnostic log. Ignored in production. Leave unset there. |
+| `INQUIRY_RECEIVER_SECRET` | Receiving side. Required bearer token for the inquiry webhook. Server-only. |
+| `SUPABASE_URL` | Server-only Supabase project URL. Not a `NEXT_PUBLIC_` variable. |
+| `SUPABASE_SECRET_KEY` | Privileged Supabase secret key. Server-only. Bypasses row level security. |
 | `GOOGLE_SITE_VERIFICATION` | Google Search Console token. Omitted from the HTML until set. Must be present at build time. |
 | `BING_SITE_VERIFICATION` | Bing Webmaster Tools token (`msvalidate.01`). Omitted until set. Must be present at build time. |
 
@@ -52,11 +55,12 @@ Do not commit `.env.local` or real secrets. `.env.example` lists names only.
 
 ## Deployment
 
-The site is a static Next.js app plus one server action for `/start-a-project`. Deploy it behind HTTPS on `www.systemarchq.com`. Point the apex host at that same HTTPS host. Details are in [docs/production-readiness.md](docs/production-readiness.md).
+The site is a Next.js app with a server action for `/start-a-project` and a server route at `/api/inquiries/webhook`. Deploy it behind HTTPS on `www.systemarchq.com`. Point the apex host at that same HTTPS host. Lead storage setup is in [docs/lead-storage.md](docs/lead-storage.md). Release notes are in [docs/production-readiness.md](docs/production-readiness.md).
 
 ## Documentation
 
 - [docs/README.md](docs/README.md) — index
 - [docs/seo-content-architecture.md](docs/seo-content-architecture.md) — SEO, AEO, and GEO
 - [docs/project-inquiry-system.md](docs/project-inquiry-system.md) — discovery form
+- [docs/lead-storage.md](docs/lead-storage.md) — inquiry receiver and Supabase
 - [docs/production-readiness.md](docs/production-readiness.md) — release audit
