@@ -36,6 +36,7 @@ Table: `public.project_inquiries`.
 | `external_inquiry_id` | Webhook `inquiryId`. Unique. |
 | `submitted_at` | Webhook `submittedAt`. |
 | `created_at` | Time the row was inserted. |
+| `updated_at` | Set on insert and before any later update. A duplicate webhook does not change it. |
 | `status` | Always `new` on insert. The webhook cannot set it. |
 | `contact_name`, `contact_email`, `contact_phone`, `preferred_contact` | `contact` |
 | `company_name`, `company_description`, `company_type`, `company_size` | `company` |

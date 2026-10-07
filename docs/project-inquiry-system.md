@@ -244,14 +244,12 @@ The form says the submission starts a conversation and is not an agreement or an
 
 The referrer stored with an inquiry has no query string.
 
-## Before production leads can be relied upon
+## Production lead delivery
 
-- Apply `supabase/migrations/20261006180000_create_project_inquiries.sql`.
-- Set `SUPABASE_URL` and `SUPABASE_SECRET_KEY` on the server.
-- Set `INQUIRY_WEBHOOK_URL` to `https://www.systemarchq.com/api/inquiries/webhook`.
-- Set `INQUIRY_WEBHOOK_SECRET` and `INQUIRY_RECEIVER_SECRET` to the same shared secret.
-- Leave `INQUIRY_LOG_SINK` unset. Production will not treat that log as delivery.
-- Submit one real inquiry and confirm the row in `project_inquiries` and the success screen.
+The storage path is configured. Production points at Supabase project `systemarc` (`mvuxmjxutzafkhbxswkg`). The migration is applied, the production environment variables are set, and a synthetic `/start-a-project` submission is stored in `project_inquiries` with status `new`. The success screen appears only after that confirmed insert.
+
+Still separate from delivery:
+
 - Publish the privacy policy, including inquiry collection, before promoting the form as a production lead channel. Then remove the "not published yet" sentence on the review step.
 - Replace the in-memory rate limit if more than one server handles the form.
 

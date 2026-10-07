@@ -7,6 +7,7 @@ create table public.project_inquiries (
   external_inquiry_id text not null,
   submitted_at timestamptz not null,
   created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
   status text not null default 'new',
 
   contact_name text not null,
@@ -100,6 +101,9 @@ comment on column public.project_inquiries.raw_payload is
 comment on column public.project_inquiries.status is
   'Internal lead status. Webhook inserts always use new. Allowed: new, reviewed, discovery, qualified, proposal, won, lost, archived.';
 
+comment on column public.project_inquiries.updated_at is
+  'Set when the row is inserted and again before any later update. Webhook retries do not update the row.';
+
 create index project_inquiries_created_at_idx
   on public.project_inquiries (created_at desc);
 
@@ -116,3 +120,21 @@ alter table public.project_inquiries enable row level security;
 
 revoke all on table public.project_inquiries from public, anon, authenticated;
 grant select, insert, update, delete on table public.project_inquiries to service_role;
+
+create or replace function public.set_project_inquiries_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+create trigger project_inquiries_set_updated_at
+before update on public.project_inquiries
+for each row
+execute function public.set_project_inquiries_updated_at();
+
+revoke all on function public.set_project_inquiries_updated_at() from public, anon, authenticated;
+grant execute on function public.set_project_inquiries_updated_at() to service_role;
