@@ -5,6 +5,8 @@ export const siteUrl = "https://www.systemarchq.com";
 
 export const siteName = "SystemArc";
 
+export const contactEmail = "support@systemarchq.com";
+
 export const siteDescription =
   "SystemArc designs and builds custom software, automation, web applications, integrations, and digital systems around the way businesses actually operate.";
 

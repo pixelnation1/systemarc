@@ -4,7 +4,7 @@ import { ProjectInquiryForm } from "@/components/inquiry/project-inquiry-form";
 import { JsonLd } from "@/components/json-ld";
 import { Section, SectionHeading } from "@/components/section";
 import { pageGraph } from "@/lib/schema";
-import { createMetadata } from "@/lib/site";
+import { contactEmail, createMetadata } from "@/lib/site";
 
 const title = "Start a Software Project | SystemArc";
 const description =
@@ -78,6 +78,15 @@ export default function StartProjectPage() {
         <Container>
           <div className="mx-auto max-w-3xl">
           <ProjectInquiryForm />
+          <p className="mt-8 text-sm leading-6 text-silver">
+            For general questions, email{" "}
+            <a
+              href={`mailto:${contactEmail}`}
+              className="text-warm-white underline decoration-steel underline-offset-4 transition-colors hover:text-electric-cobalt hover:decoration-cobalt"
+            >
+              {contactEmail}
+            </a>.
+          </p>
         </div>
         </Container>
       </section>

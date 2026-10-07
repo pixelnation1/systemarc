@@ -263,21 +263,18 @@ export function ProjectInquiryForm() {
                 <ReviewItem label="Timeline" value={draft.project.timeline} />
                 <ReviewItem label="Budget" value={draft.project.budget} />
               </ReviewSection>
-              <div className="max-w-2xl space-y-3 pt-2 text-sm leading-6 text-silver">
+              <div className="max-w-2xl pt-2 text-sm leading-6 text-silver">
                 <p>
                   By submitting this form, you&apos;re starting a conversation with
                   SystemArc. This is not a project agreement or binding estimate.
-                </p>
-                <p>
-                  The{" "}
+                  Information submitted through this form is handled as described
+                  in our{" "}
                   <Link
                     href="/privacy"
                     className="text-warm-white underline decoration-steel underline-offset-4 hover:text-electric-cobalt hover:decoration-cobalt"
                   >
-                    privacy page
-                  </Link>{" "}
-                  is where SystemArc will explain how personal information is handled.
-                  That policy is not published yet.
+                    Privacy Policy
+                  </Link>.
                 </p>
               </div>
             </div>

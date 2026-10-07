@@ -156,7 +156,7 @@ JSON-LD is server-rendered. `lib/schema.ts` builds it. `components/json-ld.tsx` 
 
 The root layout emits:
 
-- `Organization` with name, URL, logo, description, and the slogan "Software built around your business."
+- `Organization` with name, URL, email `support@systemarchq.com`, logo, description, and the slogan "Software built around your business."
 - `WebSite` linked to that organization
 
 Indexable pages emit:
@@ -189,7 +189,7 @@ It includes:
 - static paths marked indexable in `lib/indexing.ts`
 - programmatic pages that pass `isPublishable`
 
-It excludes placeholder routes, legal placeholders, and reserved topics. A future page appears automatically when it becomes publishable. No manual sitemap edit is required for that.
+It excludes placeholder routes and reserved topics. `/privacy` and `/terms` are included because they are indexable. A future page appears automatically when it becomes publishable. No manual sitemap edit is required for that.
 
 `lastmod` is omitted. A generated timestamp would claim the page changed when it did not.
 
@@ -207,6 +207,6 @@ Do not publish the same explanation under several URLs.
 
 Do not create doorway pages, city pages for places SystemArc does not serve, or pages aimed at a keyword SystemArc does not actually discuss.
 
-If a route is only a placeholder or "coming soon", set it `noindex, follow` and leave it out of the sitemap. The homepage, the completed About page, the Work index, the ReviewForge, RepairForge, and PixelNation Systems case studies, `/services`, the seven completed service pages, `/solutions`, the eight completed solution pages, `/industries`, the four completed industry pages, `/process`, and `/start-a-project` stay indexable. `/privacy` and `/terms` stay `noindex` until a real policy is published.
+If a route is only a placeholder or "coming soon", set it `noindex, follow` and leave it out of the sitemap. The homepage, the completed About page, the Work index, the ReviewForge, RepairForge, and PixelNation Systems case studies, `/services`, the seven completed service pages, `/solutions`, the eight completed solution pages, `/industries`, the four completed industry pages, `/process`, `/start-a-project`, `/privacy`, and `/terms` stay indexable. The privacy policy and website terms are published drafts and still need owner review.
 
 When a placeholder gains a full page, change its entry in `lib/indexing.ts` to `true`. The metadata helper and the sitemap both follow that flag.

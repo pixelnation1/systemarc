@@ -2,15 +2,15 @@
 
 Audit date: 2026-10-06. Canonical host: `https://www.systemarchq.com`.
 
-The marketing site can be deployed. Production lead delivery stores a confirmed inquiry in the existing SystemArc Supabase project. The legal pages are not final. Do not treat a successful form submission in development as proof that a lead was stored.
+The marketing site can be deployed. Production lead delivery stores a confirmed inquiry in the existing SystemArc Supabase project. The privacy policy and website terms are published drafts and still need owner review. Do not treat a successful form submission in development as proof that a lead was stored.
 
 ## READY
 
 - Homepage, About, Services and seven service pages, Solutions and eight solution pages, Industries and four industry pages, Work and three case studies, Process, and `/start-a-project` are substantive and indexable.
 - Each of those pages has a unique title, description, canonical path, Open Graph title, description, URL, site name, and image, plus a large Twitter card. `metadataBase` is `https://www.systemarchq.com`.
-- `/sitemap.xml` lists those indexable URLs only, on the www host. It does not list `/privacy`, `/terms`, locations, or API routes.
+- `/sitemap.xml` lists those indexable URLs, plus `/privacy` and `/terms`, on the www host. It does not list locations or API routes.
 - `/robots.txt` allows all user agents to crawl `/` and points at `https://www.systemarchq.com/sitemap.xml`.
-- JSON-LD is Organization, WebSite, WebPage, BreadcrumbList, ItemList, Service, and SoftwareApplication. SoftwareApplication is used only for ReviewForge and RepairForge. There are no ratings, prices, addresses, phones, founding dates, awards, or social profiles.
+- JSON-LD is Organization, WebSite, WebPage, BreadcrumbList, ItemList, Service, and SoftwareApplication. SoftwareApplication is used only for ReviewForge and RepairForge. Organization includes the public email `support@systemarchq.com`. There are no ratings, prices, addresses, phones, founding dates, awards, or social profiles.
 - FAQ content stays in the HTML. `FAQPage` schema is not emitted, because that rich result is limited and the visible questions already answer the page.
 - The default social image is the official lockup: SYSTEMARC and “Software built around your business.” Icons are resized from the existing mark. The 1.2 MB master files are no longer linked from the document head or the header.
 - `/start-a-project` validates on the server, limits field length and enums, checks email format, uses a honeypot, and has an in-memory rate-limit structure. Secrets stay on the server. Analytics events do not include form contents.
@@ -31,7 +31,7 @@ Production uses the existing Supabase project `systemarc` (`mvuxmjxutzafkhbxswkg
 
 Why it matters: a visitor success screen on production now means the inquiry row exists.
 
-What remains outside delivery: publish the privacy policy, including inquiry collection, before promoting the form as a production lead channel. The contract is in `docs/lead-storage.md` and `docs/project-inquiry-system.md`.
+What remains outside delivery: the published privacy policy and website terms are drafts and still need owner review. The storage contract is in `docs/lead-storage.md` and `docs/project-inquiry-system.md`.
 
 ### Shared rate limit
 
@@ -86,15 +86,33 @@ What must happen next: after the webhook host and any analytics host are chosen,
 
 ## NEEDS BUSINESS/LEGAL DECISION
 
-### Privacy and terms
+### Privacy policy
 
-What it is: `/privacy` and `/terms` say the policy and terms are not published yet. Both are `noindex` and are absent from the sitemap. The inquiry form links to `/privacy` and says the same thing. No legal text was written for this audit.
+Status: DRAFT PUBLISHED / OWNER REVIEW RECOMMENDED
 
-Why it matters: the site collects a name, email, optional phone, and business details once delivery is turned on. The public pages do not yet say how that information is kept.
+What it is: `/privacy` describes the website’s current collection, use, storage, and sharing practices in plain language. It is indexable and listed in the sitemap. The inquiry form links to it. The page has not been marked attorney approved.
 
-What must happen next: write the policy and terms from the actual practices, publish them, remove the “not published yet” sentences, then set `/privacy` and `/terms` to indexable in `lib/indexing.ts` only after that text is real.
+### Website terms
 
-### Company facts that are intentionally absent
+Status: DRAFT PUBLISHED / OWNER REVIEW RECOMMENDED
+
+What it is: `/terms` governs use of the public website. It states that client work is controlled by a separate proposal, statement of work, services agreement, or other written agreement. It is indexable and listed in the sitemap. The page has not been marked attorney approved.
+
+Why it matters: the site collects a name, work email, optional phone, and business details through Start a Project. The public pages now describe those practices as implemented. They are drafts based on the known website behavior.
+
+Revisit both documents if any of the following change:
+
+- Analytics or a similar technology is introduced.
+- Marketing email is introduced.
+- Accounts are introduced.
+- Payments are introduced.
+- Data practices change.
+- A new infrastructure provider materially affects how information is processed.
+- SystemArc’s legal entity is finalized.
+
+### Company facts
+
+Official SystemArc public contact email: `support@systemarchq.com`. It is stored in `lib/site.ts` as `contactEmail`.
 
 No street address, phone number, team size, office, founding year, credential, or social profile is published, because none of those facts are established in the project. Do not add them until they are verified.
 

@@ -15,8 +15,8 @@ export const routeIndex = {
   "/industries": true,
   "/process": true,
   "/start-a-project": true,
-  "/privacy": false,
-  "/terms": false,
+  "/privacy": true,
+  "/terms": true,
 } as const;
 
 export type StaticRoute = keyof typeof routeIndex;

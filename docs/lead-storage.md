@@ -137,7 +137,7 @@ The database row is the source of truth. A notification handler that throws is l
 
 Inquiries contain personal and business information. They are not returned by a public API, not written into analytics, and not placed in the page URL. The receiver logs ids and categories. The form still holds the draft in memory while the visitor is filling it out.
 
-`/privacy` is still a placeholder. Publish a privacy policy that describes this collection, storage, and who can read it before the form is promoted as a production lead channel.
+`/privacy` is a published draft. It describes inquiry collection, Supabase storage, and the lack of public access to inquiry records. Owner review is still recommended. The page does not name the table, project reference, or credentials.
 
 ## Migration procedure
 

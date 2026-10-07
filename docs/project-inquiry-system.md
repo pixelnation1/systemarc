@@ -2,7 +2,7 @@
 
 `/start-a-project` is the start of discovery. It collects how a business works and what is not working. It does not ask the visitor to choose a technology, language, or architecture.
 
-The page is indexable. `/privacy` stays `noindex` until a real policy is published. The form links to that page and does not invent privacy practices.
+The page is indexable. `/privacy` is a published draft and is indexable. The form links to that page and describes inquiry handling by reference to the policy.
 
 ## Form architecture
 
@@ -240,7 +240,7 @@ Subscribe with `subscribeToAnalytics` (or `subscribeToInquiryEvents` for the for
 
 ## Privacy
 
-The form says the submission starts a conversation and is not an agreement or an estimate. It links to `/privacy`. That page is still a placeholder and remains `noindex`. Do not describe retention, sharing, or security practices until they are written into the policy.
+The form says the submission starts a conversation and is not an agreement or an estimate. It links to `/privacy`, which is a published draft. General questions can go to `support@systemarchq.com`. Do not describe a retention period or a compliance certification that the policy does not state.
 
 The referrer stored with an inquiry has no query string.
 
@@ -250,7 +250,7 @@ The storage path is configured. Production points at Supabase project `systemarc
 
 Still separate from delivery:
 
-- Publish the privacy policy, including inquiry collection, before promoting the form as a production lead channel. Then remove the "not published yet" sentence on the review step.
+- The privacy policy is a published draft. Owner review is still recommended before treating it as final. Revisit it if analytics, marketing email, accounts, payments, data practices, infrastructure providers, or public contact details change.
 - Replace the in-memory rate limit if more than one server handles the form.
 
 Storage, authentication, and idempotency are specified in `docs/lead-storage.md`.

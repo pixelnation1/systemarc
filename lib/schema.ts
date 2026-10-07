@@ -1,4 +1,4 @@
-import { siteDescription, siteName, siteUrl } from "@/lib/site";
+import { contactEmail, siteDescription, siteName, siteUrl } from "@/lib/site";
 
 export const organizationId = `${siteUrl}/#organization`;
 export const websiteId = `${siteUrl}/#website`;
@@ -29,6 +29,7 @@ export function organizationNode(): SchemaNode {
     "@id": organizationId,
     name: siteName,
     url: siteUrl,
+    email: contactEmail,
     logo: `${siteUrl}/images/icon-512.png`,
     description: siteDescription,
     slogan: "Software built around your business.",

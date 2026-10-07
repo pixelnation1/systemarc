@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Container } from "@/components/container";
 import { Logo } from "@/components/logo";
-import { footerItems, legalItems } from "@/lib/site";
+import { contactEmail, footerItems, legalItems } from "@/lib/site";
 
 export function SiteFooter() {
   return (
@@ -13,6 +13,18 @@ export function SiteFooter() {
             <p className="mt-4 max-w-xs text-base leading-7 text-silver">
               Software built around your business.
             </p>
+            <p
+              id="footer-contact"
+              className="mt-8 font-mono text-xs tracking-[0.18em] text-electric-cobalt uppercase"
+            >
+              Contact
+            </p>
+            <a
+              href={`mailto:${contactEmail}`}
+              className="mt-3 inline-flex min-h-11 items-center text-sm text-silver transition-colors duration-150 hover:text-electric-cobalt"
+            >
+              {contactEmail}
+            </a>
           </div>
           <nav className="lg:col-span-4" aria-label="Footer">
             <p
