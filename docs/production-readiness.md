@@ -33,6 +33,16 @@ Why it matters: a visitor success screen on production now means the inquiry row
 
 What remains outside delivery: the published privacy policy and website terms are drafts and still need owner review. The storage contract is in `docs/lead-storage.md` and `docs/project-inquiry-system.md`.
 
+### Inquiry notification email
+
+Status: RESEND CONFIGURED
+
+What it is: after a new `project_inquiries` row is stored, production sends one internal message through Resend. The destination is `INQUIRY_NOTIFICATION_EMAIL`. The sender is `RESEND_FROM_EMAIL`. Duplicate inserts do not send again. The message is HTML plus plain text. Prospect fields are escaped. A valid prospect address is used only as Reply-To. Local development does not send. A missing key, sender, or destination logs that the notification is not configured and still treats the stored row as success.
+
+Why it matters: the stored inquiry is the source of truth. A missing provider setting or a failed send must not remove the row or change the visitor’s success screen.
+
+What must happen next: keep the Resend API key out of git and out of `NEXT_PUBLIC_` variables. Do not use the Google Workspace password for `support@systemarchq.com`.
+
 ### Shared rate limit
 
 What it is: the inquiry rate limit is an in-memory map, 20 attempts per 15 minutes per IP, inside one process.

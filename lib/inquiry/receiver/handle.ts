@@ -55,7 +55,17 @@ export async function handleInquiryWebhook(request: Request, deps: InquiryReceiv
     const duplicate = result === "duplicate";
     if (!duplicate) {
       try {
-        await (deps.notify ?? notifyLeadStored)({ inquiryId: row.external_inquiry_id });
+        await (deps.notify ?? notifyLeadStored)({
+          inquiryId: row.external_inquiry_id,
+          submittedAt: row.submitted_at,
+          contact: validated.payload.contact,
+          company: validated.payload.company,
+          problem: validated.payload.problem,
+          systems: validated.payload.systems,
+          project: validated.payload.project,
+          sourcePage: validated.payload.metadata.sourcePage,
+          referrer: validated.payload.metadata.referrer,
+        });
       } catch {
         console.error(
           JSON.stringify({

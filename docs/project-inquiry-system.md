@@ -208,6 +208,9 @@ See `.env.example`.
 | `INQUIRY_RECEIVER_SECRET` | Receiving side. Required bearer token for `POST /api/inquiries/webhook`. |
 | `SUPABASE_URL` | Server-only project URL. Not a `NEXT_PUBLIC_` variable. |
 | `SUPABASE_SECRET_KEY` | Privileged server-only Supabase secret key. Bypasses row level security. Never send it to the browser. |
+| `INQUIRY_NOTIFICATION_EMAIL` | Receiver. Internal mailbox for a notification after a new row is stored. Required for the notification to send. Server-only. |
+| `RESEND_API_KEY` | Receiver. Server-only Resend API key. A missing key does not fail a stored inquiry. |
+| `RESEND_FROM_EMAIL` | Receiver. Sender identity for the notification, such as `SystemArc <notifications@systemarchq.com>`. Never the prospect's address. |
 
 No API credentials are included in the repo.
 
@@ -222,9 +225,29 @@ Add a destination beside the webhook in `resolveInquiryDestination`. It should:
 
 Keep the form and the wizard unaware of the provider. A webhook in front of the CRM is enough if the CRM can receive the version `1.0` payload and dedupe on `inquiryId`.
 
-## Connecting email later
+## Inquiry notification email
 
-Use the same destination interface. Send mail from the server with a provider already configured in the environment. Do not add a public mail API key to the browser. The message body can be built from `ProjectInquiry`. Do not log the full body.
+Email is not an `InquiryDestination`. A destination failure would reject the form. The notification runs only inside the receiver, after Supabase confirms a new row.
+
+`POST /api/inquiries/webhook` calls `notifyNewProjectInquiry` in `lib/notifications/project-inquiry.ts`. That function notifies any `onLeadStored` handler, then `deliverProjectInquiryNotification`. Resend is called only from `lib/notifications/resend.ts`. No email-provider code lives in the receiver.
+
+Supabase remains the source of truth. Resend is the production transactional email provider, and the message is a secondary notification. The destination is `INQUIRY_NOTIFICATION_EMAIL`. The sender is `RESEND_FROM_EMAIL`. Neither address is hardcoded in the Resend transport. The message is not copied to anyone else, and it is not sent to the prospect. When the prospect’s address is one mailbox, that address is the Reply-To header and the body includes a “Reply to Prospect” link. The From address stays the configured SystemArc sender. The prospect does not receive an automatic reply.
+
+The subject is `New SystemArc Project Inquiry — [Company Name]`, or `New SystemArc Project Inquiry` when the company name cannot be used. Prospect text is escaped in the HTML part. The company name is stripped of control characters before it is placed in the subject. Both an HTML part and a plain-text part are built. The body is the structured inquiry, not raw JSON.
+
+Delivery rules:
+
+- A new stored inquiry in production attempts a send only when `RESEND_API_KEY`, a valid `RESEND_FROM_EMAIL`, and a single `INQUIRY_NOTIFICATION_EMAIL` are all present.
+- Resend is treated as sent only when it returns a message id. That id may be logged with the inquiry id. The inquiry body is not logged.
+- A duplicate inquiry id does not notify again.
+- A database failure returns before notification.
+- Outside production, delivery is skipped even if Resend is configured. Local development does not send.
+- A missing key, sender, or destination logs `project_inquiry_notification_not_configured` and the inquiry id. It does not log a sent event. The stored inquiry still succeeds.
+- A provider error logs `project_inquiry_notification_failed` and the inquiry id. The log does not include the inquiry body or the provider error text. The HTTP response stays successful because the row is already stored. The inquiry is not rolled back.
+
+No notification status columns were added. The stored row remains the record of the inquiry. The log records whether that one attempt was skipped, not configured, sent, or failed.
+
+Do not connect this path with a Google Workspace password or SMTP credentials for `support@systemarchq.com`. Keep the Resend API key server-only.
 
 ## Analytics
 

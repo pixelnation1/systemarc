@@ -263,18 +263,31 @@ describe("receiver HTTP behavior", () => {
 
   it("still confirms receipt when a notification handler fails after the row is stored", async () => {
     const { rows, store } = memoryStore();
-    const response = await handleInquiryWebhook(request(payload()), {
-      secret,
-      store,
-      notify: async () => {
-        throw new Error("smtp down ada@example.com");
-      },
-    });
-    const result = await read(response);
+    const lines: string[] = [];
+    const original = console.error;
+    console.error = (line?: unknown) => {
+      lines.push(String(line));
+    };
+    let result: { status: number; body: Record<string, unknown> };
+    try {
+      result = await read(
+        await handleInquiryWebhook(request(payload()), {
+          secret,
+          store,
+          notify: async () => {
+            throw new Error("smtp down ada@example.com");
+          },
+        }),
+      );
+    } finally {
+      console.error = original;
+    }
     assert.equal(result.status, 201);
     assert.equal(result.body.duplicate, false);
     assert.equal(rows.has(inquiryId), true);
     assert.equal(JSON.stringify(result.body).includes("ada@example.com"), false);
+    assert.equal(lines.join("\n").includes("ada@example.com"), false);
+    assert.equal(lines.join("\n").includes(inquiryId), true);
   });
 
   it("reports persistence failures without claiming the inquiry was stored", async () => {

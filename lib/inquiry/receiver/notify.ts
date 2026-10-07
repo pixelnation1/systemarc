@@ -1,3 +1,5 @@
+import type { InquiryWebhookPayload } from "@/lib/inquiry/webhook";
+
 /**
  * Fires only after a new project inquiry row is stored.
  * A duplicate delivery does not call this again.
@@ -5,6 +7,14 @@
  */
 export type LeadStoredEvent = {
   inquiryId: string;
+  submittedAt: string;
+  contact: InquiryWebhookPayload["contact"];
+  company: InquiryWebhookPayload["company"];
+  problem: InquiryWebhookPayload["problem"];
+  systems: InquiryWebhookPayload["systems"];
+  project: InquiryWebhookPayload["project"];
+  sourcePage: string;
+  referrer: string;
 };
 
 type LeadStoredHandler = (event: LeadStoredEvent) => Promise<void> | void;

@@ -129,9 +129,11 @@ Server logs may include `inquiryId`, a category (`not_configured`, `persist_fail
 
 ## Notifications
 
-`notifyLeadStored` in `lib/inquiry/receiver/notify.ts` runs only after a new row is stored. Register future work with `onLeadStored`. A duplicate delivery does not notify again.
+`notifyNewProjectInquiry` runs only after a new row is stored. A duplicate delivery does not call it. `onLeadStored` remains available for another handler.
 
-The database row is the source of truth. A notification handler that throws is logged as `project_inquiry_notification_failed` with the inquiry id. The row stays, and the HTTP response stays successful. No email provider is installed.
+The database row is the source of truth. After a new row is stored, production sends one internal notification through Resend. The destination is `INQUIRY_NOTIFICATION_EMAIL`. The sender is `RESEND_FROM_EMAIL`. Both are configuration, not hardcoded addresses. A missing destination, sender, or `RESEND_API_KEY` logs `project_inquiry_notification_not_configured` with the inquiry id and does not claim the message was sent. Outside production the send is skipped, including local development.
+
+A notification failure after the insert logs `project_inquiry_notification_failed` and the inquiry id. The row stays. The visitor still receives success. The inquiry is not rolled back. The HTTP response stays successful. The log does not include the inquiry body, the API key, or the provider error text. No notification columns were added to `project_inquiries`.
 
 ## Privacy
 
@@ -162,6 +164,9 @@ Set these on the production server. Names only belong in `.env.example`.
 | `SUPABASE_URL` | Server | `https://<project-ref>.supabase.co` |
 | `SUPABASE_SECRET_KEY` | Server, privileged | Secret key (`sb_secret_...`) |
 | `INQUIRY_LOG_SINK` | Sender | Leave unset |
+| `INQUIRY_NOTIFICATION_EMAIL` | Receiver | Mailbox that receives the notification. Required for a send. |
+| `RESEND_API_KEY` | Receiver | Server-only Resend API key. A missing key does not fail storage. |
+| `RESEND_FROM_EMAIL` | Receiver | Sender identity. Never the prospect's address. |
 
 Preview deployments should not use the production webhook URL and production database unless that is intentional. Leave the inquiry variables unset on preview, or point them at a separate Supabase project.
 
@@ -174,6 +179,14 @@ node --experimental-strip-types --import ./lib/inquiry/webhook-test-hooks.mjs --
 ```
 
 They cover a missing token, a wrong token, the wrong content type, the wrong event, the wrong version, a malformed payload, a valid payload, a duplicate id, a store failure, and a notification failure after a successful insert. The store in these tests is in-memory. A passing run does not mean Supabase saved a row.
+
+Notification tests, still with no database and no live Resend call:
+
+```txt
+node --experimental-strip-types --import ./lib/inquiry/webhook-test-hooks.mjs --test lib/notifications/inquiry-notification.test.ts
+```
+
+They check that a new row attempts one internal message, a duplicate and a failed insert do not, HTML from the prospect is escaped, a broken subject cannot add a header, development does not send, a missing Resend key, sender, or destination does not report success, and a Resend rejection leaves the stored inquiry in place.
 
 There is no automated test against a live Supabase project in this repo. Do not treat a mocked insert as that test.
 
