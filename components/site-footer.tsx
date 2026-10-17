@@ -68,7 +68,7 @@ export function SiteFooter() {
           </nav>
         </div>
         <p className="mt-14 border-t border-steel pt-6 text-sm text-silver">
-          © 2026 SystemArc. All rights reserved.
+          © 2026 SystemArc. All rights reserved.{" "}<a href="https://hqxholdings.com/" className="inline-flex min-h-11 items-center underline underline-offset-4">An HQX Holdings company</a>
         </p>
       </Container>
     </footer>
