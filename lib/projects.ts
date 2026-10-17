@@ -23,7 +23,7 @@ export const projects: readonly Project[] = [
       "Customer Engagement",
       "Automation",
     ],
-    image: null,
+    image: "/images/work/reviewforge/hero.webp",
     href: "/work/reviewforge",
   },
   {
@@ -39,7 +39,7 @@ export const projects: readonly Project[] = [
       "Operational Tools",
       "Automation",
     ],
-    image: null,
+    image: "/images/work/repairforge/hero.webp",
     href: "/work/repairforge",
   },
   {

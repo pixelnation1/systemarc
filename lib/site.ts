@@ -15,7 +15,7 @@ export const siteTitle = "SystemArc | Custom Software & Business Systems";
 export const navItems = [
   { href: "/services", label: "Services" },
   { href: "/solutions", label: "Solutions" },
-  { href: "/work", label: "Work" },
+  { href: "/portfolio", label: "Portfolio" },
   { href: "/process", label: "Process" },
   { href: "/about", label: "About" },
 ] as const;
@@ -24,7 +24,7 @@ export const footerItems = [
   { href: "/services", label: "Services" },
   { href: "/solutions", label: "Solutions" },
   { href: "/industries", label: "Industries" },
-  { href: "/work", label: "Work" },
+  { href: "/portfolio", label: "Portfolio" },
   { href: "/process", label: "Process" },
   { href: "/about", label: "About" },
   { href: "/start-a-project", label: "Start a Project" },

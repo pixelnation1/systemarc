@@ -7,6 +7,7 @@ export const routeIndex = {
   "/": true,
   "/about": true,
   "/work": true,
+  "/portfolio": true,
   "/work/reviewforge": true,
   "/work/repairforge": true,
   "/work/pixelnation-systems": true,

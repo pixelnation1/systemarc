@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Container } from "@/components/container";
 import { JsonLd } from "@/components/json-ld";
 import { WorkConversion } from "@/components/work/work-conversion";
@@ -55,6 +56,7 @@ export default function WorkPage() {
         </h1>
         <div className="mt-6 max-w-2xl space-y-5 text-base leading-7 text-secondary sm:text-lg sm:leading-8">
           <p>Good software starts with understanding the operation.</p>
+          <Link href="/portfolio" className="inline-flex min-h-11 items-center text-electric-cobalt underline underline-offset-4">Explore our full website & software portfolio →</Link>
           <p>
             These projects show how SystemArc turns operational problems,
             disconnected workflows, customer friction, and missing capabilities

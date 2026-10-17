@@ -1,7 +1,17 @@
 import Link from "next/link";
 import { ProjectShowcase } from "@/components/project-showcase";
 import { Section, SectionHeading } from "@/components/section";
-import { projects } from "@/lib/projects";
+import { portfolioProjects } from "@/lib/portfolio";
+
+const projects = [portfolioProjects[0], portfolioProjects[1], portfolioProjects[5]].map(project => ({
+  slug: project.slug,
+  name: project.name,
+  category: project.category,
+  description: project.description,
+  capabilities: project.tags,
+  image: `/images/work/${project.slug}/hero.webp`,
+  href: `/portfolio#${project.slug}`,
+}));
 
 export function WorkPreview() {
   return (
@@ -9,7 +19,7 @@ export function WorkPreview() {
       <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <SectionHeading
           eyebrow="Selected work"
-          title="Systems built to solve real problems."
+          title="Software and websites built for real businesses."
           id="work-heading"
         >
           <p>
@@ -19,10 +29,10 @@ export function WorkPreview() {
           </p>
         </SectionHeading>
         <Link
-          href="/work"
+          href="/portfolio"
           className="group/link inline-flex min-h-11 shrink-0 items-center gap-2 text-sm text-warm-white"
         >
-          View All Work
+          View Full Portfolio
           <span
             aria-hidden="true"
             className="transition-transform duration-150 group-hover/link:translate-x-1 motion-reduce:transition-none motion-reduce:group-hover/link:translate-x-0"
