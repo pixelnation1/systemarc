@@ -1,6 +1,6 @@
 "use server";
 
-import type { FieldErrors } from "@/lib/inquiry/model";
+import { emptyInquiryDraft, type FieldErrors } from "@/lib/inquiry/model";
 import {
   allowInquiryAttempt,
   createInquiryId,
@@ -115,4 +115,34 @@ export async function submitProjectInquiry(input: {
   } catch {
     return { ok: false, code: "unavailable", message: deliveryFailedMessage };
   }
+}
+
+export async function submitSimpleInquiry(input: {
+  name: string;
+  email: string;
+  company: string;
+  service: string;
+  details: string;
+  honeypot: string;
+}): Promise<{ ok: boolean; message: string }> {
+  const name = input.name.trim();
+  const email = input.email.trim();
+  const details = input.details.trim();
+  const company = input.company.trim();
+  const allowed = ["launch", "business-pro", "custom-systems", "website-care", "not-sure"];
+  const service = allowed.includes(input.service) ? input.service : "not-sure";
+  if (name.length < 2 || name.length > 120 || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email) || email.length > 254 || details.length < 10 || details.length > 4000 || company.length > 160) {
+    return { ok: false, message: "Please enter your name, a valid email, and a short project description." };
+  }
+  const draft = emptyInquiryDraft();
+  draft.contact = { name, email, phone: "", preferredContact: "Email" };
+  draft.company = { name: company || "Not provided", description: "Prospective SystemArc customer requesting a consultation.", type: "Other", size: "" };
+  draft.problem = { description: details, currentProcess: "", affectedUsers: [], frequency: "" };
+  draft.project = { desiredOutcome: details, solutionAwareness: "No — I just know the problem", areas: [], timeline: "", budget: "" };
+  draft.systems = { currentTools: "", manualDataMovement: "", keepExisting: "", systemsToKeep: "" };
+  draft.problem.description = "Service requested: " + service + ". " + details;
+  const result = await submitProjectInquiry({ draft, honeypot: input.honeypot, referrer: "" });
+  return result.ok
+    ? { ok: true, message: "Thanks! Your inquiry has been sent." }
+    : { ok: false, message: result.message };
 }
