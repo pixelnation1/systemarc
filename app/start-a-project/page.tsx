@@ -1,6 +1,6 @@
 import { Container } from "@/components/container";
-import { DiscoveryPath } from "@/components/inquiry/discovery-path";
-import { ProjectInquiryForm } from "@/components/inquiry/project-inquiry-form";
+
+import { SimpleInquiryForm } from "@/components/inquiry/simple-inquiry-form";
 import { JsonLd } from "@/components/json-ld";
 import { Section, SectionHeading } from "@/components/section";
 import { pageGraph } from "@/lib/schema";
@@ -72,12 +72,12 @@ export default function StartProjectPage() {
             which of those you need.
           </p>
         </SectionHeading>
-        <DiscoveryPath />
+
       </Section>
       <section aria-label="Project inquiry" className="border-t border-border py-16 sm:py-24">
         <Container>
           <div className="mx-auto max-w-3xl">
-          <ProjectInquiryForm />
+          <SimpleInquiryForm />
           <p className="mt-8 text-sm leading-6 text-silver">
             For general questions, email{" "}
             <a
