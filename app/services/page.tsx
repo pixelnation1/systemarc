@@ -157,6 +157,15 @@ export default function ServicesPage() {
           <p className="mt-6 text-sm leading-6 text-silver">Final pricing depends on scope. Hosting, third-party subscriptions, ongoing support, and substantial revisions are quoted separately. Custom systems require discovery before a firm estimate.</p>
         </Section>
 
+        <section aria-labelledby="website-care" className="bg-graphite py-16">
+          <Container>
+            <h2 id="website-care" className="font-serif text-4xl text-warm-white">Website Care</h2>
+            <p className="mt-4 text-3xl text-warm-white">Starting at $99/month</p>
+            <p className="mt-4 max-w-2xl text-silver">Routine website software updates where applicable, a monthly health check, up to 30 minutes of minor content changes, and email maintenance support.</p>
+            <p className="mt-3 max-w-2xl text-sm text-silver">Subject to website eligibility and agreed coverage. Hosting, third-party fees, major redesigns and new features are separate. Unused edit time does not roll over.</p>
+            <div className="mt-6"><ButtonLink href="/start-a-project?service=website-care">Ask About Website Care</ButtonLink></div>
+          </Container>
+        </section>
         <Section labelledBy="system-first">
           <div className="grid gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
             <SectionHeading
