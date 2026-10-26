@@ -1,5 +1,6 @@
 import { Container } from "@/components/container";
 
+import { Suspense } from "react";
 import { SimpleInquiryForm } from "@/components/inquiry/simple-inquiry-form";
 import { JsonLd } from "@/components/json-ld";
 import { Section, SectionHeading } from "@/components/section";
@@ -77,7 +78,7 @@ export default function StartProjectPage() {
       <section aria-label="Project inquiry" className="border-t border-border py-16 sm:py-24">
         <Container>
           <div className="mx-auto max-w-3xl">
-          <SimpleInquiryForm />
+          <Suspense fallback={<p className="text-silver">Loading inquiry form...</p>}><SimpleInquiryForm /></Suspense>
           <p className="mt-8 text-sm leading-6 text-silver">
             For general questions, email{" "}
             <a
