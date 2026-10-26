@@ -128,6 +128,35 @@ export default function ServicesPage() {
           </ol>
         </Section>
 
+        <Section labelledBy="service-packages" className="bg-carbon">
+          <SectionHeading
+            id="service-packages"
+            eyebrow="Clear starting points"
+            title="Choose a starting point. We'll tailor the details."
+          >
+            <p>Transparent starting prices for business websites, with custom quotes for more complex systems.</p>
+          </SectionHeading>
+          <div className="mt-12 grid gap-6 lg:grid-cols-3">
+            {[
+              { name: "Launch", price: "$999", detail: "Starting at", description: "A professional website for a business ready to get online.", features: ["Up to 5 pages", "Responsive design", "Contact form", "Basic search optimization"], href: "/start-a-project?service=launch" },
+              { name: "Business Pro", price: "$1,999", detail: "Starting at", description: "A more capable website for growing businesses.", features: ["Up to 10 pages", "Lead capture or booking setup", "Analytics setup", "Selected integrations"], href: "/start-a-project?service=business-pro" },
+              { name: "Custom Systems", price: "$3,500+", detail: "Projects from", description: "Software and automation scoped around your operations.", features: ["Discovery and scoping", "Dashboards and internal tools", "Workflow automation", "Integrations and custom applications"], href: "/start-a-project?service=custom-systems" },
+            ].map((plan) => (
+              <article key={plan.name} className="flex flex-col border border-steel bg-graphite p-7">
+                <h3 className="font-serif text-3xl text-warm-white">{plan.name}</h3>
+                <p className="mt-5 text-sm text-silver">{plan.detail}</p>
+                <p className="mt-1 text-4xl font-semibold text-warm-white">{plan.price}</p>
+                <p className="mt-5 leading-7 text-silver">{plan.description}</p>
+                <ul className="mt-6 mb-8 flex-1 space-y-3 text-sm text-silver">
+                  {plan.features.map((feature) => <li key={feature}>✓ {feature}</li>)}
+                </ul>
+                <ButtonLink href={plan.href}>Request a Quote</ButtonLink>
+              </article>
+            ))}
+          </div>
+          <p className="mt-6 text-sm leading-6 text-silver">Final pricing depends on scope. Hosting, third-party subscriptions, ongoing support, and substantial revisions are quoted separately. Custom systems require discovery before a firm estimate.</p>
+        </Section>
+
         <Section labelledBy="system-first">
           <div className="grid gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
             <SectionHeading
