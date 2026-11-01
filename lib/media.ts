@@ -1,0 +1,6 @@
+export const mediaServices = [
+  { id: "strategy", name: "Brand & content strategy", summary: "Know who you are talking to. Give them a reason to care.", detail: "Audience research, positioning, messaging, channel planning, and a content roadmap grounded in your business goals.", deliverables: "Audience and channel audit · Messaging direction · Content plan" },
+  { id: "creative", name: "Content & creative", summary: "Make something worth stopping for.", detail: "Short-form video, product stories, founder-led content, photography, and social creative shaped for the platforms your audience uses.", deliverables: "Content sessions · Video editing · Social assets · Ad variations" },
+  { id: "social", name: "Social media management", summary: "Show up with a purpose. Keep the conversation going.", detail: "Editorial calendars, copywriting, scheduling, publishing, and a clear plan for community responses and approvals.", deliverables: "Publishing calendar · Platform-specific copy · Monthly review" },
+  { id: "paid-media", name: "Paid media & testing", summary: "Give your strongest ideas a measurable next step.", detail: "Campaign planning and management, audience and creative tests, landing-page alignment, and reporting against agreed business goals.", deliverables: "Campaign setup · Creative testing · Performance reporting" },
+] as const;

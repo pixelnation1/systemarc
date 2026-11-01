@@ -8,13 +8,13 @@ export const siteName = "SystemArc";
 export const contactEmail = "support@systemarchq.com";
 
 export const siteDescription =
-  "SystemArc designs and builds custom software, automation, web applications, integrations, and digital systems around the way businesses actually operate.";
+  "SystemArc connects creative, media, websites, and custom software to help ambitious businesses grow. Brand strategy, social content, paid campaigns, and business technology.";
 
-export const siteTitle = "SystemArc | Custom Software & Business Systems";
+export const siteTitle = "SystemArc | Creative, Media & Technology";
 
 export const navItems = [
   { href: "/services", label: "Services" },
-  { href: "/solutions", label: "Solutions" },
+  { href: "/media", label: "Media" },
   { href: "/portfolio", label: "Portfolio" },
   { href: "/process", label: "Process" },
   { href: "/about", label: "About" },
@@ -22,7 +22,7 @@ export const navItems = [
 
 export const footerItems = [
   { href: "/services", label: "Services" },
-  { href: "/solutions", label: "Solutions" },
+  { href: "/media", label: "Media" },
   { href: "/industries", label: "Industries" },
   { href: "/portfolio", label: "Portfolio" },
   { href: "/process", label: "Process" },
@@ -38,10 +38,10 @@ export const legalItems = [
 export const startProjectHref = "/start-a-project";
 
 export const defaultSocialImage = {
-  url: "/images/og.jpg",
+  url: "/opengraph-image",
   width: 1200,
   height: 630,
-  alt: "SystemArc. Software built around your business.",
+  alt: "SystemArc. Creative, Media & Technology. Get attention. Build what’s next.",
 } as const;
 
 export type SocialImage = {

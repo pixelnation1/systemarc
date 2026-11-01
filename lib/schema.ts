@@ -32,7 +32,7 @@ export function organizationNode(): SchemaNode {
     email: contactEmail,
     logo: `${siteUrl}/images/icon-512.png`,
     description: siteDescription,
-    slogan: "Software built around your business.",
+    slogan: "Creative, media, and technology. Built around your business.",
   };
 }
 

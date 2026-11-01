@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MediaOffering } from "@/components/media-offering";
 import { ApproachModel } from "@/components/about/approach-model";
 import { SystemLayers } from "@/components/about/system-layers";
 import { ButtonLink } from "@/components/button-link";
@@ -10,9 +11,9 @@ import { getProject } from "@/lib/projects";
 import { teamMembers } from "@/lib/team";
 import { createMetadata, siteName, startProjectHref } from "@/lib/site";
 
-const aboutTitle = `About ${siteName} | Custom Software & Business Systems`;
+const aboutTitle = `About ${siteName} | Creative, Media & Technology`;
 const aboutDescription =
-  "Learn how SystemArc approaches custom software, automation, integrations, and business systems by understanding how a company actually operates before building the technology.";
+  "Meet SystemArc, an independent creative, media, and technology company connecting brand storytelling with the systems behind business growth.";
 
 export const metadata = createMetadata({
   title: aboutTitle,
@@ -113,17 +114,18 @@ export default function AboutPage() {
                   id="about-heading"
                   className="mt-5 max-w-[14em] font-serif text-4xl leading-[1.08] tracking-[-0.02em] text-balance text-warm-white sm:text-5xl lg:text-6xl"
                 >
-                  We build software around how businesses actually work.
+                  We connect the story with the systems behind it.
                 </h1>
                 <div className="mt-6 max-w-xl space-y-4 text-base leading-7 text-silver sm:text-lg sm:leading-8">
                   <p>
-                    SystemArc exists to solve the gap between how a business
-                    operates and what off-the-shelf software allows it to do.
+                    SystemArc brings creative, media, and technology together.
+                    We help businesses communicate what makes them matter
+                    and build the digital experiences that support the next step.
                   </p>
                   <p>
-                    We study the workflow, identify where technology can remove
-                    friction, and build systems around the operation instead of
-                    forcing the operation around the software.
+                    Our roots are in building and operating businesses. That
+                    perspective connects our approach to content and campaigns
+                    with our work in websites, custom software, and automation.
                   </p>
                 </div>
               </div>
@@ -134,6 +136,7 @@ export default function AboutPage() {
           </Container>
         </section>
 
+        <MediaOffering />
         <Section labelledBy="why-heading" className="bg-graphite">
           <SectionHeading
             id="why-heading"

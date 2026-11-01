@@ -12,9 +12,9 @@ import {
 import { Section, SectionHeading } from "@/components/section";
 import { createMetadata, startProjectHref } from "@/lib/site";
 
-const processTitle = "Our Software Development Process | SystemArc";
+const processTitle = "Our Process | Creative, Media & Technology | SystemArc";
 const processDescription =
-  "Learn how SystemArc approaches custom software projects through discovery, architecture, phased development, launch, and ongoing support.";
+  "See how SystemArc scopes creative and media engagements and delivers software through discovery, phased development, launch, and ongoing support.";
 
 export const metadata = createMetadata({
   title: processTitle,
@@ -203,18 +203,18 @@ export default function ProcessPage() {
                 id="process-heading"
                 className="mt-5 max-w-[14em] font-serif text-4xl leading-[1.08] tracking-[-0.02em] text-balance text-warm-white sm:text-5xl lg:text-6xl"
               >
-                Understand the business before building the software.
+                Understand the business. Define the work. Move it forward.
               </h1>
               <div className="mt-6 max-w-2xl space-y-4 text-base leading-7 text-silver sm:text-lg sm:leading-8">
-                <p>Good software does not start with code.</p>
+                <p>Every engagement starts with a clear business goal.</p>
                 <p>
-                  It starts with understanding the operation, the people using
-                  it, the systems already in place, and the problem the
-                  technology needs to solve.
+                  We align on your audience, your operation, the opportunity,
+                  and the measures that will help us evaluate the work.
                 </p>
                 <p>
-                  SystemArc moves from discovery to architecture to development
-                  with that understanding intact.
+                  For media, we agree on channels, deliverables, production,
+                  approvals, and reporting. For technology, we define the
+                  architecture, delivery phases, testing, and support.
                 </p>
               </div>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -229,10 +229,14 @@ export default function ProcessPage() {
           </Container>
         </section>
 
+        <Section labelledBy="media-process-heading" className="bg-graphite">
+          <SectionHeading id="media-process-heading" eyebrow="Creative & media" title="Plan. Produce. Publish. Learn."><p>We begin with an audience and channel review, then develop a content or campaign plan. Production follows an agreed brief and approval schedule. After publishing, we review performance against the agreed goals and use those findings to guide the next cycle.</p><p>Deliverables, account responsibilities, agency fees, and advertising spend are documented before launch.</p></SectionHeading>
+          <ButtonLink href="/media" className="mt-8">Explore Media Engagements</ButtonLink>
+        </Section>
         <Section labelledBy="overview-heading" className="bg-graphite">
           <SectionHeading
             id="overview-heading"
-            eyebrow="The path"
+            eyebrow="Technology delivery"
             title="Discovery, architecture, build, then launch and support."
           />
           <div className="mt-12">

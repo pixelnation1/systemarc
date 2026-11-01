@@ -6,9 +6,9 @@ import { Section, SectionHeading } from "@/components/section";
 import { pageGraph } from "@/lib/schema";
 import { contactEmail, createMetadata } from "@/lib/site";
 
-const title = "Start a Software Project | SystemArc";
+const title = "Start a Creative, Media or Technology Project | SystemArc";
 const description =
-  "Tell SystemArc what is not working in your business. Start a conversation about custom software, automation, integrations, customer portals, internal systems, or operational technology.";
+  "Talk to SystemArc about content, social media, advertising, websites, custom software, or a connected creative and technology engagement.";
 
 export const metadata = createMetadata({
   title,
@@ -37,14 +37,14 @@ export default function StartProjectPage() {
           Start a project
         </p>
         <h1 className="mt-4 max-w-[12em] font-serif text-4xl leading-[1.08] tracking-[-0.03em] text-balance text-warm-white sm:text-6xl">
-          Start with what isn&apos;t working.
+          Start with your ambition.
         </h1>
         <div className="mt-6 max-w-2xl space-y-5 text-base leading-7 text-silver sm:text-lg sm:leading-8">
-          <p>You don&apos;t need a technical specification.</p>
+          <p>You don&apos;t need a finished brief.</p>
           <p>
-            Tell us how the business works today, where the process breaks down,
-            what your team is doing manually, or what you wish your current
-            systems could do.
+            Tell us who you want to reach, what you want to change,
+            or what your business needs to do next. Content, campaigns,
+            websites, and software can all start here.
           </p>
           <p>We&apos;ll start there.</p>
         </div>
@@ -57,7 +57,7 @@ export default function StartProjectPage() {
         <SectionHeading
           id="discovery-intro"
           eyebrow="Discovery"
-          title="Help us understand the operation."
+          title="Help us understand the opportunity."
         >
           <p>
             The questions below are designed to give SystemArc enough context
@@ -65,11 +65,10 @@ export default function StartProjectPage() {
             document.
           </p>
           <p>
-            SystemArc determines the technical approach during discovery. An
-            inquiry can involve custom software, business automation, web
-            applications, customer portals, internal systems, software
-            integrations, or AI-assisted workflows. You do not need to know
-            which of those you need.
+            An inquiry can involve brand strategy, content production, social
+            media, paid campaigns, websites, custom software, or automation.
+            We will define deliverables, budget, responsibilities, and
+            success measures together. Skip optional questions that do not apply.
           </p>
         </SectionHeading>
         <DiscoveryPath />

@@ -38,6 +38,11 @@ export const solutionAwarenessOptions = [
   "No — I just know the problem",
 ] as const;
 export const projectAreaOptions = [
+  "Brand / Content Strategy",
+  "Content / Video Production",
+  "Social Media Management",
+  "Paid Media / Advertising",
+  "Website / Ecommerce",
   "Custom Software",
   "Automation",
   "Web Application",

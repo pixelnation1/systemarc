@@ -144,3 +144,11 @@ body {
     opacity: 0;
   }
 }
+
+/* Agency presentation: retain SystemArc's carbon, warm white, and cobalt. */
+.agency-hero { background: #2452d6; color: #fff; }
+.agency-display { font-size: clamp(3.4rem, 9vw, 8.5rem); font-weight: 750; line-height: .98; letter-spacing: -.055em; }
+.agency-outline { color: transparent; -webkit-text-stroke: 1.5px white; }
+.agency-eyebrow { font-family: var(--font-mono), monospace; color: var(--color-electric-cobalt); font-size: .75rem; text-transform: uppercase; letter-spacing: .15em; }
+.agency-paper { background: var(--color-warm-white); color: var(--color-carbon); }
+@media (forced-colors: active) { .agency-outline { color: CanvasText; -webkit-text-stroke: 0; } }

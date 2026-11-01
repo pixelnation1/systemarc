@@ -157,7 +157,7 @@ export function ProblemStep({ draft, errors, update }: Editor) {
         name="problemDescription"
         label="What problem are you trying to solve?"
         required
-        hint="Describe the workflow, bottleneck, repetitive task, missing capability, customer problem, or operational issue."
+        hint="Tell us about your audience, marketing challenge, growth goal, workflow, or customer experience."
         value={draft.problem.description}
         error={errors.problemDescription}
         onChange={(event) => update("problem", { description: event.target.value })}
@@ -208,8 +208,8 @@ export function SystemsStep({ draft, errors, update }: Editor) {
       <Textarea
         id="currentTools"
         name="currentTools"
-        label="What software or tools are involved in this process?"
-        hint="Examples include a CRM, POS, e-commerce, spreadsheets, accounting software, scheduling software, email, or internal tools."
+        label="What channels, software, or tools are involved?"
+        hint="Include social accounts, ad platforms, your website, CRM, email, or business tools. Skip questions that do not apply."
         value={draft.systems.currentTools}
         error={errors.currentTools}
         onChange={(event) => update("systems", { currentTools: event.target.value })}
@@ -284,9 +284,9 @@ export function ProjectStep({ draft, errors, update }: Editor) {
       />
       <ChoiceGroup
         id="solutionAwareness"
-        legend="Do you already have an idea of what needs to be built?"
+        legend="Do you already have an approach in mind?"
         required
-        hint="Knowing the problem is enough. SystemArc determines the technical approach during discovery."
+        hint="Knowing the goal is enough. We can define the creative, media, or technical approach together."
         error={errors.solutionAwareness}
       >
         {solutionAwarenessOptions.map((option) => (
@@ -332,7 +332,7 @@ export function ProjectStep({ draft, errors, update }: Editor) {
       <ChoiceGroup
         id="budget"
         legend="Has a budget range been established?"
-        hint="This is for planning the conversation. It does not decide whether we will talk."
+        hint="For a recurring engagement, tell us your monthly budget in the goals field, including whether advertising spend is separate."
         error={errors.budget}
       >
         {budgetOptions.map((option) => (

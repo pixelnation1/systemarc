@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MediaOffering } from "@/components/media-offering";
 import { ButtonLink } from "@/components/button-link";
 import { Container } from "@/components/container";
 import { JsonLd } from "@/components/json-ld";
@@ -7,9 +8,9 @@ import { pageGraph, type SchemaNode } from "@/lib/schema";
 import { servicePath, services } from "@/lib/services";
 import { createMetadata, siteUrl, startProjectHref } from "@/lib/site";
 
-const title = "Software Development Services | SystemArc";
+const title = "Creative, Media & Technology Services | SystemArc";
 const description =
-  "Explore SystemArc custom software development, business automation, web application development, integrations, AI automation, customer portals, and internal business systems.";
+  "Explore SystemArc content strategy, creative production, social media, paid campaigns, websites, custom software, and business automation.";
 
 const decisions = [
   {
@@ -80,27 +81,28 @@ export default function ServicesPage() {
               id="services-heading"
               className="mt-5 max-w-[16em] font-serif text-4xl leading-[1.08] tracking-[-0.02em] text-balance text-warm-white sm:text-5xl lg:text-6xl"
             >
-              Technology built around the way your business works.
+              Creative, media, and technology. Working together.
             </h1>
             <div className="mt-6 max-w-2xl space-y-4 text-base leading-7 text-silver sm:text-lg sm:leading-8">
               <p>
-                SystemArc designs and builds software, automation, integrations,
-                and digital systems around real business operations.
+                SystemArc connects brand strategy, content, social media, and paid
+                campaigns with websites, software, and business automation.
               </p>
               <p>
-                Sometimes that means building something new. Sometimes it means
-                connecting what already exists. The goal is not more software.
-                The goal is a better system.
+                Choose a focused engagement or bring the work together in one plan.
+                We start with your audience, your operation, and the outcome
+                you need, then define the scope around it.
               </p>
             </div>
           </Container>
         </section>
 
+        <MediaOffering />
         <Section labelledBy="service-overview" className="bg-graphite">
           <SectionHeading
             id="service-overview"
             eyebrow="Overview"
-            title="Seven ways SystemArc works on an operation."
+            title="Technology built around your business."
           />
           <ol className="mt-14 divide-y divide-steel border-y border-steel">
             {services.map((service) => (
@@ -216,9 +218,9 @@ export default function ServicesPage() {
               Start with the problem, not the product.
             </h2>
             <p className="mt-6 max-w-2xl text-base leading-7 text-silver sm:text-lg sm:leading-8">
-              Tell us what your team is doing manually, where information gets
-              stuck, which systems do not communicate, or what you wish your
-              current software could do.
+              Tell us who you want to reach, what your customers need,
+              or where your operation is getting stuck. We will define
+              the right creative, media, or technology scope together.
             </p>
             <div className="mt-8">
               <ButtonLink href={startProjectHref}>Start a Project</ButtonLink>

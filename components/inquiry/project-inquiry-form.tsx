@@ -28,7 +28,7 @@ const secondaryButton =
 const stepCopy = [
   {
     title: "About you",
-    intro: "Tell us who to talk with. The technical approach comes later.",
+    intro: "Tell us who to talk with. We will shape the approach together.",
   },
   {
     title: "The business",
@@ -36,11 +36,11 @@ const stepCopy = [
   },
   {
     title: "What's not working?",
-    intro: "This is the part that matters most. Describe the work, not the technology.",
+    intro: "Tell us about the opportunity, audience, or business challenge you want to address.",
   },
   {
     title: "What does the business use today?",
-    intro: "Existing tools can stay. We need to know what the process already depends on.",
+    intro: "Share your current channels and tools. Skip optional questions that do not apply.",
   },
   {
     title: "What would better look like?",

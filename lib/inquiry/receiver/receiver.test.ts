@@ -4,6 +4,8 @@ import { authorizeInquiryReceiver } from "./auth";
 import { handleInquiryWebhook } from "./handle";
 import { InquiryPersistenceError, type InquiryStore, type ProjectInquiryRow } from "./persist";
 import { validateInquiryWebhook } from "./validate";
+import { draftFromUnknown, toProjectInquiry } from "../validate";
+import { inquiryWebhookPayload } from "../webhook";
 
 const secret = "test-secret";
 const inquiryId = "11111111-1111-4111-8111-111111111111";
@@ -304,4 +306,18 @@ describe("receiver HTTP behavior", () => {
     assert.equal(result.body.received, undefined);
     assert.equal(JSON.stringify(result.body).includes("08006"), false);
   });
+});
+
+// Exercise the public form -> normalization -> webhook -> persisted row boundary.
+it("preserves media services through inquiry validation and storage", async () => {
+  const areas = ["Brand / Content Strategy", "Content / Video Production", "Social Media Management", "Paid Media / Advertising", "Website / Ecommerce"];
+  const original = payload();
+  const draft = draftFromUnknown({ ...original, project: { ...original.project, areas } });
+  assert.ok(draft);
+  const inquiry = toProjectInquiry(draft, { submittedAt: "2026-11-01T15:00:00.000Z", sourcePage: "/start-a-project", referrer: "" });
+  assert.ok(inquiry);
+  const { rows, store } = memoryStore();
+  const response = await handleInquiryWebhook(request(inquiryWebhookPayload({ ...inquiry, id: inquiryId })), { secret, store });
+  assert.equal(response.status, 201);
+  assert.deepEqual(rows.get(inquiryId)?.project_areas, areas);
 });
