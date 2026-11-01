@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { MediaBriefForm } from "@/components/inquiry/media-brief-form";
 import { Container } from "@/components/container";
 import { DiscoveryPath } from "@/components/inquiry/discovery-path";
 import { ProjectInquiryForm } from "@/components/inquiry/project-inquiry-form";
@@ -18,7 +20,17 @@ export const metadata = createMetadata({
   absoluteTitle: true,
 });
 
-export default function StartProjectPage() {
+export default async function StartProjectPage({ searchParams }: { searchParams: Promise<{ type?: string | string[]; service?: string | string[] }> }) {
+  const query = await searchParams;
+  if (query.type === "media") {
+    return <Container className="py-16 sm:py-24">
+      <Link href="/media" className="inline-flex min-h-11 items-center text-sm text-silver underline underline-offset-4">← SystemArc Media</Link>
+      <div className="mt-8 grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+        <div><p className="agency-eyebrow">Start a media conversation</p><h1 className="mt-5 text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl">Your next chapter starts here.</h1><p className="mt-6 text-lg leading-8 text-silver">Tell us about the audience, the opportunity, and what you want to change. We will help turn it into a practical brief.</p><h2 className="mt-10 text-xl font-semibold">What happens next</h2><ol className="mt-5 space-y-4 text-silver"><li>01 / We review your goals and current channels.</li><li>02 / We follow up to discuss fit and scope.</li><li>03 / We outline deliverables, responsibilities, and fees.</li></ol><p className="mt-8 text-sm leading-7 text-silver">Prefer email? <a href={`mailto:${contactEmail}`} className="underline underline-offset-4">{contactEmail}</a></p><Link href="/start-a-project" className="mt-6 inline-flex min-h-11 items-center text-sm underline underline-offset-4">Planning a software project? Use our discovery form.</Link></div>
+        <MediaBriefForm service={typeof query.service === "string" ? query.service : undefined} />
+      </div>
+    </Container>;
+  }
   return (
     <>
       <JsonLd
@@ -40,7 +52,7 @@ export default function StartProjectPage() {
           Start with your ambition.
         </h1>
         <div className="mt-6 max-w-2xl space-y-5 text-base leading-7 text-silver sm:text-lg sm:leading-8">
-          <p>You don&apos;t need a finished brief.</p>
+          <p>You don&apos;t need a finished brief.</p><p><Link href="/start-a-project?type=media" className="underline underline-offset-4">Looking for content, social, or advertising? Use our shorter media brief ↗</Link></p>
           <p>
             Tell us who you want to reach, what you want to change,
             or what your business needs to do next. Content, campaigns,

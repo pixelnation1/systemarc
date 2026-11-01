@@ -6,6 +6,7 @@ import { InquiryPersistenceError, type InquiryStore, type ProjectInquiryRow } fr
 import { validateInquiryWebhook } from "./validate";
 import { draftFromUnknown, toProjectInquiry } from "../validate";
 import { inquiryWebhookPayload } from "../webhook";
+import { emptyMediaBrief, mediaBriefToDraft } from "../media-brief";
 
 const secret = "test-secret";
 const inquiryId = "11111111-1111-4111-8111-111111111111";
@@ -320,4 +321,27 @@ it("preserves media services through inquiry validation and storage", async () =
   const response = await handleInquiryWebhook(request(inquiryWebhookPayload({ ...inquiry, id: inquiryId })), { secret, store });
   assert.equal(response.status, 201);
   assert.deepEqual(rows.get(inquiryId)?.project_areas, areas);
+});
+
+it("delivers a short media brief without losing budget, goals, or service selection", async () => {
+  const brief = { ...emptyMediaBrief("paid-media"), name: "Ada Example", email: "ada@example.com", company: "Example Studio", business: "We sell handmade furniture to local homeowners.", challenge: "We need better inquiries from our product campaigns.", outcome: "Increase the number of qualified consultation requests.", channels: "https://example.com and Instagram", planning: "Monthly engagement, $4000 agency budget; $2000 ad spend separate. Launch in January." };
+  const draft = draftFromUnknown(mediaBriefToDraft(brief));
+  assert.ok(draft);
+  const inquiry = toProjectInquiry(draft, { submittedAt: "2026-11-01T15:00:00.000Z", sourcePage: "/start-a-project", referrer: "https://www.systemarchq.com/media/paid-media" });
+  assert.ok(inquiry);
+  const { rows, store } = memoryStore();
+  const response = await handleInquiryWebhook(request(inquiryWebhookPayload({ ...inquiry, id: inquiryId })), { secret, store });
+  assert.equal(response.status, 201);
+  const row = rows.get(inquiryId);
+  assert.ok(row);
+  assert.deepEqual(row.project_areas, ["Paid Media / Advertising"]);
+  assert.equal(row.desired_outcome, brief.outcome);
+  assert.equal(row.current_tools, brief.channels);
+  assert.ok(row.current_process.includes(brief.planning));
+  assert.equal(row.contact_email, brief.email);
+});
+
+it("does not let a service URL bypass required media brief fields", () => {
+  assert.deepEqual(emptyMediaBrief("unknown").areas, []);
+  assert.equal(toProjectInquiry(mediaBriefToDraft(emptyMediaBrief("creative")), { submittedAt: "2026-11-01T15:00:00.000Z", sourcePage: "/start-a-project", referrer: "" }), null);
 });

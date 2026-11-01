@@ -6,8 +6,8 @@ import { portfolioProjects } from "@/lib/portfolio";
 
 const work = [portfolioProjects[3], portfolioProjects[0], portfolioProjects[5]];
 const capabilities = [
-  { number: "01", title: "Creative that connects.", text: "Brand strategy, short-form video, social content, and stories that give people a reason to pay attention.", href: "/media#creative", link: "Explore creative & content" },
-  { number: "02", title: "Media with a purpose.", text: "Social publishing, paid campaigns, and creative testing built around the audience you need to reach and the action you want them to take.", href: "/media#paid-media", link: "Explore social & media" },
+  { number: "01", title: "Creative that connects.", text: "Brand strategy, short-form video, social content, and stories that give people a reason to pay attention.", href: "/media/creative", link: "Explore creative & content" },
+  { number: "02", title: "Media with a purpose.", text: "Social publishing, paid campaigns, and creative testing built around the audience you need to reach and the action you want them to take.", href: "/media/paid-media", link: "Explore social & media" },
   { number: "03", title: "Technology that delivers.", text: "Websites, commerce, custom software, and automation that connect the first click to the work happening inside your business.", href: "/services#service-overview", link: "Explore technology" },
 ];
 

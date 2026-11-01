@@ -41,7 +41,7 @@ export function ButtonLink({
   function handleClick() {
     onClick?.();
 
-    if (href !== startProjectHref) return;
+    if (href.split("?")[0] !== startProjectHref) return;
 
     const location = analyticsLocation ? `${analyticsLocation}:${pathname}` : pathname;
     trackAnalytics({ name: "start_project_clicked", location });
