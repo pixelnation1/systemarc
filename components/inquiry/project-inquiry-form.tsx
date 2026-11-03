@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useTransition, type FormEvent } from "react";
 import Link from "next/link";
+import { getBuildScenario } from "@/lib/build-scenarios";
 import { submitProjectInquiry } from "@/app/start-a-project/actions";
 import { FormStep, ProgressIndicator } from "@/components/inquiry/progress";
 import { ReviewItem, ReviewSection } from "@/components/inquiry/review";
@@ -62,8 +63,13 @@ function list(values: readonly string[]) {
   return values.length ? values.join(", ") : "";
 }
 
-export function ProjectInquiryForm() {
-  const [draft, setDraft] = useState<InquiryDraft>(emptyInquiryDraft);
+export function ProjectInquiryForm({ scenarioId }: { scenarioId?: string }) {
+  const [draft, setDraft] = useState<InquiryDraft>(() => {
+    const initial = emptyInquiryDraft();
+    const scenario = getBuildScenario(scenarioId);
+    if (scenario) { initial.problem.description = scenario.problem; initial.project.desiredOutcome = scenario.outcome; }
+    return initial;
+  });
   const [step, setStep] = useState(0);
   const [reached, setReached] = useState(0);
   const [errors, setErrors] = useState<FieldErrors>({});

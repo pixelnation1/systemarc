@@ -1,3 +1,4 @@
+import { getBuildScenario } from "@/lib/build-scenarios";
 import Link from "next/link";
 import { MediaBriefForm } from "@/components/inquiry/media-brief-form";
 import { Container } from "@/components/container";
@@ -20,7 +21,7 @@ export const metadata = createMetadata({
   absoluteTitle: true,
 });
 
-export default async function StartProjectPage({ searchParams }: { searchParams: Promise<{ type?: string | string[]; service?: string | string[] }> }) {
+export default async function StartProjectPage({ searchParams }: { searchParams: Promise<{ type?: string | string[]; service?: string | string[]; scenario?: string | string[] }> }) {
   const query = await searchParams;
   if (query.type === "media") {
     return <Container className="py-16 sm:py-24">
@@ -88,7 +89,8 @@ export default async function StartProjectPage({ searchParams }: { searchParams:
       <section aria-label="Project inquiry" className="border-t border-border py-16 sm:py-24">
         <Container>
           <div className="mx-auto max-w-3xl">
-          <ProjectInquiryForm />
+          {getBuildScenario(query.scenario) && <p className="mb-6 rounded-lg border border-steel bg-graphite p-5 text-sm text-silver">Your selected direction: <strong className="text-warm-white">{getBuildScenario(query.scenario)?.solution}</strong>. We have added this starting point to the problem and outcome fields. You can edit it before submitting.</p>}
+          <ProjectInquiryForm key={typeof query.scenario === "string" ? query.scenario : "general"} scenarioId={typeof query.scenario === "string" ? query.scenario : undefined} />
           <p className="mt-8 text-sm leading-6 text-silver">
             For general questions, email{" "}
             <a
