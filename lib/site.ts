@@ -16,7 +16,7 @@ export const navItems = [
   { href: "/services", label: "Services" },
   { href: "/media", label: "Media" },
   { href: "/portfolio", label: "Portfolio" },
-  { href: "/process", label: "Process" },
+  { href: "/#products", label: "Products" },
   { href: "/about", label: "About" },
 ] as const;
 
@@ -41,7 +41,7 @@ export const defaultSocialImage = {
   url: "/opengraph-image",
   width: 1200,
   height: 630,
-  alt: "SystemArc. Software, Automation & Media. Build smarter. Reach further. Work better.",
+  alt: "SystemArc. Your next big move. Built together.",
 } as const;
 
 export type SocialImage = {
