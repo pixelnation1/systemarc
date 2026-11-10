@@ -1,15 +1,19 @@
 import "server-only";
 import { createHash, createHmac, randomBytes, scrypt as callbackScrypt, timingSafeEqual } from "node:crypto";
-import { promisify } from "node:util";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createInquirySupabase } from "@/lib/supabase/server";
 
-const scrypt = promisify(callbackScrypt);
 const cookieName = "sa_sales_session";
 const sessionSeconds = 7 * 24 * 60 * 60;
 const iterations = 1 << 15;
 const scryptOptions = { N:iterations, r:8, p:1, maxmem:64*1024*1024 };
+function derivePassword(password:string,salt:Buffer):Promise<Buffer> {
+  return new Promise((resolve,reject)=>callbackScrypt(password,salt,64,scryptOptions,(err,key)=>{
+    if(err)reject(err);
+    else resolve(key as Buffer);
+  }));
+}
 export const salesStages = ["new","contacted","qualified","proposal","won","lost"] as const;
 export type SalesStage = (typeof salesStages)[number];
 
@@ -19,14 +23,14 @@ export function isSalesLoginConfigured() {
 }
 export async function hashSalesPassword(password:string):Promise<string> {
   const salt = randomBytes(24).toString("hex");
-  const digest = await scrypt(password, Buffer.from(salt,"hex"), 64, scryptOptions) as Buffer;
+  const digest = await derivePassword(password,Buffer.from(salt,"hex"));
   return "scrypt-v1:"+salt+":"+digest.toString("hex");
 }
 export async function verifySalesPassword(password:string, encoded:string):Promise<boolean> {
   const match = /^scrypt-v1:([0-9a-f]{48}):([0-9a-f]{128})$/.exec(encoded);
   if (!match) return false;
   try {
-    const candidate=await scrypt(password,Buffer.from(match[1],"hex"),64,scryptOptions) as Buffer;
+    const candidate=await derivePassword(password,Buffer.from(match[1],"hex"));
     return timingSafeEqual(candidate,Buffer.from(match[2],"hex"));
   } catch { return false; }
 }
