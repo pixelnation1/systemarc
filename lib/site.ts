@@ -8,15 +8,15 @@ export const siteName = "SystemArc";
 export const contactEmail = "support@systemarchq.com";
 
 export const siteDescription =
-  "SystemArc builds custom software, AI-assisted workflows, websites, and media for ambitious businesses. Explore our products or start a custom project.";
+  "SystemArc builds professional business websites, custom software, and automation to help businesses win more inquiries, save time, and grow.";
 
-export const siteTitle = "SystemArc | Software, Automation & Media";
+export const siteTitle = "SystemArc | Business Websites, Software & Automation";
 
 export const navItems = [
-  { href: "/services", label: "Services" },
+  { href: "/services/business-websites", label: "Websites" },
+  { href: "/services/custom-software-development", label: "Software & Automation" },
+  { href: "/portfolio", label: "Our Work" },
   { href: "/media", label: "Media" },
-  { href: "/portfolio", label: "Portfolio" },
-  { href: "/#products", label: "Products" },
   { href: "/about", label: "About" },
 ] as const;
 

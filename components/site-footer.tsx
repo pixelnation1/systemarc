@@ -11,7 +11,7 @@ export function SiteFooter() {
           <div className="lg:col-span-5">
             <Logo />
             <p className="mt-4 max-w-xs text-base leading-7 text-silver">
-              Creative. Media. Technology. Built around your business.
+              Business websites, custom software, and automation. Built to help your business grow.
             </p>
             <p
               id="footer-contact"
