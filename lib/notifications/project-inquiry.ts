@@ -1,7 +1,7 @@
 import "server-only";
 import { notifyLeadStored, type LeadStoredEvent } from "@/lib/inquiry/receiver/notify";
 import { deliverProjectInquiryNotification } from "@/lib/notifications/deliver";
-import { createResendTransport } from "@/lib/notifications/resend";
+import { sendSystemArcMail, isSpacemailConfigured, systemArcMailbox } from "@/lib/notifications/spacemail";
 
 /**
  * Runs only after a newly stored inquiry. Duplicate deliveries must not call this.
@@ -11,11 +11,14 @@ export async function notifyNewProjectInquiry(event: LeadStoredEvent) {
   await notifyLeadStored(event);
   await deliverProjectInquiryNotification(event, {
     nodeEnv: process.env.NODE_ENV,
-    notificationEmail: process.env.INQUIRY_NOTIFICATION_EMAIL,
-    defaultEmail: "",
-    transport: createResendTransport({
-      apiKey: process.env.RESEND_API_KEY,
-      from: process.env.RESEND_FROM_EMAIL,
-    }),
+    notificationEmail: process.env.INQUIRY_NOTIFICATION_EMAIL || systemArcMailbox,
+    defaultEmail: systemArcMailbox,
+    transport: isSpacemailConfigured()?{
+      name:"spacemail",
+      async send(message) {
+        const result=await sendSystemArcMail(message);
+        return {providerMessageId:result.id};
+      },
+    }:null,
   });
 }

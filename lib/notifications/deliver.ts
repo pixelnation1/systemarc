@@ -6,9 +6,9 @@ import {
 } from "@/lib/notifications/message";
 
 /**
- * A transactional email transport. The production implementation is Resend,
- * constructed beside this module. Do not send with a mailbox password, and do
- * not put a provider key in a NEXT_PUBLIC_ variable.
+ * Transactional email transport. Production uses a server-only Spacemail
+ * SMTP sender. Keep SMTP credentials in Vercel secrets and never expose them
+ * through a NEXT_PUBLIC_ variable.
  */
 export type TransactionalEmailReceipt = {
   providerMessageId: string;

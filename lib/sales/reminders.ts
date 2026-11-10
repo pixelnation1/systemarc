@@ -1,20 +1,19 @@
 import "server-only";
-import { Resend } from "resend";
+import { isSpacemailConfigured, sendSystemArcMail, systemArcMailbox } from "@/lib/notifications/spacemail";
 import { createInquirySupabase } from "@/lib/supabase/server";
 import { businessToday,formatDate } from "@/lib/sales/model";
 import { escapeHtml } from "@/lib/sales/proposals";
-import { safeFromIdentity } from "@/lib/notifications/resend";
 
 export type DigestResult = "sent"|"empty"|"duplicate"|"unavailable";
 function recipient() {
-  const email=(process.env.SALES_ADMIN_EMAIL||process.env.INQUIRY_NOTIFICATION_EMAIL||"").trim().toLowerCase();
+  const email=(process.env.SALES_ADMIN_EMAIL||systemArcMailbox).trim().toLowerCase();
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)?email:null;
 }
 type Due = {id:string;company_name:string;contact_name:string;service:string;next_follow_up:string;stage:string};
 export async function sendDueFollowUps():Promise<DigestResult> {
-  const to=recipient(), from=safeFromIdentity(process.env.RESEND_FROM_EMAIL);
+  const to=recipient();
   const client=createInquirySupabase();
-  if(!to||!from||!process.env.RESEND_API_KEY||!client)return "unavailable";
+  if(!to||!isSpacemailConfigured()||!client)return "unavailable";
   const today=businessToday();
   const {data,error,count}=await client.from("systemarc_sales_opportunities")
     .select("id,company_name,contact_name,service,next_follow_up,stage",{count:"exact"})
@@ -46,12 +45,11 @@ export async function sendDueFollowUps():Promise<DigestResult> {
       '<a href="'+x.url+'">Open opportunity</a></li>').join('')+
     '</ul><p><a href="https://www.systemarchq.com/sales/follow-ups">Review all follow-ups</a></p></div>';
   try {
-    const {data:receipt,error:sendError}=await new Resend(process.env.RESEND_API_KEY).emails.send({
-      from,to,subject:"SystemArc: "+total+" follow-up"+(total===1?"":"s")+" due or overdue",html,text,
+    const receipt=await sendSystemArcMail({
+      to,subject:"SystemArc: "+total+" follow-up"+(total===1?"":"s")+" due or overdue",html,text,
     });
-    if(sendError||!receipt?.id)throw new Error("digest_rejected");
     const {error:updateError}=await client.from("systemarc_sales_reminder_runs")
-      .update({status:"sent",provider_id:receipt.id,sent_at:new Date().toISOString()})
+      .update({status:"sent",provider_id:receipt.id.slice(0,200),sent_at:new Date().toISOString()})
       .eq("run_day",today).eq("status","sending");
     if(updateError)console.error("sales_digest_record_failed");
     return "sent";

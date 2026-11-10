@@ -25,17 +25,17 @@ export default async function SalesLoginPage({searchParams}:{searchParams:Promis
         </form>
       </> : sent ? <>
         <h2 className="text-xl font-semibold">Check your inbox</h2>
-        <p className="mt-3 text-sm leading-7 text-silver">If the configured internal notification inbox is available, it will receive a single-use link. Check spam if necessary. The link expires after 15 minutes.</p>
+        <p className="mt-3 text-sm leading-7 text-silver">Your one-time login link was sent to info@systemarchq.com through Spacemail. Check the inbox and spam folder. It expires after 15 minutes.</p>
         <form action={requestSignInAction} className="mt-5"><button className="text-sm underline underline-offset-4">Request another link</button></form>
       </> : ready ? <>
         <h2 className="text-xl font-semibold">Sign in securely</h2>
-        <p className="mt-3 text-sm leading-7 text-silver">We'll email a one-time access link to the authorized SystemArc internal inbox. No password to remember.</p>
+        <p className="mt-3 text-sm leading-7 text-silver">We'll email a one-time access link through Spacemail to info@systemarchq.com. No password to remember.</p>
         <form action={requestSignInAction} className="mt-6">
           <button type="submit" className="min-h-12 w-full bg-warm-white px-5 font-medium text-carbon hover:bg-electric-cobalt">Email my sign-in link →</button>
         </form>
       </> : <>
         <h2 className="text-xl font-semibold">Access is not configured yet</h2>
-        <p className="mt-3 text-sm text-silver">An administrator must configure email delivery and the authorized inbox before this private workspace can be opened.</p>
+        <p className="mt-3 text-sm text-silver">SystemArc's Spacemail connection is not configured yet. Add the SPACEMAIL_SMTP_PASSWORD secret in Vercel's SystemArc production environment. Never share your mailbox password in chat.</p>
       </>}
     </div>
     <Link href="/" className="mt-7 inline-block text-sm text-silver underline underline-offset-4">← Return to SystemArc</Link>
