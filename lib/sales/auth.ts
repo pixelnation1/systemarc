@@ -1,112 +1,118 @@
 import "server-only";
-import { createHash, createHmac, randomBytes } from "node:crypto";
+import { createHash, createHmac, randomBytes, scrypt as callbackScrypt, timingSafeEqual } from "node:crypto";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { isSpacemailConfigured, sendSystemArcMail, systemArcMailbox } from "@/lib/notifications/spacemail";
 import { createInquirySupabase } from "@/lib/supabase/server";
 
 const cookieName = "sa_sales_session";
 const sessionSeconds = 7 * 24 * 60 * 60;
-const loginMinutes = 15;
+const iterations = 1 << 15;
+const scryptOptions = { N:iterations, r:8, p:1, maxmem:64*1024*1024 };
+function derivePassword(password:string,salt:Buffer):Promise<Buffer> {
+  return new Promise((resolve,reject)=>callbackScrypt(password,salt,64,scryptOptions,(err,key)=>{
+    if(err)reject(err);
+    else resolve(key as Buffer);
+  }));
+}
 export const salesStages = ["new","contacted","qualified","proposal","won","lost"] as const;
 export type SalesStage = (typeof salesStages)[number];
 
-function hash(value: string) { return createHash("sha256").update(value).digest("hex"); }
-function adminEmail() {
-  const email = (process.env.SALES_ADMIN_EMAIL || systemArcMailbox).trim().toLowerCase();
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : null;
+function sha256(text:string) { return createHash("sha256").update(text).digest("hex"); }
+export function isSalesLoginConfigured() {
+  return !!process.env.INQUIRY_RECEIVER_SECRET?.trim() && !!createInquirySupabase();
 }
-function isReady() {
-  return !!adminEmail() && isSpacemailConfigured()
-    && !!process.env.INQUIRY_RECEIVER_SECRET && !!createInquirySupabase();
+export async function hashSalesPassword(password:string):Promise<string> {
+  const salt = randomBytes(24).toString("hex");
+  const digest = await derivePassword(password,Buffer.from(salt,"hex"));
+  return "scrypt-v1:"+salt+":"+digest.toString("hex");
 }
-export function isSalesLoginConfigured() { return isReady(); }
-function loginUrl(token: string) {
-  return "https://www.systemarchq.com/sales/login?token=" + encodeURIComponent(token);
-}
-
-export async function requestSalesLogin(): Promise<"sent"|"limited"|"unavailable"> {
-  if (!isReady()) return "unavailable";
-  const client = createInquirySupabase();
-  if (!client) return "unavailable";
-  const req = await headers();
-  const ip = (req.get("x-forwarded-for") || "unknown").split(",")[0].trim().slice(0,150);
-  const requesterHash = createHmac("sha256", process.env.INQUIRY_RECEIVER_SECRET!).update(ip).digest("hex");
-  const oneHourAgo = new Date(Date.now() - 3600000).toISOString();
-  const [perSource, all] = await Promise.all([
-    client.from("systemarc_sales_login_links").select("id",{count:"exact",head:true}).eq("requester_hash",requesterHash).gte("created_at",oneHourAgo),
-    client.from("systemarc_sales_login_links").select("id",{count:"exact",head:true}).gte("created_at",oneHourAgo),
-  ]);
-  if (perSource.error || all.error) return "unavailable";
-  if ((perSource.count ?? 0) >= 4 || (all.count ?? 0) >= 30) return "limited";
-
-  const token = randomBytes(32).toString("hex");
-  const tokenHash = hash(token);
-  const { error: insertError } = await client.from("systemarc_sales_login_links").insert({
-    token_hash: tokenHash,
-    requester_hash: requesterHash,
-    expires_at: new Date(Date.now() + loginMinutes * 60000).toISOString(),
-  });
-  if (insertError) return "unavailable";
+export async function verifySalesPassword(password:string, encoded:string):Promise<boolean> {
+  const match = /^scrypt-v1:([0-9a-f]{48}):([0-9a-f]{128})$/.exec(encoded);
+  if (!match) return false;
   try {
-    const link = loginUrl(token);
-    await sendSystemArcMail({
-      to: adminEmail()!,
-      subject: "Your SystemArc Sales Command Center sign-in",
-      text: "Use this one-time link to sign in to the SystemArc Sales Command Center. It expires in 15 minutes.\\n\\n" + link + "\\n\\nIf you did not request this, you can ignore the email.",
-      html: '<p>Use this one-time link to sign in to the SystemArc Sales Command Center. It expires in 15 minutes.</p><p><a href="' + link + '">Open Sales Command Center</a></p><p>If you did not request this, ignore the message.</p>',
-    });
-    return "sent";
-  } catch {
-    await client.from("systemarc_sales_login_links").delete().eq("token_hash",tokenHash);
-    return "unavailable";
-  }
+    const candidate=await derivePassword(password,Buffer.from(match[1],"hex"));
+    return timingSafeEqual(candidate,Buffer.from(match[2],"hex"));
+  } catch { return false; }
 }
+async function requesterKey() {
+  const requestHeaders=await headers();
+  const ip=(requestHeaders.get("x-forwarded-for")||"unknown").split(",")[0].trim().slice(0,160);
+  const secret=process.env.INQUIRY_RECEIVER_SECRET||"";
+  return createHmac("sha256",secret).update(ip).digest("hex");
+}
+export async function startSalesPasswordSession(password:string):Promise<boolean> {
+  if (!isSalesLoginConfigured()||password.length<1||password.length>256) return false;
+  const client=createInquirySupabase();
+  if(!client) return false;
+  const requester_hash=await requesterKey();
+  const since=new Date(Date.now()-15*60*1000).toISOString();
+  const {count,error:attemptError}=await client.from("systemarc_sales_password_attempts")
+    .select("id",{head:true,count:"exact"})
+    .eq("requester_hash",requester_hash).gte("attempted_at",since);
+  if(attemptError || (count??0)>=6) return false;
+  const {data:attempt,error:insertError}=await client.from("systemarc_sales_password_attempts")
+    .insert({requester_hash,success:false}).select("id").single();
+  if(insertError || !attempt) return false;
 
-export async function completeSalesLogin(token: string): Promise<boolean> {
-  if (!/^[a-f0-9]{64}$/.test(token)) return false;
-  const client = createInquirySupabase();
-  if (!client || !adminEmail()) return false;
-  const now = new Date().toISOString();
-  // A conditional update consumes the link exactly once, even under concurrent requests.
-  const {data,error} = await client.from("systemarc_sales_login_links")
-    .update({used_at:now}).eq("token_hash",hash(token))
-    .is("used_at",null).gt("expires_at",now).select("id").maybeSingle();
-  if (error || !data) return false;
-  const secret = randomBytes(32).toString("hex");
-  const {error:sessionError} = await client.from("systemarc_sales_sessions").insert({
-    token_hash:hash(secret),
-    expires_at:new Date(Date.now() + sessionSeconds*1000).toISOString(),
+  const {data,error}=await client.from("systemarc_sales_admin_credentials")
+    .select("password_hash").eq("admin_id","owner").maybeSingle();
+  if(error||!data||!await verifySalesPassword(password,data.password_hash)) return false;
+  const token=randomBytes(32).toString("hex");
+  const {error:sessionError}=await client.from("systemarc_sales_sessions").insert({
+    token_hash:sha256(token),expires_at:new Date(Date.now()+sessionSeconds*1000).toISOString()
   });
-  if (sessionError) return false;
-  (await cookies()).set(cookieName,secret,{
+  if(sessionError) return false;
+  await client.from("systemarc_sales_password_attempts").update({success:true}).eq("id",attempt.id);
+  (await cookies()).set(cookieName,token,{
     httpOnly:true,secure:process.env.NODE_ENV==="production",sameSite:"lax",
     path:"/sales",maxAge:sessionSeconds,
   });
   return true;
 }
-
-export async function hasSalesSession(): Promise<boolean> {
-  const token = (await cookies()).get(cookieName)?.value ?? "";
-  if (!/^[a-f0-9]{64}$/.test(token) || !adminEmail()) return false;
-  const client = createInquirySupabase();
-  if (!client) return false;
-  const {data,error}=await client.from("systemarc_sales_sessions")
-    .select("id").eq("token_hash",hash(token)).is("revoked_at",null)
+export async function hasSalesSession():Promise<boolean> {
+  const token=(await cookies()).get(cookieName)?.value||"";
+  if(!/^[a-f0-9]{64}$/.test(token)) return false;
+  const client=createInquirySupabase();
+  if(!client) return false;
+  const {data,error}=await client.from("systemarc_sales_sessions").select("id")
+    .eq("token_hash",sha256(token)).is("revoked_at",null)
     .gt("expires_at",new Date().toISOString()).maybeSingle();
-  return !error && !!data;
+  return !error&&!!data;
 }
-export async function requireSalesSession(): Promise<void> {
-  if (!(await hasSalesSession())) redirect("/sales/login");
+export async function requireSalesSession():Promise<void> {
+  if(!(await hasSalesSession())) redirect("/sales/login");
+}
+export async function updateSalesPassword(currentPassword:string,newPassword:string):Promise<"updated"|"invalid"|"unavailable"> {
+  await requireSalesSession();
+  if (currentPassword.length<1||currentPassword.length>256 || newPassword.length<16||newPassword.length>128 ||
+      newPassword===currentPassword) return "invalid";
+  const client=createInquirySupabase();
+  if(!client) return "unavailable";
+  const {data,error}=await client.from("systemarc_sales_admin_credentials")
+    .select("password_hash").eq("admin_id","owner").maybeSingle();
+  if(error||!data||!await verifySalesPassword(currentPassword,data.password_hash))return "invalid";
+  const newHash=await hashSalesPassword(newPassword);
+  const {data:changed,error:saveError}=await client.from("systemarc_sales_admin_credentials")
+    .update({password_hash:newHash,changed_at:new Date().toISOString()})
+    .eq("admin_id","owner").eq("password_hash",data.password_hash)
+    .select("admin_id").maybeSingle();
+  if(saveError||!changed)return "unavailable";
+  const ownToken=(await cookies()).get(cookieName)?.value??"";
+  if(/^[a-f0-9]{64}$/.test(ownToken)) {
+    const {error:revokeError}=await client.from("systemarc_sales_sessions")
+      .update({revoked_at:new Date().toISOString()}).is("revoked_at",null)
+      .neq("token_hash",sha256(ownToken));
+    if(revokeError)console.error("sales_other_session_revoke_failed");
+  }
+  return "updated";
 }
 export async function revokeSalesSession() {
-  const jar = await cookies();
-  const token = jar.get(cookieName)?.value ?? "";
-  const client = createInquirySupabase();
-  if (/^[a-f0-9]{64}$/.test(token) && client) {
-    await client.from("systemarc_sales_sessions").update({revoked_at:new Date().toISOString()})
-      .eq("token_hash",hash(token)).is("revoked_at",null);
-  }
+  const jar=await cookies(),token=jar.get(cookieName)?.value||"";
+  const client=createInquirySupabase();
+  if(/^[a-f0-9]{64}$/.test(token)&&client)
+    await client.from("systemarc_sales_sessions")
+      .update({revoked_at:new Date().toISOString()})
+      .eq("token_hash",sha256(token)).is("revoked_at",null);
   jar.set(cookieName,"",{
     httpOnly:true,secure:process.env.NODE_ENV==="production",sameSite:"lax",
     path:"/sales",maxAge:0,
