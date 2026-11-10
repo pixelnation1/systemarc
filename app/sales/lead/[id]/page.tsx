@@ -5,6 +5,7 @@ import { createInquirySupabase } from "@/lib/supabase/server";
 import { formatDate,formatExactMoney,stageLabels,type SalesOpportunity } from "@/lib/sales/model";
 import { updateSalesLeadAction } from "@/app/sales/actions";
 import { SalesHeading,Alert,inputClass,labelClass } from "@/components/sales/shell";
+import {proposalMoney,proposalRef} from "@/lib/sales/proposals";
 
 export const dynamic="force-dynamic";
 export default async function LeadPage({params,searchParams}:{params:Promise<{id:string}>;searchParams:Promise<{error?:string;saved?:string}>}) {
@@ -17,10 +18,13 @@ export default async function LeadPage({params,searchParams}:{params:Promise<{id
   const {data,error}=await client.from("systemarc_sales_opportunities").select("*").eq("id",route.id).maybeSingle();
   if(error||!data) notFound();
   const lead=data as SalesOpportunity;
+  const {data:proposals}=await client.from("systemarc_sales_proposals").select("id,number,title,status,subtotal_cents").eq("opportunity_id",lead.id).order("created_at",{ascending:false}).limit(20);
   return <>
     <SalesHeading title={lead.company_name} description={"Opportunity / "+lead.service+" / "+stageLabels[lead.stage]}/>
     <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8">
       <Link href="/sales" className="text-sm text-silver underline underline-offset-4">← Back to pipeline</Link>
+      <section className="mt-7 border border-steel bg-graphite p-6"><div className="flex flex-wrap items-center justify-between gap-4"><div><h2 className="font-serif text-2xl">Client proposals</h2><p className="mt-2 text-sm text-silver">Keep each quote tied to its lead and stage. Nothing sends without your approval.</p></div><Link className="inline-flex min-h-11 items-center bg-warm-white px-5 text-sm font-semibold text-carbon" href={"/sales/lead/"+lead.id+"/proposal"}>Create proposal →</Link></div>
+        {(proposals||[]).length>0?<div className="mt-5 space-y-3">{(proposals||[]).map(p=><div key={p.id} className="flex flex-wrap items-center justify-between gap-3 border-t border-steel pt-3"><Link className="underline underline-offset-4" href={"/sales/proposals/"+p.id}>{proposalRef(p.number)} — {p.title}</Link><span className="text-sm capitalize text-silver">{p.status} · {proposalMoney(p.subtotal_cents)}</span></div>)}</div>:<p className="mt-5 text-sm text-silver">No proposals created for this lead yet.</p>}</section>
       <div className="mt-7 grid items-start gap-8 lg:grid-cols-[0.8fr_1.2fr]">
         <aside className="border border-steel bg-graphite p-6"><h2 className="font-serif text-2xl">Contact and project</h2>
           <dl className="mt-6 space-y-5 text-sm">
@@ -37,6 +41,12 @@ export default async function LeadPage({params,searchParams}:{params:Promise<{id
           {query.saved==="1"&&<div className="mt-5"><Alert ok message="Opportunity saved."/></div>}
           {query.error&&<div className="mt-5"><Alert message="Could not save the changes. Check the fields and try again."/></div>}
           <form action={updateSalesLeadAction} className="mt-7 space-y-6">
+            <div><label className={labelClass} htmlFor="lead-company">Business name</label><input id="lead-company" name="company_name" className={inputClass} required maxLength={160} defaultValue={lead.company_name}/></div>
+            <div><label className={labelClass} htmlFor="lead-contact">Contact name</label><input id="lead-contact" name="contact_name" className={inputClass} required maxLength={120} defaultValue={lead.contact_name}/></div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div><label className={labelClass} htmlFor="lead-email">Client email</label><input id="lead-email" name="contact_email" type="email" className={inputClass} maxLength={254} defaultValue={lead.contact_email}/></div>
+              <div><label className={labelClass} htmlFor="lead-phone">Phone</label><input id="lead-phone" name="contact_phone" type="tel" className={inputClass} maxLength={40} defaultValue={lead.contact_phone}/></div>
+            </div>
             <input type="hidden" name="id" value={lead.id}/>
             <div><label className={labelClass} htmlFor="lead-stage">Sales stage</label><select id="lead-stage" name="stage" defaultValue={lead.stage} className={inputClass}>{Object.entries(stageLabels).map(([value,label])=><option key={value} value={value}>{label}</option>)}</select></div>
             <div><label className={labelClass} htmlFor="lead-value">Estimated deal value (USD)</label><input className={inputClass} id="lead-value" name="value" inputMode="decimal" defaultValue={formatExactMoney(lead.estimated_value_cents)} placeholder="1499.00"/></div>

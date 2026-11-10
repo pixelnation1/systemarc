@@ -68,10 +68,15 @@ export async function updateSalesLeadAction(form: FormData) {
   const id=text(form,"id",36)??"";
   if (!/^[0-9a-f-]{36}$/i.test(id)) redirect("/sales");
   const stage=text(form,"stage",20)??"";
+  const contact_name=text(form,"contact_name",120),company_name=text(form,"company_name",160);
+  const contact_email=text(form,"contact_email",254),contact_phone=text(form,"contact_phone",40);
   const notes=text(form,"notes",4000),money=dollarsToCents(text(form,"value",16));
   const date=validDate(text(form,"next_follow_up",10));
   const path="/sales/lead/"+id;
-  if (!salesStages.includes(stage as (typeof salesStages)[number]) || notes===null || money===null || date===false)
+  if (!salesStages.includes(stage as (typeof salesStages)[number]) || notes===null || money===null || date===false
+    || !contact_name || contact_name.length<2 || !company_name || company_name.length<2
+    || contact_email===null || contact_phone===null || (!contact_email&&!contact_phone)
+    || (contact_email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact_email)))
     errPath(path,"invalid");
   const client=createInquirySupabase();
   if (!client) errPath(path,"unavailable");
@@ -81,7 +86,7 @@ export async function updateSalesLeadAction(form: FormData) {
   const closing=stage==="won" || stage==="lost";
   const now=new Date().toISOString();
   const fields={
-    stage,notes,estimated_value_cents:money,next_follow_up:date,
+    stage,notes,contact_name,company_name,contact_email,contact_phone,estimated_value_cents:money,next_follow_up:date,
     updated_at:now,
     first_contacted_at:existing.first_contacted_at ||
       (stage!=="new" ? now : null),
