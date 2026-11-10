@@ -48,3 +48,27 @@ Potential pipeline value means sum of amounts manually assigned to open opportun
 ## Ongoing improvements
 
 Add a calendar booking link, proposal/contract statuses, automatic follow-up reminders, customer testimonials and portfolio case studies. Consider scheduled cleanup of expired login links and sessions, plus pagination when lead volume exceeds 250. Do not begin broad outreach until inquiry deliveries and internal notifications have been verified end-to-end.
+
+
+## Proposals (new)
+
+The owner can create a proposal directly from a lead or review all proposals at /sales/proposals. Each private draft contains:
+
+- Up to eight service line items with quantities, prices, calculated subtotal, deposit percentage, and optional expiration date
+- Overview, scope/deliverables, timeline, exclusions, and editable payment terms
+- A branded preview and browser Print / Save as PDF option
+- A deliberate Send proposal by email action that sends the details through the existing Resend sender to the email stored on that lead only
+
+A proposal is never emailed just because a draft is saved. A sent proposal cannot be edited (create a replacement draft for revisions). Email is a project proposal, not a signed contract or a payment request; client acceptance is recorded manually. There is no public approval portal or e-signature mechanism.
+
+When the provider confirms a proposal email, the corresponding open lead moves to Proposal Sent and gets a five-day follow-up date if none was assigned. Closed leads are not reopened automatically.
+
+## Follow-up reminders (new)
+
+At /sales/follow-ups, the owner can see due, overdue and upcoming leads and trigger today's internal digest on demand. A production Vercel Cron invokes /api/sales/follow-up-reminders daily at 14:00 UTC (8 AM CST / 9 AM CDT). It sends to the configured SALES_ADMIN_EMAIL or INQUIRY_NOTIFICATION_EMAIL only when at least one open lead is due or overdue.
+
+The Cron route requires a server-side CRON_SECRET and does not expose contacts in the response. The run ledger prevents a second email for the same local day. A failed provider call is logged and not automatically retried that same day; it can be reviewed in the server logs. Scheduled digests do not email customers and are not sales outreach.
+
+**Deployment QA:** After first production deploy, confirm login with the owner inbox, create a test draft with no recipient send, test the PDF print layout, and set a test due date before manually requesting one digest. The first automated digest only fires at the next daily scheduled run.
+
+The proposal and reminder tables have RLS enabled and no direct anonymous or standard authenticated access. The privileged Supabase client remains server-only.
