@@ -41,6 +41,12 @@ export default async function LeadPage({params,searchParams}:{params:Promise<{id
           {query.saved==="1"&&<div className="mt-5"><Alert ok message="Opportunity saved."/></div>}
           {query.error&&<div className="mt-5"><Alert message="Could not save the changes. Check the fields and try again."/></div>}
           <form action={updateSalesLeadAction} className="mt-7 space-y-6">
+            <div><label className={labelClass} htmlFor="lead-company">Business name</label><input id="lead-company" name="company_name" className={inputClass} required maxLength={160} defaultValue={lead.company_name}/></div>
+            <div><label className={labelClass} htmlFor="lead-contact">Contact name</label><input id="lead-contact" name="contact_name" className={inputClass} required maxLength={120} defaultValue={lead.contact_name}/></div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div><label className={labelClass} htmlFor="lead-email">Client email</label><input id="lead-email" name="contact_email" type="email" className={inputClass} maxLength={254} defaultValue={lead.contact_email}/></div>
+              <div><label className={labelClass} htmlFor="lead-phone">Phone</label><input id="lead-phone" name="contact_phone" type="tel" className={inputClass} maxLength={40} defaultValue={lead.contact_phone}/></div>
+            </div>
             <input type="hidden" name="id" value={lead.id}/>
             <div><label className={labelClass} htmlFor="lead-stage">Sales stage</label><select id="lead-stage" name="stage" defaultValue={lead.stage} className={inputClass}>{Object.entries(stageLabels).map(([value,label])=><option key={value} value={value}>{label}</option>)}</select></div>
             <div><label className={labelClass} htmlFor="lead-value">Estimated deal value (USD)</label><input className={inputClass} id="lead-value" name="value" inputMode="decimal" defaultValue={formatExactMoney(lead.estimated_value_cents)} placeholder="1499.00"/></div>
