@@ -1,11 +1,10 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { Resend } from "resend";
+import { isSpacemailConfigured, sendSystemArcMail, systemArcMailbox } from "@/lib/notifications/spacemail";
 import { requireSalesSession } from "@/lib/sales/auth";
 import { createInquirySupabase } from "@/lib/supabase/server";
 import { parseProposalForm, proposalEmail, validUuid, type SalesProposal } from "@/lib/sales/proposals";
-import { safeFromIdentity } from "@/lib/notifications/resend";
 import type { SalesOpportunity } from "@/lib/sales/model";
 
 function field(form:FormData,key:string,max:number) {
@@ -60,8 +59,7 @@ export async function sendProposalAction(form:FormData) {
   const lead=found as SalesOpportunity;
   if(!lead.contact_email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.contact_email))
     fail(path,"Add a valid contact email to the lead before emailing a proposal.");
-  const from=safeFromIdentity(process.env.RESEND_FROM_EMAIL);
-  if(!from||!process.env.RESEND_API_KEY)fail(path,"Proposal email is not configured.");
+  if(!isSpacemailConfigured())fail(path,"Spacemail email is not configured yet.");
 
   // Atomic draft -> sending transition prevents duplicate clicks from sending twice.
   const {data:claimed,error:claimError}=await client.from("systemarc_sales_proposals")
@@ -70,11 +68,10 @@ export async function sendProposalAction(form:FormData) {
   if(claimError||!claimed)fail(path,"This proposal is already being sent.");
   const mail=proposalEmail(proposal,lead);
   try {
-    const {data:receipt,error:sendError}=await new Resend(process.env.RESEND_API_KEY).emails.send({
-      from,to:lead.contact_email,subject:mail.subject,html:mail.html,text:mail.text,
-      replyTo:"support@systemarchq.com",
+    await sendSystemArcMail({
+      to:lead.contact_email,subject:mail.subject,html:mail.html,text:mail.text,
+      replyTo:systemArcMailbox,
     });
-    if(sendError||!receipt?.id)throw new Error("provider_rejected");
   } catch {
     // Unknown provider outcomes should not trigger automatic retries.
     await client.from("systemarc_sales_proposals").update({status:"draft",updated_at:new Date().toISOString()})
