@@ -1,0 +1,10 @@
+import Link from "next/link";
+import { Container } from "@/components/container";
+import { WebsiteQuoteForm } from "@/components/inquiry/website-quote-form";
+import { createMetadata } from "@/lib/site";
+export const metadata = createMetadata({title:"Get a Business Website Quote",description:"Tell SystemArc a little about your business and get a personalized website project conversation. Launch packages from $999; Business Pro from $1,999.",path:"/website-quote",index:true});
+export default async function WebsiteQuotePage({searchParams}:{searchParams:Promise<{package?:string|string[]}>}) {
+  const query=await searchParams;
+  const selectedPackage=typeof query.package==="string"?query.package:"";
+  return <main><Container className="py-14 sm:py-20"><Link href="/services/business-websites" className="text-sm text-silver underline underline-offset-4">← Website packages</Link><div className="mt-9 grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16"><div><p className="font-mono text-xs uppercase tracking-widest text-electric-cobalt">Website quote</p><h1 className="mt-5 font-serif text-4xl leading-tight text-warm-white sm:text-5xl">Let's get your business online—and make it easier to reach.</h1><p className="mt-6 text-lg leading-8 text-silver">A few basics are enough to start. Tell us about your business and the kind of website you want. We'll follow up about scope and pricing before work begins.</p><div className="mt-8 border-t border-steel pt-7"><p className="font-semibold text-warm-white">How it works</p><ol className="mt-4 space-y-3 text-sm leading-7 text-silver"><li>01 / Send a short request.</li><li>02 / We review your goals and existing site, if any.</li><li>03 / We discuss a clear scope, timeline, and quote.</li></ol></div><p className="mt-7 text-sm text-silver">For a custom application or internal system instead? <Link href="/start-a-project" className="text-warm-white underline underline-offset-4">Use the software project form →</Link></p></div><WebsiteQuoteForm selectedPackage={selectedPackage}/></div></Container></main>;
+}

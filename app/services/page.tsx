@@ -8,9 +8,9 @@ import { pageGraph, type SchemaNode } from "@/lib/schema";
 import { servicePath, services } from "@/lib/services";
 import { createMetadata, siteUrl, startProjectHref } from "@/lib/site";
 
-const title = "Creative, Media & Technology Services | SystemArc";
+const title = "Business Websites, Software & Automation Services | SystemArc";
 const description =
-  "Explore SystemArc content strategy, creative production, social media, paid campaigns, websites, custom software, and business automation.";
+  "Compare SystemArc website packages, custom software, automation, and ongoing business technology services.";
 
 const decisions = [
   {
@@ -81,23 +81,20 @@ export default function ServicesPage() {
               id="services-heading"
               className="mt-5 max-w-[16em] font-serif text-4xl leading-[1.08] tracking-[-0.02em] text-balance text-warm-white sm:text-5xl lg:text-6xl"
             >
-              Creative, media, and technology. Working together.
+              Websites, software, and automation built for business.
             </h1>
             <div className="mt-6 max-w-2xl space-y-4 text-base leading-7 text-silver sm:text-lg sm:leading-8">
               <p>
-                SystemArc connects brand strategy, content, social media, and paid
-                campaigns with websites, software, and business automation.
+                From a business website that brings in inquiries to custom software that saves your team time, we build practical technology for the work ahead.
               </p>
               <p>
-                Choose a focused engagement or bring the work together in one plan.
-                We start with your audience, your operation, and the outcome
-                you need, then define the scope around it.
+                Start with a clear website package, or talk with us about software and automation. We define the scope and costs before the build begins.
               </p>
             </div>
           </Container>
         </section>
 
-        <MediaOffering />
+        <div className="mx-auto w-full max-w-6xl px-5 pb-12 sm:px-8"><div className="flex flex-wrap gap-3"><ButtonLink href="/services/business-websites">Explore Website Packages</ButtonLink><ButtonLink href="/website-quote">Get a Website Quote</ButtonLink><ButtonLink href="/start-a-project">Discuss Custom Software</ButtonLink></div></div>
         <Section labelledBy="service-overview" className="bg-graphite">
           <SectionHeading
             id="service-overview"
@@ -140,8 +137,8 @@ export default function ServicesPage() {
           </SectionHeading>
           <div className="mt-12 grid gap-6 lg:grid-cols-3">
             {[
-              { name: "Launch", price: "$999", detail: "Starting at", description: "A professional website for a business ready to get online.", features: ["Up to 5 pages", "Responsive design", "Contact form", "Basic search optimization"], href: "/start-a-project?service=launch" },
-              { name: "Business Pro", price: "$1,999", detail: "Starting at", description: "A more capable website for growing businesses.", features: ["Up to 10 pages", "Lead capture or booking setup", "Analytics setup", "Selected integrations"], href: "/start-a-project?service=business-pro" },
+              { name: "Launch", price: "$999", detail: "Starting at", description: "A professional website for a business ready to get online.", features: ["Up to 5 pages", "Responsive design", "Contact form", "Basic search optimization"], href: "/website-quote?package=launch" },
+              { name: "Business Pro", price: "$1,999", detail: "Starting at", description: "A more capable website for growing businesses.", features: ["Up to 10 pages", "Lead capture or booking setup", "Analytics setup", "Selected integrations"], href: "/website-quote?package=business-pro" },
               { name: "Custom Systems", price: "$3,500+", detail: "Projects from", description: "Software and automation scoped around your operations.", features: ["Discovery and scoping", "Dashboards and internal tools", "Workflow automation", "Integrations and custom applications"], href: "/start-a-project?service=custom-systems" },
             ].map((plan) => (
               <article key={plan.name} className="flex flex-col border border-steel bg-graphite p-7">
@@ -152,11 +149,11 @@ export default function ServicesPage() {
                 <ul className="mt-6 mb-8 flex-1 space-y-3 text-sm text-silver">
                   {plan.features.map((feature) => <li key={feature}>✓ {feature}</li>)}
                 </ul>
-                <ButtonLink href={plan.href}>Request a Quote</ButtonLink>
+                <ButtonLink href={plan.href}>{plan.name === "Custom Systems" ? "Discuss Your Project" : "Get a Website Quote"}</ButtonLink>
               </article>
             ))}
           </div>
-          <p className="mt-6 text-sm leading-6 text-silver">Final pricing depends on scope. Hosting, third-party subscriptions, ongoing support, and substantial revisions are quoted separately. Custom systems require discovery before a firm estimate.</p>
+          <p className="mt-6 text-sm leading-6 text-silver">Final pricing depends on scope. Hosting, third-party subscriptions, ongoing support, and substantial revisions are quoted separately. Ongoing care plans are available by quote. Custom systems require discovery before a firm estimate.</p>
         </Section>
 
         <Section labelledBy="system-first">
@@ -204,6 +201,7 @@ export default function ServicesPage() {
           </div>
         </Section>
 
+        <MediaOffering />
         <Section labelledBy="services-cta" className="bg-graphite">
           <div className="max-w-4xl">
             <div aria-hidden="true" className="mb-8 flex items-center gap-3">
