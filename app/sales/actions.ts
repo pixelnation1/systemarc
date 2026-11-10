@@ -76,7 +76,7 @@ export async function updateSalesLeadAction(form: FormData) {
   if (!salesStages.includes(stage as (typeof salesStages)[number]) || notes===null || money===null || date===false
     || !contact_name || contact_name.length<2 || !company_name || company_name.length<2
     || contact_email===null || contact_phone===null || (!contact_email&&!contact_phone)
-    || (contact_email&&!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(contact_email)))
+    || (contact_email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact_email)))
     errPath(path,"invalid");
   const client=createInquirySupabase();
   if (!client) errPath(path,"unavailable");
