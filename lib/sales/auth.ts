@@ -1,4 +1,4 @@
-"server-only";
+import "server-only";
 import { createHash, createHmac, randomBytes } from "node:crypto";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
