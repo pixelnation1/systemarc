@@ -20,13 +20,13 @@ export function WebsiteQuoteForm({selectedPackage}:{selectedPackage:string}) {
   event.preventDefault();setError("");
   const draft:InquiryDraft=emptyInquiryDraft();
   draft.contact={name:values.name.trim(),email:values.email.trim(),phone:values.phone.trim(),preferredContact:values.phone.trim()?"Either":"Email"};
-  draft.company={name:values.company.trim(),description:values.businessDescription.trim()||`Business website inquiry for ${values.company.trim()}.`,type:"Other",size:""};
+  draft.company={name:values.company.trim(),description:values.businessDescription.trim().length>=10?values.businessDescription.trim():`Website quote request for ${values.company.trim()}. ${values.businessDescription.trim()||"Business website services."}`,type:"Other",size:""};
   draft.problem={description:`Website quote requested: ${planLabel(values.plan)}. ${values.goals.trim()||"A professional website that helps customers reach the business."}`,currentProcess:values.website.trim()?`Current website: ${values.website.trim()}`:"No current website supplied.",affectedUsers:[],frequency:""};
   draft.systems={currentTools:values.website.trim(),manualDataMovement:"",keepExisting:"",systemsToKeep:""};
   draft.project={desiredOutcome:`Create or improve the business website for ${values.company.trim()}. ${values.goals.trim()||"Make services clear and help customers get in touch."}`,solutionAwareness:"Somewhat",areas:["Website / Ecommerce"],timeline:values.timeline as InquiryDraft["project"]["timeline"],budget:""};
   startTransition(async()=>{
    try{const result=await submitProjectInquiry({draft,honeypot,referrer:document.referrer});
-    if(!result.ok){setError(result.message);return}
+    if(!result.ok){setError(result.code==="validation"?Object.values(result.fieldErrors).join(" ")||result.message:result.message);return}
     if(result.delivery==="log"){setError("The request was logged but was not confirmed delivered for follow-up. Please email support@systemarchq.com.");return}
     setDelivery(result.delivery);
    }catch{setError("We couldn't send the request. Please email support@systemarchq.com.");}

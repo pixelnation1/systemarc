@@ -15,7 +15,7 @@ const packages = [
 ] as const;
 
 export default function BusinessWebsitesPage() {
-  return <main>
+  return <div>
     <section className="border-b border-steel bg-graphite"><Container className="py-16 sm:py-24">
       <p className="font-mono text-xs uppercase tracking-[0.18em] text-electric-cobalt">Business website development</p>
       <h1 className="mt-5 max-w-4xl font-serif text-4xl leading-tight tracking-tight text-warm-white sm:text-6xl">A better website. A clearer path to your next customer.</h1>
@@ -31,5 +31,5 @@ export default function BusinessWebsitesPage() {
     <section><Container className="py-16 sm:py-20"><p className="font-mono text-xs uppercase tracking-widest text-electric-cobalt">Our approach</p><h2 className="mt-4 font-serif text-3xl text-warm-white sm:text-4xl">Simple process. Clear expectations.</h2><div className="mt-9 grid gap-6 md:grid-cols-3">{[["01 / Understand", "We learn your services, customers, content, and what a successful website needs to do."],["02 / Build & review", "We agree on scope and timing, build in reviewable stages, and test across screen sizes."],["03 / Launch & support", "We launch, confirm forms and links work, and offer a separately scoped maintenance plan."]].map(([heading,body])=><div key={heading} className="border-t border-steel pt-6"><h3 className="text-lg font-semibold text-warm-white">{heading}</h3><p className="mt-3 text-sm leading-7 text-silver">{body}</p></div>)}</div></Container></section>
     <section className="border-y border-steel bg-graphite"><Container className="py-16 sm:py-20"><h2 className="font-serif text-3xl text-warm-white sm:text-4xl">Need help after launch?</h2><p className="mt-4 max-w-2xl text-silver">Ask about ongoing updates, maintenance, support, and site improvements. Monthly coverage and response times are defined in your agreement so there are no surprises.</p><Link href="/website-quote?package=unsure" className="mt-7 inline-flex min-h-12 items-center justify-center bg-warm-white px-6 font-medium text-carbon hover:bg-electric-cobalt">Let's talk about your website →</Link></Container></section>
     <section><Container className="py-16 sm:py-20"><h2 className="font-serif text-3xl text-warm-white">See what we've built.</h2><p className="mt-4 max-w-2xl text-silver">From local service businesses to nonprofit organizations, our portfolio shows the kinds of digital experiences we build.</p><div className="mt-6 flex flex-wrap gap-5"><Link href="/portfolio" className="text-warm-white underline underline-offset-8">Explore our portfolio →</Link><Link href="/website-quote" className="text-warm-white underline underline-offset-8">Get a website quote →</Link></div></Container></section>
-  </main>;
+  </div>;
 }

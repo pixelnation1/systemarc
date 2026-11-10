@@ -35,7 +35,7 @@ export const legalItems = [
   { href: "/terms", label: "Terms" },
 ] as const;
 
-export const startProjectHref = "/website-quote";
+export const startProjectHref = "/start-a-project";
 
 export const defaultSocialImage = {
   url: "/opengraph-image",

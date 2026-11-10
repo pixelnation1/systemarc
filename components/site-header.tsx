@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { ButtonLink } from "@/components/button-link";
 import { Container } from "@/components/container";
 import { Logo } from "@/components/logo";
-import { navItems, startProjectHref } from "@/lib/site";
+import { navItems } from "@/lib/site";
 
 function isCurrent(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
@@ -70,12 +70,12 @@ export function SiteHeader() {
             })}
           </ul>
           <ButtonLink
-            href={startProjectHref}
-            current={isCurrent(pathname, startProjectHref)}
+            href="/website-quote"
+            current={isCurrent(pathname, "/website-quote")}
             analyticsLocation="header"
             className="ml-4"
           >
-            Start a Project
+            Get a Quote
           </ButtonLink>
         </nav>
         <button
@@ -136,13 +136,13 @@ export function SiteHeader() {
             })}
           </ul>
           <ButtonLink
-            href={startProjectHref}
+            href="/website-quote"
             onClick={closeMenu}
-            current={isCurrent(pathname, startProjectHref)}
+            current={isCurrent(pathname, "/website-quote")}
             analyticsLocation="header"
             className="mt-3 w-full"
           >
-            Start a Project
+            Get a Quote
           </ButtonLink>
         </Container>
       </nav>
