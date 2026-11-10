@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/json-ld";
 import { SiteFooter } from "@/components/site-footer";
+import { ConversionTracker } from "@/components/analytics/conversion-tracker";
 import { SiteHeader } from "@/components/site-header";
 import { fontVariables } from "@/lib/fonts";
 import { siteGraph } from "@/lib/schema";
@@ -69,6 +70,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <SiteFooter />
+        <ConversionTracker />
       </body>
     </html>
   );

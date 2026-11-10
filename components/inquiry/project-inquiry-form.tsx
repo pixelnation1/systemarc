@@ -9,6 +9,7 @@ import { ReviewItem, ReviewSection } from "@/components/inquiry/review";
 import { AboutStep, BusinessStep, ProblemStep, ProjectStep, SystemsStep } from "@/components/inquiry/steps";
 import { SubmissionSuccess } from "@/components/inquiry/success";
 import { trackInquiryEvent } from "@/lib/inquiry/analytics";
+import { conversionPayload, trackConversion } from "@/lib/conversions/client";
 import {
   emptyInquiryDraft,
   type FieldErrors,
@@ -105,6 +106,7 @@ export function ProjectInquiryForm({ scenarioId }: { scenarioId?: string }) {
     if (started.current) return;
     started.current = true;
     trackInquiryEvent({ name: "project_form_started" });
+    trackConversion("software_inquiry_started");
   }
 
   function update<K extends keyof InquiryDraft>(section: K, patch: Partial<InquiryDraft[K]>) {
@@ -193,6 +195,7 @@ export function ProjectInquiryForm({ scenarioId }: { scenarioId?: string }) {
         draft,
         honeypot,
         referrer: typeof document === "undefined" ? "" : document.referrer,
+        conversion: conversionPayload("software_inquiry_submitted"),
       });
 
       if (result.ok) {
