@@ -171,9 +171,9 @@ export default function PrivacyPage() {
         </p>
         <p>
           How long an inquiry is kept can depend on the information and whether
-          a working relationship develops. Conversion event records are retained
-          for up to 13 months for aggregate business reporting; older records
-          are periodically purged. You can contact SystemArc with questions
+          a working relationship develops. Conversion events are kept only
+          while reasonably needed for business reporting; SystemArc reviews
+          their retention periodically. You can contact SystemArc with questions
           about the retention schedule.
         </p>
       </LegalSection>
