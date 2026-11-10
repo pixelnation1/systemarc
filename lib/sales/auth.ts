@@ -2,9 +2,8 @@ import "server-only";
 import { createHash, createHmac, randomBytes } from "node:crypto";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { Resend } from "resend";
+import { isSpacemailConfigured, sendSystemArcMail, systemArcMailbox } from "@/lib/notifications/spacemail";
 import { createInquirySupabase } from "@/lib/supabase/server";
-import { safeFromIdentity } from "@/lib/notifications/resend";
 
 const cookieName = "sa_sales_session";
 const sessionSeconds = 7 * 24 * 60 * 60;
@@ -14,11 +13,11 @@ export type SalesStage = (typeof salesStages)[number];
 
 function hash(value: string) { return createHash("sha256").update(value).digest("hex"); }
 function adminEmail() {
-  const email = (process.env.SALES_ADMIN_EMAIL || process.env.INQUIRY_NOTIFICATION_EMAIL || "").trim().toLowerCase();
+  const email = (process.env.SALES_ADMIN_EMAIL || systemArcMailbox).trim().toLowerCase();
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : null;
 }
 function isReady() {
-  return !!adminEmail() && !!process.env.RESEND_API_KEY && !!safeFromIdentity(process.env.RESEND_FROM_EMAIL)
+  return !!adminEmail() && isSpacemailConfigured()
     && !!process.env.INQUIRY_RECEIVER_SECRET && !!createInquirySupabase();
 }
 export function isSalesLoginConfigured() { return isReady(); }
@@ -50,16 +49,13 @@ export async function requestSalesLogin(): Promise<"sent"|"limited"|"unavailable
   });
   if (insertError) return "unavailable";
   try {
-    const resend = new Resend(process.env.RESEND_API_KEY!);
     const link = loginUrl(token);
-    const {error,data} = await resend.emails.send({
-      from: safeFromIdentity(process.env.RESEND_FROM_EMAIL),
+    await sendSystemArcMail({
       to: adminEmail()!,
       subject: "Your SystemArc Sales Command Center sign-in",
-      text: "Use this one-time link to sign in to the SystemArc Sales Command Center. It expires in 15 minutes.\n\n" + link + "\n\nIf you did not request this, you can ignore the email.",
+      text: "Use this one-time link to sign in to the SystemArc Sales Command Center. It expires in 15 minutes.\\n\\n" + link + "\\n\\nIf you did not request this, you can ignore the email.",
       html: '<p>Use this one-time link to sign in to the SystemArc Sales Command Center. It expires in 15 minutes.</p><p><a href="' + link + '">Open Sales Command Center</a></p><p>If you did not request this, ignore the message.</p>',
     });
-    if (error || !data?.id) throw new Error("resend_failed");
     return "sent";
   } catch {
     await client.from("systemarc_sales_login_links").delete().eq("token_hash",tokenHash);
