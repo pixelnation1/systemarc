@@ -111,5 +111,8 @@ export async function revokeSalesSession() {
     await client.from("systemarc_sales_sessions").update({revoked_at:new Date().toISOString()})
       .eq("token_hash",hash(token)).is("revoked_at",null);
   }
-  jar.delete(cookieName);
+  jar.set(cookieName,"",{
+    httpOnly:true,secure:process.env.NODE_ENV==="production",sameSite:"lax",
+    path:"/sales",maxAge:0,
+  });
 }
