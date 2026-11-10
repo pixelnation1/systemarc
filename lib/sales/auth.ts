@@ -84,7 +84,7 @@ export async function requireSalesSession():Promise<void> {
 }
 export async function updateSalesPassword(currentPassword:string,newPassword:string):Promise<"updated"|"invalid"|"unavailable"> {
   await requireSalesSession();
-  if (currentPassword.length<1||currentPassword.length>256 || newPassword.length<16||newPassword.length>128 ||
+  if (currentPassword.length<1||currentPassword.length>256 || newPassword.length<1||newPassword.length>128 ||
       newPassword===currentPassword) return "invalid";
   const client=createInquirySupabase();
   if(!client) return "unavailable";
