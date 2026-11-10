@@ -1,7 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { completeSalesLogin, requestSalesLogin, requireSalesSession, revokeSalesSession, salesStages } from "@/lib/sales/auth";
+import { startSalesPasswordSession, updateSalesPassword, requireSalesSession, revokeSalesSession, salesStages } from "@/lib/sales/auth";
 import { createInquirySupabase } from "@/lib/supabase/server";
 
 function text(form: FormData, key: string, max: number) {
@@ -25,14 +25,19 @@ function errPath(path: string, message: string): never {
   redirect(path + "?error=" + encodeURIComponent(message));
 }
 
-export async function requestSignInAction() {
-  const result = await requestSalesLogin();
-  redirect("/sales/login?" + (result==="sent" ? "sent=1" : "error=" + (result==="limited" ? "limit" : "unavailable")));
-}
-export async function confirmSignInAction(form: FormData) {
-  const token=text(form,"token",64) ?? "";
-  if (!await completeSalesLogin(token)) redirect("/sales/login?error=expired");
+export async function signInWithPasswordAction(form:FormData) {
+  const candidate=form.get("password");
+  const password=typeof candidate==="string"&&candidate.length<=256?candidate:"";
+  if(!await startSalesPasswordSession(password))redirect("/sales/login?error=invalid");
   redirect("/sales");
+}
+export async function changeAdminPasswordAction(form:FormData) {
+  await requireSalesSession();
+  const current=form.get("current_password"),next=form.get("new_password"),confirm=form.get("confirm_password");
+  if(typeof current!=="string"||typeof next!=="string"||typeof confirm!=="string"||next!==confirm)
+    redirect("/sales/settings?error=invalid");
+  const result=await updateSalesPassword(current,next);
+  redirect("/sales/settings?"+(result==="updated"?"saved=1":"error="+result));
 }
 export async function signOutAction() {
   await revokeSalesSession();

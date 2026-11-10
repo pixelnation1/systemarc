@@ -72,3 +72,10 @@ The Cron route requires a server-side CRON_SECRET and does not expose contacts i
 **Deployment QA:** After first production deploy, confirm login with the owner inbox, create a test draft with no recipient send, test the PDF print layout, and set a test due date before manually requesting one digest. The first automated digest only fires at the next daily scheduled run.
 
 The proposal and reminder tables have RLS enabled and no direct anonymous or standard authenticated access. The privileged Supabase client remains server-only.
+
+
+## Admin login update (November 2026)
+
+The Sales Command Center now uses a single password-only administrator account. There are no emailed login links, no public sign-up, and no dependency on SMTP for admin access. The private area remains at `/sales` and `/admin` redirects there. Sign in at `/sales/login` using the owner password. Password changes are available under `/sales/settings`; a change revokes other sessions. Keep the initial administrator password in a secure password manager and change it after first login. If the password is lost, recovery requires an authenticated database administrator; no email recovery is enabled. Existing customer proposal emails, reminder digests, and inquiry email notifications are separate workflows and still use Spacemail when configured.
+
+The owner credential is stored only as a salted scrypt hash in `systemarc_sales_admin_credentials`. Every login attempt is rate-limited by a private, HMAC-hashed network key; password comparisons use constant-time verification. A successful login creates a seven-day secure HttpOnly session cookie backed by the private session table. Legacy magic links and sessions were revoked by migration. The privileged database key remains server-only.

@@ -1,42 +1,27 @@
 import Link from "next/link";
-import { confirmSignInAction, requestSignInAction } from "@/app/sales/actions";
-import { isSalesLoginConfigured } from "@/lib/sales/auth";
-
-type Params = { token?:string|string[]; sent?:string|string[]; error?:string|string[] };
-export default async function SalesLoginPage({searchParams}:{searchParams:Promise<Params>}) {
+import { signInWithPasswordAction } from "@/app/sales/actions";
+import { isSalesLoginConfigured, hasSalesSession } from "@/lib/sales/auth";
+import { redirect } from "next/navigation";
+export const dynamic="force-dynamic";
+export default async function SalesLoginPage({searchParams}:{searchParams:Promise<{error?:string|string[]}>}) {
+  if(await hasSalesSession())redirect("/sales");
   const params=await searchParams;
-  const token=typeof params.token==="string" && /^[a-f0-9]{64}$/.test(params.token)?params.token:null;
-  const sent=params.sent==="1";
-  const error=typeof params.error==="string"?params.error:"";
   const ready=isSalesLoginConfigured();
-  const message=error==="limit"?"Too many sign-in requests. Try again in an hour.":error==="expired"?"That link expired or has already been used. Request a fresh one.":error?"Sign-in isn't available right now. Please try again later.":"";
   return <section className="mx-auto max-w-xl px-5 py-20 sm:py-28">
-    <p className="font-mono text-xs uppercase tracking-[0.16em] text-electric-cobalt">SystemArc / Authorized access</p>
-    <h1 className="mt-5 font-serif text-4xl leading-tight sm:text-5xl">Sales Command Center</h1>
-    <p className="mt-5 text-base leading-8 text-silver">Your private workspace for incoming client inquiries, prospects, follow-ups, quotes, and conversion reporting.</p>
+    <p className="font-mono text-xs uppercase tracking-[0.16em] text-electric-cobalt">SystemArc / Private admin</p>
+    <h1 className="mt-5 font-serif text-4xl leading-tight sm:text-5xl">Admin Command Center</h1>
+    <p className="mt-5 text-base leading-8 text-silver">One private password. No emailed codes or sign-in links. Your sales pipeline, proposals, follow-ups, and reporting remain restricted to your session.</p>
     <div className="mt-9 border border-steel bg-graphite p-6 sm:p-9">
-      {message&&<p role="alert" className="mb-5 border border-amber-700/50 p-3 text-sm text-warm-white">{message}</p>}
-      {token ? <>
-        <h2 className="text-xl font-semibold">Finish signing in</h2>
-        <p className="mt-3 text-sm leading-7 text-silver">Use the confirmation button to complete your one-time sign-in. This link can only be used once.</p>
-        <form action={confirmSignInAction} className="mt-6">
-          <input type="hidden" name="token" value={token}/>
-          <button type="submit" className="min-h-12 w-full bg-warm-white px-5 font-medium text-carbon hover:bg-electric-cobalt">Confirm sign-in →</button>
+      {params.error&&<p role="alert" className="mb-5 border border-amber-700/50 p-3 text-sm text-warm-white">Unable to sign in. Check the password or try again after 15 minutes if there have been multiple attempts.</p>}
+      {ready? <>
+        <h2 className="text-xl font-semibold">Admin sign-in</h2>
+        <form action={signInWithPasswordAction} className="mt-5">
+          <label className="block text-sm text-warm-white" htmlFor="sales-password">Admin password</label>
+          <input id="sales-password" name="password" type="password" required minLength={1} maxLength={256} autoComplete="current-password" className="mt-2 block min-h-12 w-full rounded-md border border-steel bg-carbon px-4 text-warm-white focus:border-electric-cobalt focus:outline-none"/>
+          <button type="submit" className="mt-5 min-h-12 w-full bg-warm-white px-5 font-medium text-carbon hover:bg-electric-cobalt">Sign in to admin →</button>
         </form>
-      </> : sent ? <>
-        <h2 className="text-xl font-semibold">Check your inbox</h2>
-        <p className="mt-3 text-sm leading-7 text-silver">Your one-time login link was sent to info@systemarchq.com through Spacemail. Check the inbox and spam folder. It expires after 15 minutes.</p>
-        <form action={requestSignInAction} className="mt-5"><button className="text-sm underline underline-offset-4">Request another link</button></form>
-      </> : ready ? <>
-        <h2 className="text-xl font-semibold">Sign in securely</h2>
-        <p className="mt-3 text-sm leading-7 text-silver">We'll email a one-time access link through Spacemail to info@systemarchq.com. No password to remember.</p>
-        <form action={requestSignInAction} className="mt-6">
-          <button type="submit" className="min-h-12 w-full bg-warm-white px-5 font-medium text-carbon hover:bg-electric-cobalt">Email my sign-in link →</button>
-        </form>
-      </> : <>
-        <h2 className="text-xl font-semibold">Access is not configured yet</h2>
-        <p className="mt-3 text-sm text-silver">SystemArc's Spacemail connection is not configured yet. Add the SPACEMAIL_SMTP_PASSWORD secret in Vercel's SystemArc production environment. Never share your mailbox password in chat.</p>
-      </>}
+        <p className="mt-5 text-xs leading-6 text-silver">Private access only. There is no self-registration or password recovery by email. You can change your password after signing in.</p>
+      </>:<p className="text-sm leading-7 text-silver">Admin storage isn't configured. The owner account must be initialized before login is available.</p>}
     </div>
     <Link href="/" className="mt-7 inline-block text-sm text-silver underline underline-offset-4">← Return to SystemArc</Link>
   </section>;
