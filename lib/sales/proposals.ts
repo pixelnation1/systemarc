@@ -9,7 +9,7 @@ export type SalesProposal = {
   valid_until:string|null; status:"draft"|"sending"|"sent"|"accepted"|"declined";
   sent_at:string|null; sent_to:string|null; created_at:string; updated_at:string;
 };
-export const defaultTerms = "A 50% deposit is due before work begins unless otherwise agreed in writing. The balance is due on project completion. Any work outside the agreed scope is quoted separately. Hosting, domains, third-party subscriptions, and taxes (if applicable) are additional unless explicitly listed. This proposal is not a binding agreement until both parties approve the final scope and terms.";
+export const defaultTerms = "The deposit percentage shown in this proposal is due before work begins unless otherwise agreed in writing. The balance is due on project completion. Any work outside the agreed scope is quoted separately. Hosting, domains, third-party subscriptions, and taxes (if applicable) are additional unless explicitly listed. This proposal is not a binding agreement until both parties approve the final scope and terms.";
 export function proposalMoney(cents:number) {
   return new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(cents/100);
 }
