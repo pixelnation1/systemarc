@@ -1,5 +1,6 @@
 "use client";
-import { useState, useTransition, type FormEvent } from "react";
+import { useRef, useState, useTransition, type FormEvent } from "react";
+import { conversionPayload, trackConversion } from "@/lib/conversions/client";
 import Link from "next/link";
 import { submitProjectInquiry } from "@/app/start-a-project/actions";
 import { emptyInquiryDraft, type InquiryDraft } from "@/lib/inquiry/model";
@@ -15,7 +16,8 @@ export function WebsiteQuoteForm({selectedPackage}:{selectedPackage:string}) {
  const [error,setError]=useState("");
  const [delivery,setDelivery]=useState<"webhook"|"log"|"discarded"|null>(null);
  const [pending,startTransition]=useTransition();
- const update=(key:keyof typeof values,value:string)=>setValues(old=>({...old,[key]:value}));
+ const started=useRef(false);
+ const update=(key:keyof typeof values,value:string)=>{if(!started.current){started.current=true;trackConversion("website_quote_started");}setValues(old=>({...old,[key]:value}));};
  function submit(event:FormEvent<HTMLFormElement>) {
   event.preventDefault();setError("");
   const draft:InquiryDraft=emptyInquiryDraft();
@@ -25,7 +27,7 @@ export function WebsiteQuoteForm({selectedPackage}:{selectedPackage:string}) {
   draft.systems={currentTools:values.website.trim(),manualDataMovement:"",keepExisting:"",systemsToKeep:""};
   draft.project={desiredOutcome:`Create or improve the business website for ${values.company.trim()}. ${values.goals.trim()||"Make services clear and help customers get in touch."}`,solutionAwareness:"Somewhat",areas:["Website / Ecommerce"],timeline:values.timeline as InquiryDraft["project"]["timeline"],budget:""};
   startTransition(async()=>{
-   try{const result=await submitProjectInquiry({draft,honeypot,referrer:document.referrer});
+   try{const result=await submitProjectInquiry({draft,honeypot,referrer:document.referrer,conversion:conversionPayload("website_quote_submitted")});
     if(!result.ok){setError(result.code==="validation"?Object.values(result.fieldErrors).join(" ")||result.message:result.message);return}
     if(result.delivery==="log"){setError("The request was logged but was not confirmed delivered for follow-up. Please email support@systemarchq.com.");return}
     setDelivery(result.delivery);

@@ -22,7 +22,7 @@ export default function PrivacyPage() {
       title={title}
       description={description}
       breadcrumb="Privacy Policy"
-      updated="October 2026"
+      updated="November 2026"
     >
       <LegalSection id="introduction" title="Introduction">
         <p>
@@ -76,11 +76,17 @@ export default function PrivacyPage() {
           request, and security or server logs.
         </p>
         <p>
-          SystemArc does not use that technical information to build a profile
-          of visitors. No third-party analytics provider is intentionally
-          configured on the production website today. If SystemArc later uses
-          analytics or a similar technology, this policy will be updated to
-          describe that change.
+          SystemArc uses first-party conversion analytics to measure site page
+          views, clicks to inquiry pages, form starts, and successfully delivered
+          quote or project submissions. These records include the page path
+          (without query strings), an event type, and limited campaign or
+          referring-domain information. The analytics table does not record
+          names, email addresses, phone numbers, IP addresses, cookies, or
+          persistent visitor IDs. Browser storage may temporarily retain
+          campaign labels for attribution within the same tab, for up to four
+          hours. SystemArc honors browser Do Not Track and Global Privacy
+          Control signals for these analytics requests. No third-party
+          marketing pixel is installed as part of this tracking.
         </p>
       </LegalSection>
 
@@ -108,12 +114,12 @@ export default function PrivacyPage() {
 
       <LegalSection id="storage" title="Where inquiry information is stored">
         <p>
-          Project inquiry information is stored in SystemArc&apos;s database.
+          Project inquiries and first-party conversion analytics are stored in SystemArc&apos;s database.
           SystemArc currently uses Supabase to provide that database
           infrastructure.
         </p>
         <p>
-          Inquiry records are not published on the website. Visitors using the
+          Inquiry and analytics records are not published on the website. Visitors using the
           public site do not have direct access to read, add, change, or delete
           those records.
         </p>
@@ -164,9 +170,11 @@ export default function PrivacyPage() {
           obligation.
         </p>
         <p>
-          How long a record is kept can depend on the information and on
-          whether a working relationship develops. This policy does not set one
-          retention period for every kind of information.
+          How long an inquiry is kept can depend on the information and whether
+          a working relationship develops. Conversion event records are retained
+          for up to 13 months for aggregate business reporting; older records
+          are periodically purged. You can contact SystemArc with questions
+          about the retention schedule.
         </p>
       </LegalSection>
 

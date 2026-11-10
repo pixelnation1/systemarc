@@ -1,6 +1,7 @@
 "use server";
 
 import type { FieldErrors } from "@/lib/inquiry/model";
+import { captureConversionEvent } from "@/lib/conversions/server";
 import {
   allowInquiryAttempt,
   createInquiryId,
@@ -44,6 +45,7 @@ export async function submitProjectInquiry(input: {
   draft: unknown;
   honeypot: unknown;
   referrer: unknown;
+  conversion?: unknown;
 }): Promise<InquiryActionResult> {
   try {
     const key = await inquiryClientKey();
@@ -106,6 +108,10 @@ export async function submitProjectInquiry(input: {
     const inquiryId = createInquiryId();
     try {
       await destination.deliver({ ...inquiry, id: inquiryId });
+      if (destination.name === "webhook" && input.conversion) {
+        // Analytics failures never turn a stored customer lead into a failed submission.
+        await captureConversionEvent(input.conversion);
+      }
     } catch (error) {
       logInquiryDeliveryFailure(inquiryId, error);
       return { ok: false, code: "unavailable", message: deliveryFailedMessage };
