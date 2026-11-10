@@ -5,9 +5,10 @@ import { trackConversion } from "@/lib/conversions/client";
 
 export function ConversionTracker() {
   const pathname=usePathname();
-  useEffect(()=>{trackConversion("page_view");},[pathname]);
+  useEffect(()=>{if (!pathname.startsWith("/sales")) trackConversion("page_view");},[pathname]);
   useEffect(()=>{
     function handleClick(event:MouseEvent){
+      if (location.pathname.startsWith("/sales")) return;
       const target=event.target;
       if (!(target instanceof Element)) return;
       const link=target.closest("a[href]");
