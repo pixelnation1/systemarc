@@ -8,6 +8,8 @@ export function SalesHeading({title,description}:{title:string;description:strin
     <p className="mt-3 max-w-2xl text-sm leading-7 text-silver">{description}</p>
     <div className="mt-7 flex flex-wrap items-center gap-3">
       <Link href="/sales" className="inline-flex min-h-10 items-center border border-steel px-4 text-sm hover:border-cobalt">Pipeline</Link>
+      <Link href="/sales/proposals" className="inline-flex min-h-10 items-center border border-steel px-4 text-sm hover:border-cobalt">Proposals</Link>
+      <Link href="/sales/follow-ups" className="inline-flex min-h-10 items-center border border-steel px-4 text-sm hover:border-cobalt">Follow-ups</Link>
       <Link href="/sales/report" className="inline-flex min-h-10 items-center border border-steel px-4 text-sm hover:border-cobalt">Conversion Report</Link>
       <Link href="/sales/new" className="inline-flex min-h-10 items-center bg-warm-white px-4 text-sm font-medium text-carbon hover:bg-electric-cobalt">+ Add prospect</Link>
       <form action={signOutAction} className="ml-auto"><button type="submit" className="min-h-10 px-2 text-sm text-silver underline underline-offset-4">Sign out</button></form>
