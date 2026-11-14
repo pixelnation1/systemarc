@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "security:audit": "node scripts/security-audit.mjs",
+    "test:security": "node --test scripts/security-audit.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",

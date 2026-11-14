@@ -49,6 +49,8 @@ export const projectAreaOptions = [
   "Customer Portal",
   "Internal Tools",
   "Software Integrations",
+  "Cybersecurity Assessment",
+  "Security Hardening",
   "AI",
   "Dashboard / Reporting",
   "Scheduling",

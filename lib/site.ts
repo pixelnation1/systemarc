@@ -15,6 +15,7 @@ export const siteTitle = "SystemArc | Business Websites, Software & Automation";
 export const navItems = [
   { href: "/services/business-websites", label: "Websites" },
   { href: "/services/custom-software-development", label: "Software & Automation" },
+  { href: "/cybersecurity", label: "Cybersecurity" },
   { href: "/portfolio", label: "Our Work" },
   { href: "/media", label: "Media" },
   { href: "/about", label: "About" },
@@ -22,6 +23,7 @@ export const navItems = [
 
 export const footerItems = [
   { href: "/services", label: "Services" },
+  { href: "/cybersecurity", label: "Cybersecurity" },
   { href: "/media", label: "Media" },
   { href: "/industries", label: "Industries" },
   { href: "/portfolio", label: "Portfolio" },

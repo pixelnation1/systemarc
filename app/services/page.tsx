@@ -95,6 +95,16 @@ export default function ServicesPage() {
         </section>
 
         <div className="mx-auto w-full max-w-6xl px-5 pb-12 sm:px-8"><div className="flex flex-wrap gap-3"><ButtonLink href="/services/business-websites">Explore Website Packages</ButtonLink><ButtonLink href="/website-quote">Get a Website Quote</ButtonLink><ButtonLink href="/start-a-project">Discuss Custom Software</ButtonLink></div></div>
+        <section aria-label="Cybersecurity services" className="border-y border-steel bg-[#101f33]">
+          <Container className="grid gap-6 py-10 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div>
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-electric-cobalt">New service area / Cybersecurity</p>
+              <h2 className="mt-3 font-serif text-2xl text-warm-white sm:text-3xl">Protect the business behind the technology.</h2>
+              <p className="mt-3 max-w-2xl text-silver">Explore practical security assessments, account hardening, backup readiness, and security planning for small businesses and individuals.</p>
+            </div>
+            <ButtonLink href="/cybersecurity" variant="secondary">Explore Cybersecurity</ButtonLink>
+          </Container>
+        </section>
         <Section labelledBy="service-overview" className="bg-graphite">
           <SectionHeading
             id="service-overview"
