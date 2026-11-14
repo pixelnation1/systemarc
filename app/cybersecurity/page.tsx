@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SecurityInquiryForm } from "@/components/inquiry/security-inquiry-form";
 import { ButtonLink } from "@/components/button-link";
 import { Container } from "@/components/container";
 import { JsonLd } from "@/components/json-ld";
@@ -85,7 +86,7 @@ export default function CybersecurityPage() {
               A security problem does not have to become a business disaster. We help people and growing businesses understand their digital risks and take practical steps to reduce them.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
-              <ButtonLink href="/start-a-project?scenario=security">Request a Security Conversation</ButtonLink>
+              <ButtonLink href="#security-inquiry">Request a Security Conversation</ButtonLink>
               <ButtonLink href="#services" variant="secondary">Explore Services</ButtonLink>
             </div>
             <p className="mt-5 max-w-2xl text-sm leading-6 text-silver">No security testing begins from a form submission. Every assessment requires a defined scope and appropriate authorization.</p>
@@ -148,7 +149,7 @@ export default function CybersecurityPage() {
             <h2 id="cyber-contact" className="mt-5 font-serif text-3xl text-warm-white sm:text-5xl">Protect what you've worked to build.</h2>
             <p className="mt-5 text-base leading-8 text-silver">Tell us what you want to protect and what concerns you. We'll discuss the appropriate next step and scope before making any commitments.</p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <ButtonLink href="/start-a-project?scenario=security">Discuss Your Security Needs</ButtonLink>
+              <ButtonLink href="#security-inquiry">Discuss Your Security Needs</ButtonLink>
               <Link href={"mailto:" + contactEmail + "?subject=SystemArc%20Cybersecurity%20Inquiry"} className="inline-flex min-h-12 items-center text-sm text-warm-white underline underline-offset-4">
                 Email us directly
               </Link>
@@ -156,6 +157,16 @@ export default function CybersecurityPage() {
             <p className="mt-5 text-sm text-silver">Please don't send account credentials, access tokens, or sensitive incident files through initial inquiries.</p>
           </div>
         </Section>
+        <section id="security-inquiry" aria-labelledby="security-inquiry-heading" className="border-t border-steel bg-graphite py-16 sm:py-24">
+          <Container>
+            <div className="mx-auto max-w-3xl">
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-electric-cobalt">Security inquiry</p>
+              <h2 id="security-inquiry-heading" className="mt-4 font-serif text-3xl text-warm-white sm:text-4xl">Tell us what you need to protect.</h2>
+              <p className="mt-4 text-base leading-7 text-silver">A simple first conversation for individuals or businesses. Please describe the general issue only; do not submit passwords, one-time codes, access tokens, or sensitive records.</p>
+              <div className="mt-8"><SecurityInquiryForm /></div>
+            </div>
+          </Container>
+        </section>
       </article>
     </>
   );

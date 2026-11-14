@@ -215,6 +215,7 @@ export default function ProcessPage() {
                   For media, we agree on channels, deliverables, production,
                   approvals, and reporting. For technology, we define the
                   architecture, delivery phases, testing, and support.
+                  For cybersecurity, we agree on boundaries and written permission before examining systems.
                 </p>
               </div>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -232,6 +233,13 @@ export default function ProcessPage() {
         <Section labelledBy="media-process-heading" className="bg-graphite">
           <SectionHeading id="media-process-heading" eyebrow="Creative & media" title="Plan. Produce. Publish. Learn."><p>We begin with an audience and channel review, then develop a content or campaign plan. Production follows an agreed brief and approval schedule. After publishing, we review performance against the agreed goals and use those findings to guide the next cycle.</p><p>Deliverables, account responsibilities, agency fees, and advertising spend are documented before launch.</p></SectionHeading>
           <ButtonLink href="/media" className="mt-8">Explore Media Engagements</ButtonLink>
+        </Section>
+        <Section labelledBy="security-process-heading" className="bg-carbon">
+          <SectionHeading id="security-process-heading" eyebrow="Cybersecurity process" title="Scope first. Test only with permission. Prioritize clear fixes.">
+            <p>We start by understanding what needs protection and which systems you own. We agree on the assessment methods, authorized targets, confidentiality, and reporting before work begins.</p>
+            <p>An inquiry is never permission to scan or test a system. Any active assessment is limited to a separately approved scope and timeframe, with results handled confidentially.</p>
+          </SectionHeading>
+          <ButtonLink href="/cybersecurity" className="mt-8" variant="secondary">Explore Cybersecurity</ButtonLink>
         </Section>
         <Section labelledBy="overview-heading" className="bg-graphite">
           <SectionHeading
