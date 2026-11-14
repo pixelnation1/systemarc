@@ -90,7 +90,7 @@ export default function ServicesPage() {
             </h1>
             <div className="mt-6 max-w-2xl space-y-4 text-base leading-7 text-silver sm:text-lg sm:leading-8">
               <p>
-                From websites that attract customers to software that simplifies operations, media that tells your story, and security that protects what you've built, our services share one practical approach.
+                From websites that attract customers to software that simplifies operations, media that tells your story, and security that protects what you&apos;ve built, our services share one practical approach.
               </p>
               <p>
                 Choose the service that fits your goal. We discuss requirements, scope, and costs before beginning work, with written authorization required for security assessments.

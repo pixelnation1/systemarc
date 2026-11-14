@@ -83,7 +83,7 @@ export function SecurityInquiryForm() {
   if (outcome === "received") {
     return <div role="status" className="rounded-md border border-steel bg-carbon p-7">
       <h3 className="font-serif text-2xl text-warm-white">Thank you for reaching out.</h3>
-      <p className="mt-3 leading-7 text-silver">Your request has been submitted. We'll review the general concern and discuss the appropriate next step before any security work begins.</p>
+      <p className="mt-3 leading-7 text-silver">Your request has been submitted. We&apos;ll review the general concern and discuss the appropriate next step before any security work begins.</p>
       <p className="mt-4 text-sm text-silver">Submitting this form does not authorize testing of any device, network, or account.</p>
     </div>;
   }

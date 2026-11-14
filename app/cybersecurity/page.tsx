@@ -165,15 +165,15 @@ export default function CybersecurityPage() {
         <Section labelledBy="cyber-contact" className="bg-carbon">
           <div className="max-w-3xl">
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-electric-cobalt">Take the first step</p>
-            <h2 id="cyber-contact" className="mt-5 font-serif text-3xl text-warm-white sm:text-5xl">Protect what you've worked to build.</h2>
-            <p className="mt-5 text-base leading-8 text-silver">Tell us what you want to protect and what concerns you. We'll discuss the appropriate next step and scope before making any commitments.</p>
+            <h2 id="cyber-contact" className="mt-5 font-serif text-3xl text-warm-white sm:text-5xl">Protect what you&apos;ve worked to build.</h2>
+            <p className="mt-5 text-base leading-8 text-silver">Tell us what you want to protect and what concerns you. We&apos;ll discuss the appropriate next step and scope before making any commitments.</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <ButtonLink href="#security-inquiry">Discuss Your Security Needs</ButtonLink>
               <Link href={"mailto:" + contactEmail + "?subject=SystemArc%20Cybersecurity%20Inquiry"} className="inline-flex min-h-12 items-center text-sm text-warm-white underline underline-offset-4">
                 Email us directly
               </Link>
             </div>
-            <p className="mt-5 text-sm text-silver">Please don't send account credentials, access tokens, or sensitive incident files through initial inquiries.</p>
+            <p className="mt-5 text-sm text-silver">Please don&apos;t send account credentials, access tokens, or sensitive incident files through initial inquiries.</p>
           </div>
         </Section>
         <section id="security-inquiry" aria-labelledby="security-inquiry-heading" className="border-t border-steel bg-graphite py-16 sm:py-24">
