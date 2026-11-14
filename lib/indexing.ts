@@ -12,6 +12,7 @@ export const routeIndex = {
   "/work/repairforge": true,
   "/work/pixelnation-systems": true,
   "/services": true,
+  "/cybersecurity": true,
   "/services/business-websites": true,
   "/website-quote": true,
   "/media": true,

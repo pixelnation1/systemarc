@@ -8,9 +8,9 @@ import { pageGraph, type SchemaNode } from "@/lib/schema";
 import { servicePath, services } from "@/lib/services";
 import { createMetadata, siteUrl, startProjectHref } from "@/lib/site";
 
-const title = "Business Websites, Software & Automation Services | SystemArc";
+const title = "Business Websites, Software, Media & Cybersecurity Services | SystemArc";
 const description =
-  "Compare SystemArc website packages, custom software, automation, and ongoing business technology services.";
+  "Explore SystemArc websites, custom software, automation, creative media, and practical cybersecurity services for people and businesses.";
 
 const decisions = [
   {
@@ -27,6 +27,11 @@ const decisions = [
     title: "An API integration",
     body: "Sometimes an API integration removes the problem entirely.",
     href: "/services/software-integrations",
+  },
+  {
+    title: "Protect the systems you already have",
+    body: "Sometimes better access controls, backups, and security practices need to come before more software.",
+    href: "/cybersecurity",
   },
   {
     title: "Change the process first",
@@ -81,20 +86,30 @@ export default function ServicesPage() {
               id="services-heading"
               className="mt-5 max-w-[16em] font-serif text-4xl leading-[1.08] tracking-[-0.02em] text-balance text-warm-white sm:text-5xl lg:text-6xl"
             >
-              Websites, software, and automation built for business.
+              Websites, software, security, and creative services that work together.
             </h1>
             <div className="mt-6 max-w-2xl space-y-4 text-base leading-7 text-silver sm:text-lg sm:leading-8">
               <p>
-                From a business website that brings in inquiries to custom software that saves your team time, we build practical technology for the work ahead.
+                From websites that attract customers to software that simplifies operations, media that tells your story, and security that protects what you&apos;ve built, our services share one practical approach.
               </p>
               <p>
-                Start with a clear website package, or talk with us about software and automation. We define the scope and costs before the build begins.
+                Choose the service that fits your goal. We discuss requirements, scope, and costs before beginning work, with written authorization required for security assessments.
               </p>
             </div>
           </Container>
         </section>
 
-        <div className="mx-auto w-full max-w-6xl px-5 pb-12 sm:px-8"><div className="flex flex-wrap gap-3"><ButtonLink href="/services/business-websites">Explore Website Packages</ButtonLink><ButtonLink href="/website-quote">Get a Website Quote</ButtonLink><ButtonLink href="/start-a-project">Discuss Custom Software</ButtonLink></div></div>
+        <div className="mx-auto w-full max-w-6xl px-5 pb-12 sm:px-8"><div className="flex flex-wrap gap-3"><ButtonLink href="/services/business-websites">Explore Website Packages</ButtonLink><ButtonLink href="/website-quote">Get a Website Quote</ButtonLink><ButtonLink href="/start-a-project">Discuss Custom Software</ButtonLink><ButtonLink href="/cybersecurity" variant="secondary">Cybersecurity</ButtonLink></div></div>
+        <section aria-label="Cybersecurity services" className="border-y border-steel bg-[#101f33]">
+          <Container className="grid gap-6 py-10 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div>
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-electric-cobalt">Cybersecurity / Protect your systems</p>
+              <h2 className="mt-3 font-serif text-2xl text-warm-white sm:text-3xl">Protect the business behind the technology.</h2>
+              <p className="mt-3 max-w-2xl text-silver">Explore practical security assessments, account hardening, backup readiness, and security planning for small businesses and individuals.</p>
+            </div>
+            <ButtonLink href="/cybersecurity" variant="secondary">Explore Cybersecurity</ButtonLink>
+          </Container>
+        </section>
         <Section labelledBy="service-overview" className="bg-graphite">
           <SectionHeading
             id="service-overview"
@@ -133,7 +148,7 @@ export default function ServicesPage() {
             eyebrow="Clear starting points"
             title="Choose a starting point. We'll tailor the details."
           >
-            <p>Transparent starting prices for business websites, with custom quotes for more complex systems.</p>
+            <p>Website pricing is shown below. Software, media, and cybersecurity engagements are individually scoped and quoted.</p>
           </SectionHeading>
           <div className="mt-12 grid gap-6 lg:grid-cols-3">
             {[

@@ -8,20 +8,22 @@ export const siteName = "SystemArc";
 export const contactEmail = "support@systemarchq.com";
 
 export const siteDescription =
-  "SystemArc builds professional business websites, custom software, and automation to help businesses win more inquiries, save time, and grow.";
+  "SystemArc builds business websites, custom software, and automation, and offers practical cybersecurity services for people and growing businesses.";
 
-export const siteTitle = "SystemArc | Business Websites, Software & Automation";
+export const siteTitle = "SystemArc | Websites, Software, Media & Cybersecurity";
 
 export const navItems = [
   { href: "/services/business-websites", label: "Websites" },
-  { href: "/services/custom-software-development", label: "Software & Automation" },
-  { href: "/portfolio", label: "Our Work" },
+  { href: "/services/custom-software-development", label: "Software" },
+  { href: "/cybersecurity", label: "Cybersecurity" },
   { href: "/media", label: "Media" },
+  { href: "/portfolio", label: "Work" },
   { href: "/about", label: "About" },
 ] as const;
 
 export const footerItems = [
   { href: "/services", label: "Services" },
+  { href: "/cybersecurity", label: "Cybersecurity" },
   { href: "/media", label: "Media" },
   { href: "/industries", label: "Industries" },
   { href: "/portfolio", label: "Portfolio" },

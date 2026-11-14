@@ -67,6 +67,10 @@ const capabilities = [
     title: "AI-Assisted Workflows",
     body: "Practical AI implementations where AI can meaningfully improve an existing workflow.",
   },
+  {
+    title: "Cybersecurity & Digital Protection",
+    body: "Scoped security reviews, account hardening, backup readiness, and practical protection for people and businesses.",
+  },
 ] as const;
 
 const projectNotes = [
@@ -125,7 +129,8 @@ export default function AboutPage() {
                   <p>
                     Our roots are in building and operating businesses. That
                     perspective connects our approach to content and campaigns
-                    with our work in websites, custom software, and automation.
+                    with our work in websites, custom software, automation,
+                    and responsible cybersecurity services.
                   </p>
                 </div>
               </div>
@@ -198,7 +203,7 @@ export default function AboutPage() {
           <SectionHeading
             id="capabilities-heading"
             eyebrow="What we build"
-            title="Custom software, automation, and the connections between them."
+            title="We build useful systems and help protect the people using them."
           />
           <ul className="mt-12 border-b border-steel">
             {capabilities.map((capability) => (
@@ -215,6 +220,7 @@ export default function AboutPage() {
               </li>
             ))}
           </ul>
+          <p className="mt-8 text-sm leading-7 text-silver">Our <Link href="/cybersecurity" className="text-warm-white underline underline-offset-4 hover:text-electric-cobalt">cybersecurity services</Link> begin with discovery and written authorization for any assessment or testing.</p>
         </Section>
 
         <Section labelledBy="built-heading" className="bg-carbon">

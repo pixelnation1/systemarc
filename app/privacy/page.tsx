@@ -42,16 +42,17 @@ export default function PrivacyPage() {
           You may choose to send information through{" "}
           <Link href="/start-a-project" className={textLink}>
             Start a Project
-          </Link>, or through another contact method SystemArc publishes later.
+          </Link>, our <Link href="/cybersecurity#security-inquiry" className={textLink}>Cybersecurity Inquiry</Link>, or another published contact method.
         </p>
         <p>The information you provide can include:</p>
         <LegalList
           items={[
-            "Contact information, such as your name, work email, a phone number if you choose to provide one, and how you prefer to be reached.",
-            "Business and organization information, such as the organization name, what the business does, the type of business, and an approximate size.",
+            "Contact information, such as your name, email address, an optional phone number, and how you prefer to be reached.",
+            "Business and organization information when relevant, such as the organization name, what the business does, the type of business, and an approximate size.",
             "Operational and workflow information, such as the problem you want to solve, how the work happens today, who is affected, and how often the problem occurs.",
             "Existing software and system information, such as the tools involved, whether information is moved by hand, and systems you want to keep.",
             "Project requirements, such as the outcome you want, possible areas of work, a timeline, and an approximate budget range.",
+            "For cybersecurity inquiries, your selection of personal or business help, the general type of protection you need, and the non-sensitive concern you describe.",
             "Communications with SystemArc about a possible project.",
           ]}
         />
@@ -63,7 +64,9 @@ export default function PrivacyPage() {
           Do not send highly sensitive personal information unless SystemArc has
           specifically asked for it and it is necessary for the conversation.
           That includes government identification numbers, financial account
-          numbers, and health information.
+          numbers, and health information. For cybersecurity inquiries, do not
+          submit passwords, authentication codes, recovery keys, API tokens,
+          customer data, system logs, or other sensitive incident evidence.
         </p>
       </LegalSection>
 
@@ -106,7 +109,7 @@ export default function PrivacyPage() {
           ]}
         />
         <p>
-          Submitting Start a Project does not add you to a promotional email
+          Submitting a project or cybersecurity inquiry does not add you to a promotional email
           list. SystemArc does not treat that submission as consent to receive
           marketing email.
         </p>

@@ -64,7 +64,7 @@ export default function TermsPage() {
           <Link href="/start-a-project" className={textLink}>
             Start a Project
           </Link>{" "}
-          begins a conversation. It does not:
+          or the <Link href="/cybersecurity#security-inquiry" className={textLink}>Cybersecurity Inquiry</Link> begins a conversation. It does not:
         </p>
         <LegalList
           items={[
@@ -75,11 +75,13 @@ export default function TermsPage() {
             "Create a services agreement.",
             "Guarantee a response.",
             "Guarantee that a project is feasible.",
+            "Authorize SystemArc to scan, access, or test any system or account.",
           ]}
         />
         <p>
           If both sides decide to proceed, that engagement requires a separate
-          agreement.
+          agreement. Security testing also requires explicit written authorization,
+          approved scope, and rules of engagement from the appropriate system owner.
         </p>
       </LegalSection>
 

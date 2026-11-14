@@ -1,5 +1,6 @@
 import { getBuildScenario } from "@/lib/build-scenarios";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { MediaBriefForm } from "@/components/inquiry/media-brief-form";
 import { Container } from "@/components/container";
 import { DiscoveryPath } from "@/components/inquiry/discovery-path";
@@ -9,9 +10,9 @@ import { Section, SectionHeading } from "@/components/section";
 import { pageGraph } from "@/lib/schema";
 import { contactEmail, createMetadata } from "@/lib/site";
 
-const title = "Start a Creative, Media or Technology Project | SystemArc";
+const title = "Start a Website, Software, Media or Security Project | SystemArc";
 const description =
-  "Talk to SystemArc about content, social media, advertising, websites, custom software, or a connected creative and technology engagement.";
+  "Talk to SystemArc about websites, software, automation, content, media, or a scoped cybersecurity assessment.";
 
 export const metadata = createMetadata({
   title,
@@ -23,6 +24,7 @@ export const metadata = createMetadata({
 
 export default async function StartProjectPage({ searchParams }: { searchParams: Promise<{ type?: string | string[]; service?: string | string[]; scenario?: string | string[] }> }) {
   const query = await searchParams;
+  if (query.scenario === "security") redirect("/cybersecurity#security-inquiry");
   if (query.type === "media") {
     return <Container className="py-16 sm:py-24">
       <Link href="/media" className="inline-flex min-h-11 items-center text-sm text-silver underline underline-offset-4">← SystemArc Media</Link>
@@ -53,11 +55,11 @@ export default async function StartProjectPage({ searchParams }: { searchParams:
           Start with your ambition.
         </h1>
         <div className="mt-6 max-w-2xl space-y-5 text-base leading-7 text-silver sm:text-lg sm:leading-8">
-          <p>You don&apos;t need a finished brief.</p><p><Link href="/start-a-project?type=media" className="underline underline-offset-4">Looking for content, social, or advertising? Use our shorter media brief ↗</Link></p>
+          <p>You don&apos;t need a finished brief.</p><p><Link href="/cybersecurity#security-inquiry" className="underline underline-offset-4">Looking for personal or business cybersecurity help? Use our focused security inquiry form.</Link></p><p><Link href="/start-a-project?type=media" className="underline underline-offset-4">Looking for content, social, or advertising? Use our shorter media brief ↗</Link></p>
           <p>
             Tell us who you want to reach, what you want to change,
             or what your business needs to do next. Content, campaigns,
-            websites, and software can all start here.
+            websites, software, and digital protection can all start here.
           </p>
           <p>We&apos;ll start there.</p>
         </div>
@@ -79,7 +81,7 @@ export default async function StartProjectPage({ searchParams }: { searchParams:
           </p>
           <p>
             An inquiry can involve brand strategy, content production, social
-            media, paid campaigns, websites, custom software, or automation.
+            media, paid campaigns, websites, custom software, automation, or cybersecurity.
             We will define deliverables, budget, responsibilities, and
             success measures together. Skip optional questions that do not apply.
           </p>
