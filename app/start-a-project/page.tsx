@@ -1,5 +1,6 @@
 import { getBuildScenario } from "@/lib/build-scenarios";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { MediaBriefForm } from "@/components/inquiry/media-brief-form";
 import { Container } from "@/components/container";
 import { DiscoveryPath } from "@/components/inquiry/discovery-path";
@@ -23,6 +24,7 @@ export const metadata = createMetadata({
 
 export default async function StartProjectPage({ searchParams }: { searchParams: Promise<{ type?: string | string[]; service?: string | string[]; scenario?: string | string[] }> }) {
   const query = await searchParams;
+  if (query.scenario === "security") redirect("/cybersecurity#security-inquiry");
   if (query.type === "media") {
     return <Container className="py-16 sm:py-24">
       <Link href="/media" className="inline-flex min-h-11 items-center text-sm text-silver underline underline-offset-4">← SystemArc Media</Link>

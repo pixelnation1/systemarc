@@ -17,6 +17,7 @@ export function SiteHeader() {
   const [openPath, setOpenPath] = useState<string | null>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const open = openPath === pathname;
+  const securityPage = pathname === "/cybersecurity";
 
   useEffect(() => {
     if (!open) {
@@ -70,12 +71,12 @@ export function SiteHeader() {
             })}
           </ul>
           <ButtonLink
-            href="/website-quote"
-            current={isCurrent(pathname, "/website-quote")}
+            href={securityPage ? "/cybersecurity#security-inquiry" : "/website-quote"}
+            current={securityPage ? false : isCurrent(pathname, "/website-quote")}
             analyticsLocation="header"
             className="ml-4"
           >
-            Get a Quote
+            {securityPage ? "Security Inquiry" : "Get a Quote"}
           </ButtonLink>
         </nav>
         <button
@@ -136,13 +137,13 @@ export function SiteHeader() {
             })}
           </ul>
           <ButtonLink
-            href="/website-quote"
+            href={securityPage ? "/cybersecurity#security-inquiry" : "/website-quote"}
             onClick={closeMenu}
-            current={isCurrent(pathname, "/website-quote")}
+            current={securityPage ? false : isCurrent(pathname, "/website-quote")}
             analyticsLocation="header"
             className="mt-3 w-full"
           >
-            Get a Quote
+            {securityPage ? "Security Inquiry" : "Get a Quote"}
           </ButtonLink>
         </Container>
       </nav>

@@ -95,8 +95,8 @@ export function SecurityInquiryForm() {
     <fieldset>
       <legend className={labelClass}>Who needs help?</legend>
       <div className="mt-3 flex flex-wrap gap-5 text-sm text-warm-white">
-        <label className="inline-flex min-h-11 items-center gap-2"><input className="size-4 accent-cobalt" type="radio" name="kind" value="business" checked={kind === "business"} onChange={() => setKind("business")} />A business</label>
-        <label className="inline-flex min-h-11 items-center gap-2"><input className="size-4 accent-cobalt" type="radio" name="kind" value="individual" checked={kind === "individual"} onChange={() => setKind("individual")} />Myself or my family</label>
+        <label className="inline-flex min-h-11 items-center gap-2"><input className="size-4 accent-cobalt" type="radio" name="kind" value="business" checked={kind === "business"} onChange={() => { setKind("business"); if (topic === "personal-safety") setTopic("business-assessment"); }} />A business</label>
+        <label className="inline-flex min-h-11 items-center gap-2"><input className="size-4 accent-cobalt" type="radio" name="kind" value="individual" checked={kind === "individual"} onChange={() => { setKind("individual"); if (topic === "business-assessment") setTopic("personal-safety"); }} />Myself or my family</label>
       </div>
     </fieldset>
     <div className="grid gap-5 sm:grid-cols-2">
