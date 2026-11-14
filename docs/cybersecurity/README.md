@@ -4,7 +4,8 @@ This is the initial service and internal tooling foundation. It is not a public 
 
 ## What is implemented
 
-- Public cybersecurity overview at /cybersecurity, linked from the main site and the services hub.
+- Public cybersecurity overview at /cybersecurity, integrated with the homepage, main navigation, services hub, About and Process pages, and footer.
+- Focused personal/business security inquiry form that reuses the existing server-side project inquiry delivery and tags security requests. Never send passwords or secret values through this form.
 - The existing project inquiry flow has a cybersecurity scenario and assessment / hardening options. Never request passwords, API keys, access tokens, customer exports, or incident evidence through the inquiry form.
 - A read-only local repository preflight tool with redacted findings. Run npm run security:audit for a human summary or npm run security:audit -- --json for machine-readable JSON. Use npm run test:security to test the preflight rules.
 - A local-only report formatter: npm run security:audit -- --json > local-audit.json followed by npm run security:report -- local-audit.json. Keep generated assessment files out of version control.

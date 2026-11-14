@@ -29,6 +29,11 @@ const decisions = [
     href: "/services/software-integrations",
   },
   {
+    title: "Protect the systems you already have",
+    body: "Sometimes better access controls, backups, and security practices need to come before more software.",
+    href: "/cybersecurity",
+  },
+  {
     title: "Change the process first",
     body: "Sometimes the existing process needs to change before technology should be introduced.",
   },

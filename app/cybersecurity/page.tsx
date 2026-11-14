@@ -131,7 +131,26 @@ export default function CybersecurityPage() {
           </SectionHeading>
         </Section>
 
-        <Section labelledBy="cyber-faq" className="bg-graphite">
+        <Section labelledBy="cyber-connections" className="bg-graphite">
+          <SectionHeading id="cyber-connections" eyebrow="One connected team" title="Build better technology. Protect it as you grow.">
+            <p>Security should not be disconnected from the technology your business relies on. SystemArc brings practical protection into conversations about websites, software, and day-to-day operations.</p>
+          </SectionHeading>
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {[
+              { title: "Business Websites", description: "Start with a clear digital presence and practical attention to hosting, updates, and access.", href: "/services/business-websites", label: "Explore websites" },
+              { title: "Custom Software", description: "Build around your business while considering authentication, data permissions, and secure change management.", href: "/services/custom-software-development", label: "Explore software" },
+              { title: "Our Process", description: "Understand how we scope work, define responsibilities, and review each step before moving forward.", href: "/process", label: "See our approach" },
+            ].map((item) => (
+              <div key={item.title} className="flex flex-col border border-steel bg-carbon p-6">
+                <h3 className="font-serif text-xl text-warm-white">{item.title}</h3>
+                <p className="mt-3 flex-1 text-sm leading-7 text-silver">{item.description}</p>
+                <Link href={item.href} className="mt-6 inline-flex min-h-11 items-center text-sm text-warm-white underline underline-offset-4 hover:text-electric-cobalt">{item.label}</Link>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        <Section labelledBy="cyber-faq" className="bg-carbon">
           <SectionHeading id="cyber-faq" eyebrow="Questions" title="Straight answers about security assessments." />
           <div className="mt-10 divide-y divide-steel border-y border-steel">
             {questions.map(([question, answer]) => (
