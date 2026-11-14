@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "security:audit": "node scripts/security-audit.mjs",
-    "test:security": "node --test scripts/security-audit.test.mjs",
+    "test:security": "node --test scripts/security-audit.test.mjs scripts/security-report.test.mjs",
     "security:report": "node scripts/security-report.mjs"
   },
   "dependencies": {
