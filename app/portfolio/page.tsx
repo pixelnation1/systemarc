@@ -21,7 +21,7 @@ export default function PortfolioPage() {
       <Container className="py-20 sm:py-28">
         <p className="font-mono text-xs tracking-[0.18em] text-electric-cobalt uppercase">The SystemArc portfolio</p>
         <h1 className="mt-5 max-w-4xl font-serif text-5xl leading-[1.05] tracking-[-0.03em] text-balance text-warm-white sm:text-7xl">Built to be used.<br />Made to stand out.</h1>
-        <p className="mt-7 max-w-2xl text-lg leading-8 text-silver">Business software. Online marketplaces. Websites with a purpose. Explore a selection of projects we&apos;ve built, then see them for yourself.</p>
+        <p className="mt-7 max-w-2xl text-lg leading-8 text-silver">Business software. Online marketplaces. Websites with a purpose. Explore websites and software SystemArc designed and built, then visit the live projects.</p>
         <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 border-t border-steel pt-6 font-mono text-xs tracking-[0.12em] text-silver uppercase">
           <span>06 featured projects</span><span>Software & websites</span><span>Real website previews</span>
         </div>
